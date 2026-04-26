@@ -11,7 +11,7 @@ git clone https://github.com/MOClim/climate-data-analysis.git
 cd climate-data-analysis
 conda env create -f environment.yml
 conda activate climate-analysis
-jupyter lab
+jupyter notebook
 ```
 
 ## Course Structure
