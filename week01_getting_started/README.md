@@ -108,12 +108,6 @@ Data is stored outside this folder.
 
 ---
 
-## Workflow
-
-Directory → Notebook → Code → Data
-
----
-
 ## Check
 
 * Navigate directories
