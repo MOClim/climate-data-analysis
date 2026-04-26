@@ -1,0 +1,13 @@
+name: climate-data-analysis
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.11
+  - jupyter
+  - numpy
+  - matplotlib
+  - xarray
+  - netcdf4
+  - scipy
