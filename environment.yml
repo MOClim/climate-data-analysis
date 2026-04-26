@@ -1,4 +1,4 @@
-name: climate-data-analysis
+name: climate-analysis
 
 channels:
   - conda-forge
