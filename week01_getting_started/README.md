@@ -32,10 +32,10 @@ Mac users will use iTerm as the terminal application for this course.
 
 Install iTerm2:
 
-Download from: https://iterm2.com
-Open the downloaded file
-Drag iTerm into the Applications folder
-Launch iTerm
+- Download from: https://iterm2.com
+- Open the downloaded file
+- Drag iTerm into the Applications folder
+- Launch iTerm
 
 Check:
 ```bash id="m3z7qa"
@@ -50,13 +50,15 @@ Windows users will use WSL (Ubuntu) as the main terminal environment.
 
 First, open Windows PowerShell as Administrator and run:
 
+```bash id="m3z7qa"
 wsl --install
+```
 
 Restart your computer.
 
 Then open Ubuntu from the Start menu and complete the setup.
 
-From this point on, use the Ubuntu (WSL) terminal for all course work.
+From this point on, use the Ubuntu (WSL) terminal for all coursework.
 
 Check:
 ```bash id="m3z7qa"
