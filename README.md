@@ -4,6 +4,8 @@ Course materials for climate data analysis using Python and NCL.
 
 ## Getting Started
 
+# If conda is not installed, see "Environment Setup" below
+
 Clone this repository and set up the Python environment:
 
 ```bash
@@ -12,6 +14,47 @@ cd climate-data-analysis
 conda env create -f environment.yml
 conda activate climate-analysis
 ```
+---
+
+## Environment Setup (Miniconda)
+
+If you do not have conda installed, follow the steps below.
+
+# 1. Install Miniconda
+
+Download Miniconda from:
+
+https://docs.anaconda.com/free/miniconda/
+
+Choose the correct version:
+
+- Mac (Apple Silicon: M1/M2/M3) → Apple Silicon
+- Mac (Intel) → Intel x86
+- Windows → 64-bit
+  
+---
+
+# 2. Initialize Conda
+
+Open terminal:
+- Mac → Terminal or iTerm
+- Windows → PowerShell
+
+Run:
+```bash
+conda init
+```
+Restart your terminal.
+
+---
+
+# 3. Verify Installation
+
+```bash
+conda --version
+```
+
+---
 
 ## Course Structure
 
