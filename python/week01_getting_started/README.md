@@ -14,9 +14,11 @@
 ```id="x9k2pm"
 climate-data-analysis/
     ├── data/
-    └── week01_getting_started/
-        ├── week01_intro.ipynb
-        └── README.md
+    ├── python/
+    |      └── week01_getting_started/
+    |             ├── week01_intro.ipynb
+    |             └── README.md
+    └── ncl/
 ```
 
 **Important:**
@@ -183,7 +185,7 @@ Example:
 
 ```python id="u3p8dm"
 python w01_01_hello.py
-print("Hello, climate data")
+print("Hello, climate data analysis!")
 ```
 
 ---
@@ -204,7 +206,7 @@ python w01_01_hello.py
 
 Expected Output
 ```python id="u3p8dm"
-Hello, climate data
+Hello, climate data analysis!
 Hello, my name is xxx.
 20
 ```
