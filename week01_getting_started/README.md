@@ -149,6 +149,8 @@ You should see:
   
 ### 4. Create Your Script
 
+Copy the original file to a new file using the `cp` command:
+
 ```bash id="z1w3xl"
 cp w01_01_hello.sample.py w01_01_hello.py
 ```
