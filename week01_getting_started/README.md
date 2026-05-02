@@ -13,10 +13,10 @@
 
 ```id="x9k2pm"
 climate-data-analysis/
-├── data/
-└── week01_getting_started/
-    ├── week01_intro.ipynb
-    └── README.md
+    ├── data/
+    └── week01_getting_started/
+        ├── week01_intro.ipynb
+        └── README.md
 ```
 
 **Important:**
