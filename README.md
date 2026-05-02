@@ -4,7 +4,8 @@ Course materials for climate data analysis using Python and NCL.
 
 ## Getting Started
 
-# If conda is not installed, see "Environment Setup" below
+If conda is not installed, see "Environment Setup" below
+
 
 Clone this repository and set up the Python environment:
 
@@ -20,7 +21,20 @@ conda activate climate-analysis
 
 If you do not have conda installed, follow the steps below.
 
-# 1. Install Miniconda
+### Optional: Install iTerm2 (Mac)
+
+The default macOS Terminal is sufficient, but iTerm2 provides a better interface.
+
+Install iTerm2:
+
+1. Download from: https://iterm2.com
+2. Open the downloaded file
+3. Drag iTerm into the Applications folder
+4. Launch iTerm
+
+---
+
+### 1. Install Miniconda
 
 Download Miniconda from:
 
@@ -34,7 +48,7 @@ Choose the correct version:
   
 ---
 
-# 2. Initialize Conda
+### 2. Initialize Conda
 
 Open terminal:
 - Mac → Terminal or iTerm
@@ -48,7 +62,7 @@ Restart your terminal.
 
 ---
 
-# 3. Verify Installation
+### 3. Verify Installation
 
 ```bash
 conda --version
