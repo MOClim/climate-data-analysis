@@ -137,8 +137,19 @@ ls
 
 ---
 
-### 3. Check Branch
+### 3. Check Repositely
 
+Update Repository
+```bash id="r6k1vb"
+git pull
+```
+
+Check Status
+```bash id="r6k1vb"
+git status
+```
+
+Check Branch
 ```bash id="r6k1vb"
 git branch
 ```
