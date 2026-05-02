@@ -21,6 +21,8 @@ conda activate climate-analysis
 
 If you do not have conda installed, follow the steps below.
 
+---
+
 ### Optional: Install iTerm2 (Mac)
 
 The default macOS Terminal is sufficient, but iTerm2 provides a better interface.
