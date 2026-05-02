@@ -4,7 +4,7 @@
 
 * Use shell commands
 * Understand directory structure
-* Launch Jupyter Notebook
+* Launch vi for editing
 * Run basic Python code
 
 ---
@@ -175,8 +175,7 @@ Example:
 
 - Press `i`
 - Edit the file
-- Press `:wq`
-- Press return
+- Esc → :wq → Enter
 
 ---
 
@@ -189,37 +188,32 @@ print("Hello, climate data")
 
 ---
 
-### 7. Add command lines
+### 7. Add Code
 
-```python id="u3p8dm"
-vi w01_01_hello.py
-```
+Inside the file, write:
 
-Example:
+print("Hello, my name is xxx.")
+temperature = 20
+print(temperature)
 
-- Press `i`
-- Add the file as follows:
-- print ("Hello, my name is xxx.")
-- Press `:wq`
-- Press return
+### 8. Run the Script
 
 ```python id="u3p8dm"
 python w01_01_hello.py
-
-Hello, climate data
-Hello, my name is xxx.
 ```
 
-Add the following commands.
-```python id="t7n2qk"
-temperature = 20
-print(temperature)
+Expected Output
+```python id="u3p8dm"
+Hello, climate data
+Hello, my name is xxx.
+20
 ```
 
 ---
 
 ## Check
 
-* Navigate directories
-* Open iTerm (Mac) or WSL (Windows) for editing a code
-* Run a python script
+You should be able to:
+- Navigate directories
+- Use vi to edit a file
+- Run a Python script
