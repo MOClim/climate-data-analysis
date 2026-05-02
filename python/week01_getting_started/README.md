@@ -137,7 +137,7 @@ ls
 
 ---
 
-### 3. Check Repositely
+### 3. Check Repository
 
 Update Repository
 ```bash id="r6k1vb"
