@@ -121,8 +121,8 @@ You should see:
 ## Day 2: First Python Script
 
 ### 1. Open Terminal
-Mac: iTerm
-Windows: Ubuntu (WSL) terminal
+- Mac: iTerm
+- Windows: Ubuntu (WSL) terminal
 
 ---
 
@@ -171,10 +171,10 @@ Basic commands:
 
 Example:
 
-Press `i`
-Edit the file
-Press `:wq`
-Press return
+- Press `i`
+- Edit the file
+- Press `:wq`
+- Press return
 
 ---
 
@@ -195,11 +195,11 @@ vi w01_01_hello.py
 
 Example:
 
-Press `i`
-Add the file as follows:
-print ("Hello, my name is xxx.")
-Press `:wq`
-Press return
+- Press `i`
+- Add the file as follows:
+- print ("Hello, my name is xxx.")
+- Press `:wq`
+- Press return
 
 ```python id="u3p8dm"
 python w01_01_hello.py
