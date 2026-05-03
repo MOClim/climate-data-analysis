@@ -32,14 +32,14 @@ week02_basics_timeseries1/
 ```
 ---
 
-### Environment Setup
+## Environment Setup
 Activate the virtual environment
-```
+```bash
 conda activate climate-analysis
 ```
 
 List available environments (if forgotten)
-```
+```bash
 conda info --envs
 ```
 
@@ -59,6 +59,38 @@ conda info --envs
 * `pandas` — time series handling
 * `xarray` — labeled multidimensional arrays
 * `matplotlib` — visualization
+
+---
+## Exercise: Modify the Namelist
+
+This exercise introduces basic file operations and code editing within a Unix-like environment.
+
+### Step 1: Create a new file
+```bash
+cp w02_01_namelist.sample.py w02_01_namelist.py
+ls
+```
+
+### Step 2: Edit the code
+```bash
+vi w02_01_namelist.py
+```
+- Press i to enter insert mode
+- Add a new fruit name to the list
+- Press ESC, then type :wq and press Enter to save and exit
+
+### Step 3: Run the code
+```bash
+python w02_01_namelist.py
+```
+
+### Learning Focus
+- File duplication and version control practice
+- Basic terminal-based editing (vi)
+- Execution of Python scripts
+- Understanding simple data structures (lists)
+
+---
 
 ## Notes
 
