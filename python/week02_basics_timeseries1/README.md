@@ -27,11 +27,23 @@ By the end of this week, you should be able to:
 ```
 week02_basics_timeseries1/
 │
-├── notebooks/        # Jupyter notebooks with lecture and practice material
-├── data/             # Sample datasets (e.g., temperature, precipitation)
-├── scripts/          # Python scripts for data processing
-└── README.md         # Module documentation
+├── w02_01.namelist.sample.py   # Python scripts for data processing
+└── README.md                   # Module documentation
 ```
+---
+
+### Environment Setup
+Activate the virtual environment
+```
+conda activate climate-analysis
+```
+
+List available environments (if forgotten)
+```
+conda info --envs
+```
+
+---
 
 ## Example Workflow
 
