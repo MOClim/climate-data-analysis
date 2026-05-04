@@ -186,8 +186,11 @@ python w02_05_whileloop.py
 for i, fruit in enumerate(fruits):
     print(i, fruit)
 ```
-- Cleaner than index-based loop
-- Keeps both index and value
+- More concise than index-based loops
+- Provides both index and value simultaneously
+- Improves readability and reduces indexing errors
+
+Reference: w02_06_enumerate.solution.py
   
 ---
 
