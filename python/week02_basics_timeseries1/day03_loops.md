@@ -1,4 +1,4 @@
-# Week 02: Basics & Time Series Analysis (Part 1)
+# Week 02 (Day 3): Python Basics
 
 ## Overview
 
@@ -6,61 +6,11 @@ This module introduces foundational Python tools for climate data analysis and d
 
 ## Learning Objectives
 
-By the end of this week, you should be able to:
-
-* Apply core Python data structures for geophysical datasets
-* Manipulate time-indexed data using `pandas` and `xarray`
-* Perform basic temporal aggregation and resampling
-* Visualize climate time series and identify variability patterns
-* Interpret trends, seasonality, and anomalies in environmental data
 
 ## Topics Covered
 
-* Python basics for scientific computing
-* Introduction to time series in climate systems
-* Temporal indexing and datetime handling
-* Resampling (daily, monthly, seasonal scales)
-* Rolling statistics and smoothing techniques
-
-## Directory Structure
-
-```
-week02_basics_timeseries1/
-│
-├── w02_01.namelist.sample.py   # Python scripts for data processing
-└── README.md                   # Module documentation
-```
 ---
 
-## Environment Setup
-Activate the virtual environment
-```bash
-conda activate climate-analysis
-```
-
-List available environments (if forgotten)
-```bash
-conda info --envs
-```
-
----
-
-## Example Workflow
-
-1. Load climate dataset (e.g., NetCDF, CSV)
-2. Convert time coordinates to datetime objects
-3. Subset data by time range
-4. Compute monthly or seasonal means
-5. Plot time series and identify patterns
-
-## Recommended Libraries
-
-* `numpy` — numerical computation
-* `pandas` — time series handling
-* `xarray` — labeled multidimensional arrays
-* `matplotlib` — visualization
-
----
 ## Exercise: Modify the Namelist
 
 This exercise introduces basic file operations and code editing within a Unix-like environment.
@@ -114,6 +64,113 @@ python w02_02_loop.py
 
 ---
 
-## Notes
+## Exercise: Loop over Fruit Names
+### Step 1: Inspect the script
+```bash
+cp w02_03_multi-lines-loop.sample.py w02_03_multi-lines-loop.py
+less w02_03_multi-lines-loop.py
+```
 
-Temporal analysis is fundamental in climate science, where variability spans multiple scales—from synoptic events to decadal oscillations. Careful handling 
+### Step 2: Run the script
+```bash
+python w02_03_multi-lines-loop.py
+```
+
+Output (example)
+
+```bash
+['apple', 'cherry', 'peach', 'pear', 'banana', 'grape', 'watermelon', 'orange', 'kiwi', 'mango']
+10
+
+Index-based loop
+0 apple
+1 cherry
+2 peach
+...
+```
+
+### Concept: Index-based Loop
+
+fruits = ["apple", "cherry", "peach", "pear", "banana"]
+
+```python
+for i in range(len(fruits)):
+    print(i, fruits[i])
+```
+Uses an index to access elements
+range(len(fruits)) → 0 to N−1
+
+---
+
+## Direct Loop (Recommended)
+### Step 1: Inspect another script
+```bash
+cp w02_04_multi-lines-loop2.sample.py w02_04_multi-lines-loop2.py
+less w02_04_multi-lines-loop2.py
+```
+
+### Step 2: Run the script
+```bash
+python w02_04_multi-lines-loop2.py
+```
+
+### Concept: Direct iteration
+```python
+for fruit in fruits:
+    print(fruit)
+```
+- Iterates directly over elements
+- More readable and Pythonic
+
+---
+
+### Extension: Compare Two Loop Styles
+
+Method	Description
+Index-based loop	Access using position (i)
+Direct loop	Access element directly
+
+👉 Which one is more readable?
+
+---
+
+## Exercise: While Loop
+
+###Concept
+A while loop runs as long as a condition is true.
+
+```python
+i = 0
+while i < 5:
+   print(i) i += 1
+```
+
+- Starts from an initial condition
+- Continues until the condition becomes false
+
+### Step 1: Create a new file
+```bash
+cp w02_04_multi-lines-loop2.py w02_05_whileloop.py
+```
+
+### Step 2: Add the while loop
+```python
+i = 0
+while i < len(fruits):
+  print(i, fruits[i])
+  i += 1
+```
+
+### Step 3: Run
+```bash
+python w02_05_whileloop.py
+```
+
+---
+
+## Key Takeaways
+
+- for loop → best for iterating over sequences
+- while loop → best when using conditions
+
+Loops are essential for processing time series and multidimensional climate data
