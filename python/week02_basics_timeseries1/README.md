@@ -28,7 +28,9 @@ By the end of this week, you should be able to:
 week02_basics_timeseries1/
 │
 ├── w02_01.namelist.sample.py   # Python scripts for data processing
-└── README.md                   # Module documentation
+├── README.md                   # Module documentation
+├── day3_loops.md
+└── day4_timeseries1.md
 ```
 ---
 
@@ -45,78 +47,18 @@ conda info --envs
 
 ---
 
-## Example Workflow
+## Week 02 Overview
+- Python basics
+- Loop structures
+- Introduction to time series
 
-1. Load climate dataset (e.g., NetCDF, CSV)
-2. Convert time coordinates to datetime objects
-3. Subset data by time range
-4. Compute monthly or seasonal means
-5. Plot time series and identify patterns
+## Day 03: Loops
+→ see `day03_loops.md`
 
-## Recommended Libraries
-
-* `numpy` — numerical computation
-* `pandas` — time series handling
-* `xarray` — labeled multidimensional arrays
-* `matplotlib` — visualization
+## Day 04: Time Series
+→ see `day04_timeseries.md`
 
 ---
-## Exercise: Modify the Namelist
-
-This exercise introduces basic file operations and code editing within a Unix-like environment.
-
-### Step 1: Access the repository
-
-Open the Week 02 directory in your local clone of the repository:
-```bash
-cd python/week02_basics_timeseries1
-```
-
-### Step 2: Create a new file
-```bash
-cp w02_01_namelist.sample.py w02_01_namelist.py
-ls
-```
-
-### Step 3: Edit the code
-```bash
-vi w02_01_namelist.py
-```
-- Press i to enter insert mode
-- Add a new fruit name to the list
-- Press ESC, then type :wq and press Enter to save and exit
-
-### Step 4: Run the code
-```bash
-python w02_01_namelist.py
-```
-
-### Example Output
-apple cherry peach pear banana grape watermelon orange kiwi mango berry
-
-### Next Step
-Modify the script to print each fruit on a separate line.
-This introduces the concept of a loop, which is fundamental for iterating over climate data arrays and time series.
-
-### Extension: Loop Practice
-
-Modify the loop in w02_02_loop.py (copied from w02_02_loop.sample.py):
-
-```python
-for i in range(5):
-    print(i)
-```
-
-Change range(5) to range(10) and run again:
-```bash
-python w02_02_loop.py
-```
-
----
-
-## Notes
-
-Temporal analysis is fundamental in climate science, where variability spans multiple scales—from synoptic events to decadal oscillations. Careful handling of time coordinates and aggregation methods is essential for robust interpretation.
 
 ## Next Steps
 
