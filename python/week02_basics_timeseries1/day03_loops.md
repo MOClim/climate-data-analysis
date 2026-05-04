@@ -2,12 +2,24 @@
 
 ## Overview
 
-This module introduces foundational Python tools for climate data analysis and develops essential techniques for handling and interpreting time series. Emphasis is placed on temporal structure, indexing, and exploratory diagnostics relevant to atmospheric and oceanographic datasets.
+This module introduces loop constructs in Python, focusing on iterative operations over lists and simple data structures. These techniques form the computational foundation for processing sequential and gridded climate datasets.
 
 ## Learning Objectives
 
+By the end of this module, you will be able to:
+- Implement for loops using index-based and direct iteration
+- Apply enumerate() for efficient index-value pairing
+- Use while loops with conditional control
+- Execute and modify Python scripts from the command line
+- Interpret loop behavior in the context of data iteration
 
 ## Topics Covered
+
+- Index-based loops (range, len)
+- Direct iteration over sequences
+- enumerate() for combined indexing and access
+- Conditional iteration using while loops
+- Basic file inspection and execution in a Unix-like environment
 
 ---
 
@@ -166,6 +178,17 @@ while i < len(fruits):
 python w02_05_whileloop.py
 ```
 
+---
+
+### Better Practice: enumerate()
+
+```python
+for i, fruit in enumerate(fruits):
+    print(i, fruit)
+```
+- Cleaner than index-based loop
+- Keeps both index and value
+  
 ---
 
 ## Key Takeaways
