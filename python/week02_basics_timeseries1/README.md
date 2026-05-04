@@ -91,11 +91,13 @@ vi w02_01_namelist.py
 python w02_01_namelist.py
 ```
 
-### Learning Focus
-- File duplication and version control practice
-- Basic terminal-based editing (vi)
-- Execution of Python scripts
-- Understanding simple data structures (lists)
+### Example Output
+apple cherry peach pear banana grape watermelon orange kiwi mango berry
+
+### Next Step
+Modify the script to print each fruit on a separate line.
+This introduces the concept of a loop, which is fundamental for iterating over climate data arrays and time series.
+
 
 ---
 
