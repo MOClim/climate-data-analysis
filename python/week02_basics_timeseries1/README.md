@@ -65,13 +65,20 @@ conda info --envs
 
 This exercise introduces basic file operations and code editing within a Unix-like environment.
 
-### Step 1: Create a new file
+### Step 1: Access the repository
+
+Open the Week 02 directory in your local clone of the repository:
+```bash
+cd python/week02_basics_timeseries1
+```
+
+### Step 2: Create a new file
 ```bash
 cp w02_01_namelist.sample.py w02_01_namelist.py
 ls
 ```
 
-### Step 2: Edit the code
+### Step 3: Edit the code
 ```bash
 vi w02_01_namelist.py
 ```
@@ -79,7 +86,7 @@ vi w02_01_namelist.py
 - Add a new fruit name to the list
 - Press ESC, then type :wq and press Enter to save and exit
 
-### Step 3: Run the code
+### Step 4: Run the code
 ```bash
 python w02_01_namelist.py
 ```
