@@ -98,6 +98,19 @@ apple cherry peach pear banana grape watermelon orange kiwi mango berry
 Modify the script to print each fruit on a separate line.
 This introduces the concept of a loop, which is fundamental for iterating over climate data arrays and time series.
 
+### Extension: Loop Practice
+
+Modify the loop in w02_02_loop.py (copied from w02_02_loop.sample.py):
+
+```python
+for i in range(5):
+    print(i)
+```
+
+Change range(5) to range(10) and run again:
+```bash
+python w02_02_loop.py
+```
 
 ---
 
