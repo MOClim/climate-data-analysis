@@ -10,7 +10,7 @@ If conda is not installed, see "Environment Setup" below
 Clone this repository and set up the Python environment:
 
 ```bash
-git clone -b student-2026 https://github.com/MOClim/climate-data-analysis.git
+git clone https://github.com/MOClim/climate-data-analysis.git
 cd climate-data-analysis
 conda env create -f environment.yml
 conda activate climate-analysis
