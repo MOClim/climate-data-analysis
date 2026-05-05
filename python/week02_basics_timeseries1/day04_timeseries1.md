@@ -109,20 +109,20 @@ The script should:
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
-```
-- `pandas` (`pd`): used to read and handle tabular climate data (CSV)
-- `matplotlib.pyplot` (`plt`): used to create plots (time series visualization)
-- `pathlib.Path`: used to handle file paths in a portable way
 
-```python
 data = pd.read_csv(file_path, skiprows=4, names=['Year', 'Anomaly'])
 print(data.head())
 
 plt.plot(data['Year'], data['Anomaly'], marker='o')
 ```
+- `pandas` (`pd`): used to read and handle tabular climate data (CSV)
+- `matplotlib.pyplot` (`plt`): used to create plots (time series visualization)
+- `pathlib.Path`: used to handle file paths in a portable way
+- `names=['Year','Anomaly']` assigns column names manually
 - `data['Year']` and `data['Anomaly']` are columns in a pandas DataFrame
   - `Year` is used as the x-axis
   - `Anomaly` (temperature anomaly, °C) is plotted on the y-axis
+- The anomaly represents the deviation from a climatological baseline (1901–2000 mean, °C)
  
 ### Step 4: Understand the output filename
 
