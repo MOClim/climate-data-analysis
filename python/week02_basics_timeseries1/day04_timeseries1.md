@@ -1,18 +1,41 @@
+# Week 02 (Day 4): Reading and Plotting Climate Time Series
+
+## Overview
+
+This module introduces basic time-series analysis using a NOAA global ocean temperature anomaly dataset. Students will inspect a climate data file, read it with pandas, examine its structure, and create a simple x-y plot.
+
+## Learning Objectives
+
+By the end of this module, you will be able to:
+
+* Inspect the structure of a climate data file
+* Read a CSV file using pandas
+* Interpret basic DataFrame information
+* Create an x-y plot of a climate time series
+* Save a figure as a JPEG file
+* Open the saved figure from the command line
+
+## Topics Covered
+
+* CSV data structure
+* Metadata and tabular data
+* pandas DataFrame basics
+* x-y plotting with matplotlib
+* Figure output and file opening commands
+
+---
+
 ## Exercise: Inspect and read a climate data file
 
-In this exercise, we will inspect a NOAA global ocean temperature anomaly dataset and read it using `pandas`.
+### Step 1: Inspect the data file
 
-The data file is located in the project `data` directory:
-
-```text
-../../data/NOAA.1850-2025.OCN.csv
+```bash
+cd python/week02_basics_timeseries1
+less ../../data/NOAA.1850-2025.OCN.csv
 ```
 
-Open the file and look at its structure before reading it in Python.
-
-### Data structure
-
-The file has a short metadata header followed by the actual tabular data.
+### Step 2: Understand the data structure
+The file has metadata lines followed by tabular data:
 
 ```text
 # Title: Global Ocean January - December Average Temperature Anomalies
@@ -25,26 +48,24 @@ Year,Anomaly
 ...
 ```
 
-The first three lines start with `#`. These lines are metadata, not data values. They describe the dataset title, units, and base period. The tabular data begin with the column names:
-
+The lines beginning with `#` are metadata. The tabular data begin with:
 ```text
 Year,Anomaly
 ```
 
 The two columns are:
-
 - `Year`: calendar year
 - `Anomaly`: global ocean temperature anomaly in degrees Celsius, relative to the 1901–2000 base period
 
-Run the sample script:
+### Step 3: Run the sample script:
 
 ```bash
-python w02_07_read-data.sample.py
+cp w02_07_read-data.sample.py w02_07_read-data.py
+python w02_07_read-data.py
 ```
+The script reads the CSV file and prints basic information about the DataFrame, including column names, data types, dimensions, and summary information.
 
-This script reads the CSV file and prints basic information about the data, including column names, data types, dimensions, and a summary of the DataFrame.
-
-A robust way to read this file is:
+### Step 5: Recommended reading method
 
 ```python
 from pathlib import Path
@@ -60,7 +81,6 @@ print(data.shape)
 print(data.columns)
 print(data.info())
 ```
-
 The option `comment='#'` tells `pandas` to ignore metadata lines beginning with `#`.
 
 ---
@@ -69,11 +89,14 @@ The option `comment='#'` tells `pandas` to ignore metadata lines beginning with 
 
 In this exercise, we will make a time-series plot of the NOAA global ocean temperature anomaly data.
 
-Run the sample script:
+### Step 1: Run the sample script:
 
 ```bash
-python w02_08_xy-plot.sample.py
+cp w02_08_xy-plot.sample.py w02_08_xy-plot.py
+python w02_08_xy-plot.py
 ```
+
+### Step 2: Check what the script does
 
 The script should:
 
@@ -81,63 +104,36 @@ The script should:
 2. plot `Year` on the x-axis and `Anomaly` on the y-axis,
 3. save the figure as a JPEG file with the same base name as the Python script.
 
-A recommended version is:
-
-```python
-from pathlib import Path
-import pandas as pd
-import matplotlib.pyplot as plt
-
-file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
-
-data = pd.read_csv(file_path, comment='#')
-
-plt.figure(figsize=(10, 5))
-plt.plot(data['Year'], data['Anomaly'], marker='o', linestyle='-')
-
-plt.title('Global Ocean Temperature Anomalies')
-plt.xlabel('Year')
-plt.ylabel('Temperature Anomaly (°C)')
-plt.grid(True)
-
-output_path = Path(__file__).with_suffix('.jpg')
-plt.savefig(output_path, format='jpeg', dpi=300)
-
-plt.show()
-```
-
-The command
+### Step 3: Understand the output filename
 
 ```python
 Path(__file__).with_suffix('.jpg')
 ```
 
-creates an output filename using the same name as the Python script, but with the extension changed from `.py` to `.jpg`.
+This creates an output filename using the same name as the Python script, but changes the extension from `.py` to `.jpg`.
 
 For example:
 
 ```text
-w02_08_xy-plot.sample.py  ->  w02_08_xy-plot.sample.jpg
+w02_08_xy-plot.py  ->  w02_08_xy-plot.jpg
 ```
 
-### Open the saved JPEG file
-
-After running the script, open the JPEG file from the terminal.
+### Step 4: Open the saved JPEG file
 
 On macOS:
 
 ```bash
-open w02_08_xy-plot.sample.jpg
+open w02_08_xy-plot.jpg
 ```
 
 On Windows:
 
 ```cmd
-start "" w02_08_xy-plot.sample.jpg
+start "" w02_08_xy-plot.jpg
 ```
 
-If using PowerShell on Windows, this also works:
+On Windows PowerShell:
 
 ```powershell
-start .\w02_08_xy-plot.sample.jpg
+start .\w02_08_xy-plot.jpg
 ```
