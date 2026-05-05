@@ -16,8 +16,9 @@ climate-data-analysis/
     ├── data/
     ├── python/
     |      └── week01_getting_started/
-    |             ├── week01_intro.ipynb
-    |             └── README.md
+    |             ├── README.md
+    |             ├── solution/
+    |             └── w01_01_hello.sample.py
     └── ncl/
 ```
 
@@ -90,7 +91,7 @@ cd ~/Documents
 ### 3. Clone Repository
 
 ```bash id="p8n4kt"
-git clone -b student-2026 [<repository_url>](https://github.com/MOClim/climate-data-analysis.git)
+git clone [<repository_url>](https://github.com/MOClim/climate-data-analysis.git)
 cd climate-data-analysis
 ls
 cd python
@@ -148,15 +149,6 @@ Check Status
 ```bash id="r6k1vb"
 git status
 ```
-
-Check Branch
-```bash id="r6k1vb"
-git branch
-```
-
-You should see:
-
-* student-2026
 
 ---
   
