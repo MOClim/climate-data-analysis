@@ -110,7 +110,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-data = pd.read_csv(file_path, skiprows=4, names=['Year', 'Anomaly'])
+data = pd.read_csv(file_path, comment='#')
 print(data.head())
 
 plt.plot(data['Year'], data['Anomaly'], marker='o')
@@ -118,7 +118,7 @@ plt.plot(data['Year'], data['Anomaly'], marker='o')
 - `pandas` (`pd`): used to read and handle tabular climate data (CSV)
 - `matplotlib.pyplot` (`plt`): used to create plots (time series visualization)
 - `pathlib.Path`: used to handle file paths in a portable way
-- `names=['Year','Anomaly']` assigns column names manually
+- `comment='#'` ignores metadata lines in the NOAA file
 - `data['Year']` and `data['Anomaly']` are columns in a pandas DataFrame
   - `Year` is used as the x-axis
   - `Anomaly` (temperature anomaly, °C) is plotted on the y-axis
@@ -229,12 +229,14 @@ Update the following:
 
 - Change the input file to the land dataset
 - Update the plot title (e.g., "Global Land Temperature Anomalies")
+- ensure the column names match (`Year`, `Anomaly`)
 
 ### Step 3: Run the script
 
 ```bash
 python w02_09_xy-plot.land.py
 ```
+The output image will be saved in the same directory as the Python script.
 
 ### Step 4: Check the output
 
