@@ -222,9 +222,8 @@ Copy the ocean plotting script:
 cp w02_08_xy-plot.sample.py w02_09_xy-plot.land.py
 ```
 
-```markdown id="v6nq3r"
 ### Step 2: Modify the script
-```
+
 Update the following:
 
 - Change the input file to the land dataset
@@ -251,3 +250,11 @@ Confirm that:
 Submit the modified code and the resulting plot to Canvas (Homework2 – Python Land Data) by the due date.
 
 ---
+
+## Key Takeaways
+
+- Climate data files often include metadata before tabular data
+- `pandas` can read and inspect time-series data from CSV files
+- `matplotlib` can be used to visualize time series (x-y plot)
+- Clear axis labels and grid improve the readability of scientific figures
+- The same workflow can be applied to different datasets
