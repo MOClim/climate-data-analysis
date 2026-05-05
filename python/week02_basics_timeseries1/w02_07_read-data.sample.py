@@ -8,7 +8,7 @@ from pathlib import Path
 file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
 
 # Read the CSV file
-data = pd.read_csv(file_path, skiprows=4)
+data = pd.read_csv(file_path,  comment='#')
 
 # Data information
 print("")
