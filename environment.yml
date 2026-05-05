@@ -7,7 +7,26 @@ dependencies:
   - python=3.11
   - jupyter
   - numpy
-  - matplotlib
-  - xarray
-  - netcdf4
   - scipy
+  - pandas
+  - matplotlib
+  - seaborn
+
+  - xarray
+  - dask
+  - bottleneck
+  - numba
+
+  - netcdf4
+  - h5netcdf
+  - cftime
+
+  - cartopy
+  - pyproj
+  - shapely
+
+  - cmocean
+  - metpy
+  - cf_xarray
+  - xesmf
+
