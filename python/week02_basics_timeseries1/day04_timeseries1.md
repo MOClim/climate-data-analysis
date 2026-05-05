@@ -92,8 +92,8 @@ In this exercise, we will make a time-series plot of the NOAA global ocean tempe
 ### Step 1: Run the sample script:
 
 ```bash
-cp w02_08_xy-plot.sample.py w02_08_xy-plot.py
-python w02_08_xy-plot.py
+cp w02_08_xy-plot.ocn.sample.py w02_08_xy-plot.ocn.py
+python w02_08_xy-plot.ocn.py
 ```
 
 ### Step 2: Check what the script does
@@ -135,7 +135,7 @@ This creates an output filename using the same name as the Python script, but ch
 For example:
 
 ```text
-w02_08_xy-plot.py  ->  w02_08_xy-plot.jpg
+w02_08_xy-plot.ocn.py  ->  w02_08_xy-plot.ocn.jpg
 ```
 
 ### Step 4: Open the saved JPEG file
@@ -143,25 +143,25 @@ w02_08_xy-plot.py  ->  w02_08_xy-plot.jpg
 On macOS:
 
 ```bash
-open w02_08_xy-plot.jpg
+open w02_08_xy-plot.ocn.jpg
 ```
 
 On Windows:
 
 ```cmd
-start w02_08_xy-plot.jpg
+start w02_08_xy-plot.ocn.jpg
 ```
 
 On Windows PowerShell:
 
 ```powershell
-start .\w02_08_xy-plot.jpg
+start .\w02_08_xy-plot.ocn.jpg
 ```
 ---
 
 ## Exercise: Modify the plotting script
 
-Open `w02_08_xy-plot.py` and update the plotting section:
+Open `w02_08_xy-plot.ocn.py` and update the plotting section:
 
 ```python
 plt.plot(data['Year'], data['Anomaly'], marker='o')
@@ -219,7 +219,7 @@ mv ~/Download/data.csv data_raw/NOAA.1850-2000.LND.csv
 Copy the ocean plotting script:
 
 ```bash
-cp w02_08_xy-plot.sample.py w02_09_xy-plot.land.py
+cp w02_08_xy-plot.ocn.sample.py w02_09_xy-plot.lnd.py
 ```
 
 ### Step 2: Modify the script
@@ -233,7 +233,7 @@ Update the following:
 ### Step 3: Run the script
 
 ```bash
-python w02_09_xy-plot.land.py
+python w02_09_xy-plot.lnd.py
 ```
 The output image will be saved in the same directory as the Python script.
 
