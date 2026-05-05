@@ -149,7 +149,7 @@ open w02_08_xy-plot.jpg
 On Windows:
 
 ```cmd
-start "" w02_08_xy-plot.jpg
+start w02_08_xy-plot.jpg
 ```
 
 On Windows PowerShell:
