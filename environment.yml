@@ -15,7 +15,6 @@ dependencies:
   - xarray
   - dask
   - bottleneck
-  - numba
 
   - netcdf4
   - h5netcdf
@@ -28,5 +27,4 @@ dependencies:
   - cmocean
   - metpy
   - cf_xarray
-  - xesmf
 
