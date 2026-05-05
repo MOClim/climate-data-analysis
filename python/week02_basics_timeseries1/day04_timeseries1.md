@@ -171,3 +171,48 @@ plt.ylabel('Temperature Anomaly (°C)')
 plt.title('Global Ocean Temperature Anomalies')
 plt.grid(True)
 ```
+
+---
+
+## Homework: Plot land temperature anomalies
+
+In this exercise, you will apply the same workflow to a different dataset.
+
+### Step 1: Open the NOAA website
+
+https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/global/time-series
+
+### Step 2: Set the options
+
+- Time Scale: 12-Month
+- Month: December
+- Start Year: 1850
+- End Year: 2025
+- Region: Global
+- Surface: Land
+
+### Step 3: Generate the plot
+
+Click the "Plot" button.
+
+### Step 4: Download the data
+
+Click "CSV" to download the dataset.
+
+### Step 5: Save the file
+
+Save the file to your project directory:
+```bash
+cd ~Documents/course/climate-data-analysis
+mkdir data_raw
+mv ~/Download/data.csv data_raw/NOAA.1850-2000.LND.csv
+```
+- `mkdir`: Create a new directory
+- `mv`: move data
+
+---
+### Step 6: (Homework)
+
+Copy `w02_08_xy-plot.py` to a new file, `w02_09_xy-plot.land.py` and use it to:
+- read the downloaded CSV file
+- plot the time series (Year vs Anomaly)
