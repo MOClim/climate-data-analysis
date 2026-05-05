@@ -1,123 +1,143 @@
-# Week 02: Basics & Time Series Analysis (Part 1)
+## Exercise: Inspect and read a climate data file
 
-## Overview
+In this exercise, we will inspect a NOAA global ocean temperature anomaly dataset and read it using `pandas`.
 
-This module introduces foundational Python tools for climate data analysis and develops essential techniques for handling and interpreting time series. Emphasis is placed on temporal structure, indexing, and exploratory diagnostics relevant to atmospheric and oceanographic datasets.
+The data file is located in the project `data` directory:
 
-## Learning Objectives
-
-By the end of this week, you should be able to:
-
-* Apply core Python data structures for geophysical datasets
-* Manipulate time-indexed data using `pandas` and `xarray`
-* Perform basic temporal aggregation and resampling
-* Visualize climate time series and identify variability patterns
-* Interpret trends, seasonality, and anomalies in environmental data
-
-## Topics Covered
-
-* Python basics for scientific computing
-* Introduction to time series in climate systems
-* Temporal indexing and datetime handling
-* Resampling (daily, monthly, seasonal scales)
-* Rolling statistics and smoothing techniques
-
-## Directory Structure
-
+```text
+../../data/NOAA.1850-2025.OCN.csv
 ```
-week02_basics_timeseries1/
-│
-├── w02_01.namelist.sample.py   # Python scripts for data processing
-└── README.md                   # Module documentation
-```
----
 
-## Environment Setup
-Activate the virtual environment
+Open the file and look at its structure before reading it in Python.
+
+### Data structure
+
+The file has a short metadata header followed by the actual tabular data.
+
+```text
+# Title: Global Ocean January - December Average Temperature Anomalies
+# Units: Degrees Celsius
+# Base Period: 1901-2000
+Year,Anomaly
+1850,0
+1851,0.06
+1852,0.08
+...
+```
+
+The first three lines start with `#`. These lines are metadata, not data values. They describe the dataset title, units, and base period. The tabular data begin with the column names:
+
+```text
+Year,Anomaly
+```
+
+The two columns are:
+
+- `Year`: calendar year
+- `Anomaly`: global ocean temperature anomaly in degrees Celsius, relative to the 1901–2000 base period
+
+Run the sample script:
+
 ```bash
-conda activate climate-analysis
+python w02_07_read-data.sample.py
 ```
 
-List available environments (if forgotten)
-```bash
-conda info --envs
-```
+This script reads the CSV file and prints basic information about the data, including column names, data types, dimensions, and a summary of the DataFrame.
 
----
-
-## Example Workflow
-
-1. Load climate dataset (e.g., NetCDF, CSV)
-2. Convert time coordinates to datetime objects
-3. Subset data by time range
-4. Compute monthly or seasonal means
-5. Plot time series and identify patterns
-
-## Recommended Libraries
-
-* `numpy` — numerical computation
-* `pandas` — time series handling
-* `xarray` — labeled multidimensional arrays
-* `matplotlib` — visualization
-
----
-## Exercise: Modify the Namelist
-
-This exercise introduces basic file operations and code editing within a Unix-like environment.
-
-### Step 1: Access the repository
-
-Open the Week 02 directory in your local clone of the repository:
-```bash
-cd python/week02_basics_timeseries1
-```
-
-### Step 2: Create a new file
-```bash
-cp w02_01_namelist.sample.py w02_01_namelist.py
-ls
-```
-
-### Step 3: Edit the code
-```bash
-vi w02_01_namelist.py
-```
-- Press i to enter insert mode
-- Add a new fruit name to the list
-- Press ESC, then type :wq and press Enter to save and exit
-
-### Step 4: Run the code
-```bash
-python w02_01_namelist.py
-```
-
-### Example Output
-apple cherry peach pear banana grape watermelon orange kiwi mango berry
-
-### Next Step
-Modify the script to print each fruit on a separate line.
-This introduces the concept of a loop, which is fundamental for iterating over climate data arrays and time series.
-
-### Extension: Loop Practice
-
-Modify the loop in w02_02_loop.py (copied from w02_02_loop.sample.py):
+A robust way to read this file is:
 
 ```python
-for i in range(5):
-    print(i)
+from pathlib import Path
+import pandas as pd
+
+file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
+
+data = pd.read_csv(file_path, comment='#')
+
+print(data.head())
+print(data.dtypes)
+print(data.shape)
+print(data.columns)
+print(data.info())
 ```
 
-Change range(5) to range(10) and run again:
-```bash
-python w02_02_loop.py
-```
+The option `comment='#'` tells `pandas` to ignore metadata lines beginning with `#`.
 
 ---
 
-## Notes
+## Exercise: Make an x-y plot of the ocean temperature anomaly
 
-Temporal analysis is fundamental in climate science, where variability spans multiple scales—from synoptic events to decadal oscillations. Careful handling of time coordinates and aggregation methods is essential for robust interpretation.
+In this exercise, we will make a time-series plot of the NOAA global ocean temperature anomaly data.
 
-## Next Steps
+Run the sample script:
 
-Week 03 will extend these concepts toward more advanced temporal diagnostics and pattern recognition in climate datasets.
+```bash
+python w02_08_xy-plot.sample.py
+```
+
+The script should:
+
+1. read `NOAA.1850-2025.OCN.csv` from the `data` directory,
+2. plot `Year` on the x-axis and `Anomaly` on the y-axis,
+3. save the figure as a JPEG file with the same base name as the Python script.
+
+A recommended version is:
+
+```python
+from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
+
+file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
+
+data = pd.read_csv(file_path, comment='#')
+
+plt.figure(figsize=(10, 5))
+plt.plot(data['Year'], data['Anomaly'], marker='o', linestyle='-')
+
+plt.title('Global Ocean Temperature Anomalies')
+plt.xlabel('Year')
+plt.ylabel('Temperature Anomaly (°C)')
+plt.grid(True)
+
+output_path = Path(__file__).with_suffix('.jpg')
+plt.savefig(output_path, format='jpeg', dpi=300)
+
+plt.show()
+```
+
+The command
+
+```python
+Path(__file__).with_suffix('.jpg')
+```
+
+creates an output filename using the same name as the Python script, but with the extension changed from `.py` to `.jpg`.
+
+For example:
+
+```text
+w02_08_xy-plot.sample.py  ->  w02_08_xy-plot.sample.jpg
+```
+
+### Open the saved JPEG file
+
+After running the script, open the JPEG file from the terminal.
+
+On macOS:
+
+```bash
+open w02_08_xy-plot.sample.jpg
+```
+
+On Windows:
+
+```cmd
+start "" w02_08_xy-plot.sample.jpg
+```
+
+If using PowerShell on Windows, this also works:
+
+```powershell
+start .\w02_08_xy-plot.sample.jpg
+```
