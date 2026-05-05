@@ -157,3 +157,17 @@ On Windows PowerShell:
 ```powershell
 start .\w02_08_xy-plot.jpg
 ```
+---
+
+## Exercise: Modify the plotting script
+
+Open `w02_08_xy-plot.py` and update the plotting section:
+
+```python
+plt.plot(data['Year'], data['Anomaly'], marker='o')
+
+plt.xlabel('Year')
+plt.ylabel('Temperature Anomaly (°C)')
+plt.title('Global Ocean Temperature Anomalies')
+plt.grid(True)
+```
