@@ -174,7 +174,7 @@ plt.grid(True)
 
 ---
 
-## Homework: Plot land temperature anomalies
+## Exercise: Land Data Download
 
 In this exercise, you will apply the same workflow to a different dataset.
 
@@ -211,8 +211,41 @@ mv ~/Download/data.csv data_raw/NOAA.1850-2000.LND.csv
 - `mv`: move data
 
 ---
-### Step 6: (Homework)
 
-Copy `w02_08_xy-plot.py` to a new file, `w02_09_xy-plot.land.py` and use it to:
-- read the downloaded CSV file
-- plot the time series (Year vs Anomaly)
+## Homework: Plot land temperature anomalies
+
+### Step 1: Create a new script
+
+Copy the ocean plotting script:
+
+```bash
+cp w02_08_xy-plot.sample.py w02_09_xy-plot.land.py
+```
+
+```markdown id="v6nq3r"
+### Step 2: Modify the script
+```
+Update the following:
+
+- Change the input file to the land dataset
+- Update the plot title (e.g., "Global Land Temperature Anomalies")
+
+### Step 3: Run the script
+
+```bash
+python w02_09_xy-plot.land.py
+```
+
+### Step 4: Check the output
+
+Confirm that:
+
+- A `.jpg` file is created
+- The axes are labeled correctly
+- The plot shows land temperature anomalies
+
+### Step 5: Upload files
+
+Submit the modified code and the resulting plot to Canvas (Homework2 – Python Land Data) by the due date.
+
+---
