@@ -9,7 +9,7 @@ from pathlib import Path
 # --- Read Data ---
 
 # File paths for both datasets. Add data name for each path.
-land_file_path = Path('../../data/NOAA.1850-2025.LND.csv')
+land_file_path = Path('../../data_raw/NOAA.1850-2025.LND.csv')
 ocean_file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
 
 # Read the CSV files, assuming data starts from the 5th row
