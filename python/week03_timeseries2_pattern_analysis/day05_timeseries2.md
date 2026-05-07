@@ -229,7 +229,7 @@ python p05_03.add_column.py
 
 ---
 
-# Step 4. Check the Data
+### Step 4. Check the Data
 
 Print the dataset to verify successful reading.
 
