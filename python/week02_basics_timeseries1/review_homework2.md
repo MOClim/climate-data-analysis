@@ -74,24 +74,10 @@ The figure is automatically saved as a JPG image.
 
 ---
 
-# Summary
-
-| Feature | `w02_08` | `w02_09` |
-|---|---|---|
-| Dataset | Ocean anomalies | Land anomalies |
-| Input file | `OCN.csv` | `LND.csv` |
-| Axis labels | No | Yes |
-| Figure title | No | Yes |
-| Grid lines | No | Yes |
-
----
-
 # Learning Goals
 
 Students learn how to:
 
-- read climate CSV datasets with pandas
-- generate XY plots using matplotlib
 - modify datasets and file paths
 - improve scientific figure formatting
 - save publication-quality graphics
