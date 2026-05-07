@@ -150,7 +150,7 @@ The figure should display:
 
 ---
 
-## Exercise: Make an x-y plot of the ocean temperature anomaly
+## Exercise: Make an x-y plot of the atmospheric CO2
 
 ---
 
