@@ -16,16 +16,102 @@ By the end of this module, you will be able to:
 
 ---
 
-## Exercise: Inspect and read a climate data file
+## Exercise: Create Comparable Plots
 
-### Step 1: Inspect the data file
+In this exercise, students update `w03_01_xy2-plot.sample.py` to compare land and ocean temperature anomalies on the same figure.
 
-```bash
-cd python/week02_basics_timeseries1
-less ../../data/NOAA.1850-2025.OCN.csv
+The original file contains placeholder text that must be replaced with:
+
+- CSV file paths
+- plot colors
+- ocean plotting commands
+- figure title
+
+Source file: `w03_01_xy2-plot.sample.py` :contentReference[oaicite:0]{index=0}
+
+---
+
+### Step 1: Add CSV File Names
+
+Replace the placeholder text with the correct CSV file paths.
+
+Original:
+
+```python
+land_file_path = Path('ENTER_FULL_PATH_TO_LAND_FILE.csv')
+ocean_file_path = Path('ENTER_FULL_PATH_TO_OCEAN_FILE.csv')
+```
+Example:
+
+```python
+land_file_path = Path('../../data_raw/NOAA.1850-2025.LND.csv')
+ocean_file_path = Path('../../data_raw/NOAA.1850-2025.OCN.csv')
+```
+---
+
+### Step 2: Choose Plot Colors
+
+Replace the placeholder color names.
+
+Original:
+
+```python
+land_color = 'ENTER_LAND_COLOR'
+ocean_color = 'ENTER_OCEAN_COLOR'
 ```
 
-### Step 2: Understand the data structure
+Example:
+
+```python
+land_color = 'red'
+ocean_color = 'blue'
+```
+
+Students may choose other matplotlib named colors.
+https://matplotlib.org/2.0.2/examples/color/named_colors.html
+
+---
+
+### Step 3: Plot the Land Data
+
+The land dataset is already plotted in the sample file.
+
+```python
+plt.plot(
+    land_data['Year'],
+    land_data['Anomaly'],
+    marker='o',
+    linestyle='-',
+    color=land_color,
+    label='Land',
+    zorder=1
+)
+```
+
+Marker types: https://matplotlib.org/stable/api/markers_api.html
+
+---
+
+### Step 4: Add a Figure Title
+
+Replace the placeholder title.
+
+Original:
+
+```python
+fig_title = 'YOUR_FIGURE_TITLE'
+```
+
+Example:
+
+```python
+fig_title = 'Global Land and Ocean Temperature Anomalies'
+```
+
+---
+
+
+Understand the data structure
 The file has metadata lines followed by tabular data:
 
 ```text
