@@ -111,17 +111,42 @@ fig_title = 'Global Land and Ocean Temperature Anomalies'
 
 ---
 
-## Exercise: XY Area Plot
+## Exercise: Create an Area Plot
 
-### Step 1: copy `w03_02_area-plot.sample.py` to `w03_02_area-plot.py` and run:
+This exercise demonstrates how to create an area plot using NOAA ocean temperature anomaly data.
+
+The script uses `fill_between()` in matplotlib to highlight:
+
+- positive anomalies in red
+- negative anomalies in blue
+
+Source file: `w03_02_area-plot.sample.py` :contentReference[oaicite:0]{index=0}
+
+---
+
+### Step 1: Copy the sample file
+
+Copy `w03_02_area-plot.sample.py` to `w03_02_area-plot.py` and run:
 
 ```bash
 cp w03_02_area-plot.sample.py w03_02_area-plot.py
 python w03_02_area-plot.py
 ```
 
-The script reads the CSV file and prints basic information about the DataFrame, including column names, data types, dimensions, and summary information.
+---
 
+### Step 2. Check the Output Figure
+
+The script automatically generates and saves:
+
+```text
+w03_02_area-plot.jpg
+```
+
+The figure should display:
+
+- positive anomalies shaded in red
+- negative anomalies shaded in blue
 
 ---
 
