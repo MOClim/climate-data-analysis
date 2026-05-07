@@ -214,7 +214,42 @@ The dataset contains:
 
 ---
 
-### Step 3. Copy the Sample File
+### Step 3. Define Column Names
+
+The dataset does not contain regular CSV headers.
+
+Define the column names manually:
+
+```python
+column_names = ['Year', 'Month', 'Day', 'Decimal_Year', 'CO2']
+```
+
+---
+
+### Step 4. Read the CSV File
+
+Use `pd.read_csv()` to load the dataset.
+
+```python
+data = pd.read_csv(
+    file_path,
+    header=None,
+    comment="#",
+    names=column_names
+)
+```
+
+### Explanation
+
+| Argument | Purpose |
+|---|---|
+| `file_path` | input CSV filename |
+| `comment="#"` | skip metadata lines beginning with `#` |
+| `names=column_names` | assign custom column headers |
+
+---
+
+### Step 5. Copy the Sample File
 
 Copy:
 
@@ -229,7 +264,7 @@ python p05_03.add_column.py
 
 ---
 
-### Step 4. Check the Data
+### Step 6. Check the Data
 
 Print the dataset to verify successful reading.
 
