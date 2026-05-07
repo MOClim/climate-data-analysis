@@ -273,6 +273,92 @@ print(data.head())
 ```
 
 ---
+## Exercise: Weather Station Time Series
+
+This exercise demonstrates how to download and visualize weather station precipitation data from the Utah Climate Center.
+
+Students will:
+
+- download station precipitation data
+- save the CSV file
+- move the file into the `data_raw` directory
+- run a Python time-series plotting script
+- generate a precipitation time-series figure
+
+Source file: `w03_04_xy-plot.precip.sample.py` :contentReference[oaicite:0]{index=0}
+
+---
+
+### Step 1. Download Weather Station Data
+
+Access the Utah Climate Center website:
+
+```text
+https://climate.usu.edu/mchd/
+```
+
+Example workflow:
+```text
+UCRN
+→ Beaver
+→ View Station Data
+```
+
+---
+
+### Step 2. Select Data Options
+
+Example selections:
+
+1. metric
+2. Precipitation
+3. Daily
+4. Change month → March 2026
+5. Download CSV
+
+Save the downloaded CSV file.
+
+Example filename:
+
+```text
+beaver-big-flat-nfs-ucrn.csv
+```
+
+Move the downloaded file into the course `data_raw` directory.
+
+Example:
+
+```bash
+mv ~/Downloads/beaver-big-flat-nfs-ucrn.csv ../../data_raw/
+```
+
+---
+
+### Step 3. Copy the Sample File and run
+
+```bash
+cp w03_04_xy-plot.precip.sample.py w03_04_xy-plot.precip.py
+python w03_04_xy-plot.precip.py
+```
+
+---
+
+### Step 4. Check the Output Figure
+
+The script automatically creates:
+
+```bash
+open w03_04_xy-plot.precip.jpg
+```
+
+The figure displays:
+
+- daily precipitation observations
+- precipitation time series
+- labeled axes and title
+- publication-quality output
+
+---
 
 ## Key Takeaways
 
