@@ -1,27 +1,18 @@
-# Week 02 (Day 4): Reading and Plotting Climate Time Series
+# Week 03 (Day 5): Reading and Plotting Climate Time Series part 2
 
 ## Overview
 
-This module introduces basic time-series analysis using a NOAA global ocean temperature anomaly dataset. Students will inspect a climate data file, read it with pandas, examine its structure, and create a simple x-y plot.
 
 ## Learning Objectives
 
 By the end of this module, you will be able to:
 
-* Inspect the structure of a climate data file
-* Read a CSV file using pandas
-* Interpret basic DataFrame information
-* Create an x-y plot of a climate time series
-* Save a figure as a JPEG file
-* Open the saved figure from the command line
+*
 
 ## Topics Covered
 
-* CSV data structure
-* Metadata and tabular data
-* pandas DataFrame basics
-* x-y plotting with matplotlib
-* Figure output and file opening commands
+* 
+
 
 ---
 
