@@ -150,7 +150,92 @@ The figure should display:
 
 ---
 
-## Exercise: Make an x-y plot of the atmospheric CO2
+## Exercise: Mauna Loa CO₂ Time Series
+
+This exercise demonstrates how to download, read, and process Mauna Loa atmospheric CO₂ observations from NOAA.
+
+Students will:
+
+- download the CO₂ dataset
+- inspect the raw data structure
+- create a datetime column
+- prepare the dataset for time-series analysis
+
+---
+
+### Step 1. Download the CO₂ Dataset
+
+Download:
+
+```text
+co2_daily_mlo.csv
+```
+
+from the NOAA Global Monitoring Laboratory website:
+
+```text
+https://gml.noaa.gov/ccgg/trends/
+```
+
+Save the downloaded file into the course data directory.
+
+Example:
+
+```bash
+mv ~/Download/co2_daily_mlo.csv ../../data_raw/
+```
+
+---
+
+### Step 2: Check the Raw Data
+
+Inspect the file using:
+
+```bash
+less ../../data_raw/co2_daily_mlo.csv
+```
+
+The dataset contains:
+
+- metadata lines beginning with `#`
+- no standard CSV column headers
+
+```text
+# NOTE: Due to the eruption of the Mauna Loa Volcano, measurements from Mauna Loa Observatory
+# were suspended as of Nov. 29, 2022 and resumed in July 2023.
+# Observations starting from December 2022 to July 4, 2023 are from a site at the
+# Maunakea Observatories, approximately 21 miles north of the Mauna Loa Observatory.
+#
+1974,5,19,1974.3781,333.46
+1974,5,20,1974.3808,333.64
+1974,5,21,1974.3836,333.50
+1974,5,22,1974.3863,333.21
+```
+
+---
+
+### Step 3. Copy the Sample File
+
+Copy:
+
+```bash
+cp p05_03.add_column.sample.py p05_03.add_column.py
+```
+
+Run:
+```bash
+python p05_03.add_column.py
+```
+
+---
+
+# Step 4. Check the Data
+
+Print the dataset to verify successful reading.
+
+```python
+print(data.head())
+```
 
 ---
 
