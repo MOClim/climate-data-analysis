@@ -360,10 +360,50 @@ The figure displays:
 
 ---
 
+## Exercise: Station Data Bar Plot
+
+This exercise compares a standard time-series plot with a bar plot using the same precipitation dataset.
+
+Source file: `w03_05_bar-plot.precip.sample.py` :contentReference[oaicite:0]{index=0}
+
+---
+
+### Bar Plot
+
+A bar plot displays each observation as an individual bar.
+
+Example:
+
+```python
+plt.bar(data.index, data['Precipitation'], color='blue')
+```
+
+This type of plot is useful for:
+
+- emphasizing event magnitude
+- comparing daily precipitation totals
+- highlighting intermittent rainfall events
+
+---
+
+## Instructions
+
+### Step 1. Copy the Sample File and run
+```bash
+cp w03_05_bar-plot.precip.sample.py w03_05_bar-plot.precip.py
+python w03_05_bar-plot.precip.py
+```
+
+### Step 2. Check the Output Figure
+
+The script automatically creates:
+```bash
+open w03_05_bar-plot.precip.jpg
+```
+Compare the bar plot with the previous precipitation time-series figure.
+
+---
+
 ## Key Takeaways
 
-- Climate data files often include metadata before tabular data
-- `pandas` can read and inspect time-series data from CSV files
-- `matplotlib` can be used to visualize time series (x-y plot)
-- Clear axis labels and grid improve the readability of scientific figures
-- The same workflow can be applied to different datasets
+- 
