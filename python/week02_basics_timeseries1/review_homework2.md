@@ -1,133 +1,56 @@
-# Homework Review: Homework2 – Python Land Data
+# Homework 2 Review
 
-## Environment Setup
-```bash
-git pull origin main
-git status
-```
-You can find the file in `solution` directory.
-```bash
-ls solution/w02_09_xy-plot.lnd.sample.py
-```
+This exercise updates `w02_08_xy-plot.ocn.sample.py` to create `w02_09_xy-plot.lnd.sample.py`.
 
-This example demonstrates how to update the ocean temperature anomaly plotting example (`w02_08_xy-plot.ocn.sample.py`) to visualize global land temperature anomalies.
+The goal is to switch from NOAA ocean temperature anomalies to land temperature anomalies and improve the figure formatting.
 
 ---
 
-## Overview
+# Main Changes
 
-The original script (`w02_08`) reads NOAA ocean temperature anomaly data and generates a simple XY plot.  
-The updated script (`w02_09`) modifies the workflow to use land temperature anomaly data and improves the figure presentation with labels, titles, and grid lines.
+## 1. Update the Input Dataset
 
-Source files:
-
-- `w02_08_xy-plot.ocn.sample.py`
-- `solution/w02_09_xy-plot.lnd.sample.py`
-
----
-
-## Main Updates
-
-### 1. Update the Input Dataset
-
-The original script reads the ocean temperature anomaly dataset:
+Original:
 
 ```python
 file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
 ```
 
----
-
-# Step-by-Step Explanation
-
-## Step 1. Update the Dataset
-
-The original script reads ocean temperature anomalies:
-
-```python
-file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
-```
-
-The updated script reads land temperature anomalies:
+Updated:
 
 ```python
 file_path = Path('../../data_raw/NOAA.1850-2025.LND.csv')
 ```
 
-### Changes
+Changes:
 
-| Original | Updated |
-|---|---|
-| `OCN` | `LND` |
-| `data` | `data_raw` |
-
-This modification changes the input dataset while preserving the rest of the workflow.
+- `OCN` → `LND`
+- `data` → `data_raw`
 
 ---
 
-## Step 2. Read the CSV File
-
-The pandas workflow remains unchanged:
+## 2. Keep the CSV Workflow
 
 ```python
 data = pd.read_csv(file_path, comment='#')
 ```
 
-### Explanation
-
-- `pd.read_csv()` reads tabular data from a CSV file
-- `comment='#'` ignores metadata lines beginning with `#`
-- the dataset is stored in a pandas DataFrame named `data`
+This reads the CSV file and ignores metadata lines beginning with `#`.
 
 ---
 
-## Step 3. Inspect the Dataset
-
-The script prints the first few rows:
-
-```python
-print(data.head())
-```
-### Purpose
-
-This helps verify:
-
-- column names
-- numerical values
-- successful file loading
-
-Typical columns include:
-
-| Column | Description |
-|---|---|
-| `Year` | Observation year |
-| `Anomaly` | Temperature anomaly (°C) |
-
----
-
-# Step 4. Generate the XY Plot
-
-The plotting command remains unchanged:
+## 3. Create the XY Plot
 
 ```python
 plt.plot(data['Year'], data['Anomaly'], marker='o')
 ```
 
-### Explanation
-
-| Component | Purpose |
-|---|---|
-| `data['Year']` | x-axis values |
-| `data['Anomaly']` | y-axis values |
-| `marker='o'` | draw circular markers |
-
-This creates a climate time-series visualization.
+- x-axis: `Year`
+- y-axis: `Anomaly`
 
 ---
 
-# Step 5. Add Figure Annotation
-
-The updated script improves readability using axis labels and titles.
+## 4. Add Figure Labels
 
 ```python
 plt.xlabel('Year')
@@ -136,22 +59,39 @@ plt.title('Global Land Temperature Anomalies')
 plt.grid(True)
 ```
 
-### Purpose of Each Command
-
-| Command | Purpose |
-|---|---|
-| `xlabel()` | label x-axis |
-| `ylabel()` | label y-axis |
-| `title()` | add figure title |
-| `grid(True)` | display grid lines |
-
-These additions improve scientific presentation quality.
+These commands improve readability and scientific presentation.
 
 ---
 
-The figure is automatically exported as a JPG image:
+## 5. Save the Figure
 
 ```python
 output_path = Path(__file__).with_suffix('.jpg')
 plt.savefig(output_path, dpi=300)
 ```
+
+The figure is automatically saved as a JPG image.
+
+---
+
+# Summary
+
+| Feature | `w02_08` | `w02_09` |
+|---|---|---|
+| Dataset | Ocean anomalies | Land anomalies |
+| Input file | `OCN.csv` | `LND.csv` |
+| Axis labels | No | Yes |
+| Figure title | No | Yes |
+| Grid lines | No | Yes |
+
+---
+
+# Learning Goals
+
+Students learn how to:
+
+- read climate CSV datasets with pandas
+- generate XY plots using matplotlib
+- modify datasets and file paths
+- improve scientific figure formatting
+- save publication-quality graphics
