@@ -9,18 +9,18 @@ from pathlib import Path
 # --- Read Data ---
 
 # File paths for both datasets. Add data name for each path.
-file_path = Path('../data/co2_daily_mld.csv')
+file_path = Path('../../data_raw/co2_daily_mlo.csv')
 
 # Assuming columns are year, month, day, decimal year, and CO2 level
 column_names = ['Year', 'Month', 'Day', 'Decimal_Year', 'CO2']
 
-# Read the CSV files, assuming data starts from the 33rd row
-data = pd.read_csv(file_path, header=None, skiprows=32, names=column_names)
+# Read the CSV files 
+# Skip metadata lines beginning with '#' and assign custom column names.
+data = pd.read_csv(file_path, header=None, comment="#", names=column_names)
 
 # Create a 'Date' column by combining year, month, and day
 data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
 print(data.head())
-
 
 # --- Create the plot ---
 

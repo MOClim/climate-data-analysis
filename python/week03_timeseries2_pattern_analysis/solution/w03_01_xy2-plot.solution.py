@@ -12,7 +12,7 @@ from pathlib import Path
 # Example (different folder): Path('../data/filename.csv')
 # Example (absolute path): Path('/Users/yourname/data/filename.csv')
 
-land_file_path = Path('../../data/NOAA.1850-2025.LND.csv')
+land_file_path = Path('../../data_raw/NOAA.1850-2025.LND.csv')
 ocean_file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
 
 # --- Read the CSV files ---
@@ -48,7 +48,7 @@ plt.plot(ocean_data['Year'], ocean_data['Anomaly'], marker='.', linestyle='-', c
 
 # --- Step 4: Add a figure title ---
 
-fig_title = 'YOUR_FIGURE_TITLE'
+fig_title = 'Global Land and Ocean Temperature Anomalies'
 
 # Adding title and labels
 plt.title(fig_title)
