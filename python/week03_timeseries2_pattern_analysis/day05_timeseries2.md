@@ -68,7 +68,7 @@ ocean_color = 'blue'
 ```
 
 Students may choose other matplotlib named colors.
-https://matplotlib.org/2.0.2/examples/color/named_colors.html
+[Matplotlib Named Colors](https://matplotlib.org/2.0.2/examples/color/named_colors.html)
 
 ---
 
