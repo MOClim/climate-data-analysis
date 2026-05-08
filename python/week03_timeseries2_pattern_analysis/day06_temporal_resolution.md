@@ -2,14 +2,16 @@
 
 ## Overview
 
+This exercise introduces temporal resolution and panel plotting techniques for climate-data visualization. Students will compare daily, hourly, and minute observations and create subplot figures using `matplotlib`.
+
 ## Learning Objective
+
 After completing this exercise, students will be able to:
 
-- Understand temporal resolution in climate observations
-- Compare daily, hourly, and minute datasets
-- Create panel plots using matplotlib
-- Use plt.subplot() to organize multiple figures
-- Compare different visualization methods for the same dataset
+- Compare climate datasets with different temporal resolutions
+- Create panel plots using `plt.subplot()`
+- Visualize climate observations using multiple plot types
+- Interpret temporal variability in climate data
 
 ---
 ## Panel Plot Layouts
@@ -107,7 +109,9 @@ This comparison demonstrates how temporal resolution influences the interpretati
 
 ## Exercise: Daily Average
 
-Check the code of `w03_09_daily_avg.sample.py` and investigate the daily average.
+Check the code in `w03_09_daily_avg.sample.py` and investigate how daily averages are calculated from higher temporal resolution datasets.
+
+Hourly and minute observations are resampled to daily frequency using the mean value for each day.
 
 ```python
 # Resample hourly and minute data to daily averages
@@ -137,24 +141,34 @@ How might quality control or sensor timing affect the results?
 
 ---
 
-## Exercise: Daily to monthly average
+## Exercise: Daily to Monthly Average
 
-Check the code of `w03_10_monthly_ave.sample.py` and investigate the monthly average.
+Check the code in `w03_10_monthly_ave.sample.py` and investigate how monthly averages are calculated from daily climate observations.
 
-Calculate monthly averages. Daily observations are aggregated into monthly mean values using the pandas resample() function.
+Daily observations are aggregated into monthly mean values using the pandas `resample()` function.
 
 ```python
+# Calculate monthly averages from daily observations
 # 'ME' represents month-end frequency.
-#
-# numeric_only=True ensures that only numeric
-# variables are included in the averaging process.
+# numeric_only=True ensures that only numeric variables
+# are included in the averaging process.
 
 data_mnt = data_dly.resample('ME').mean(numeric_only=True)
 ```
 
+The monthly average smooths short-term weather variability and highlights broader seasonal climate patterns.
+
+Compare the original daily observations with the calculated monthly averages.
+
 ----
 
 # Key Takeaways
+
+- Monthly averages reduce short-term weather variability
+- Temporal aggregation highlights seasonal climate patterns
+- Aggregated datasets are easier to interpret for long-term analysis
+- Daily variability becomes smoother after monthly averaging
+- Resampling is an essential technique in climatology and geoscience data analysis
 
 
 
