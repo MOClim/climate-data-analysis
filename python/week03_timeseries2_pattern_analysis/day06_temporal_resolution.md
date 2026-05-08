@@ -79,6 +79,10 @@ python w03_06_2_panels.py
 ```
 
 ---
+## Exercise: Narrow Time Resolution
+
+In this exercise, copy and run `w03_08_compare_temporal_resolution.sample.py` with a zoomed narrow time range.
+
 
 ### Zooming into a Narrow Time Range
 
