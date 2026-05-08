@@ -13,6 +13,7 @@ After completing this exercise, students will be able to:
 
 ---
 ## Panel Plot Layouts
+The index value starts from the upper-left panel and increases from left to right.
 ### Example 1. Two vertical panels
 ```python
 plt.subplot(2, 1, 1) # 1 row, 2 columns, first subplot
