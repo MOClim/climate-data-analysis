@@ -105,3 +105,57 @@ This comparison demonstrates how temporal resolution influences the interpretati
 
 ---
 
+## Exercise: Daily Average
+
+Check the code of `w03_09_daily_avg.sample.py` and investigate the daily average.
+
+```python
+# Resample hourly and minute data to daily averages
+# Aggregate sub-daily observations into daily mean values
+
+data_h_daily_avg = data_hly.resample('D').mean()
+data_m_daily_avg = data_min.resample('D').mean()
+```
+
+Compare the daily datasets with the daily-averaged datasets from hourly and minute data.
+```python
+plt.plot(data_dly.index, data_dly[var], marker='.', linestyle='-', color="black", label='Daily (original)',zorder=3)
+plt.plot(data_h_daily_avg.index, data_h_daily_avg[var], marker='+', linestyle='-', color="blue", label='Daily from Hourly',zorder=2)
+plt.plot(data_m_daily_avg.index, data_m_daily_avg[var], marker='.', linestyle='-', color="green", label='Daily from Minite',zorder=1,
+linewidth=3)
+```
+
+Key Question
+Do you expect the original daily observations and the calculated daily averages from hourly or minute data to be identical?
+
+Consider:
+
+How are daily observations originally calculated?
+Are there missing hourly or minute observations?
+Do averaging methods differ between datasets?
+How might quality control or sensor timing affect the results?
+
+---
+
+## Exercise: Daily to monthly average
+
+Check the code of `w03_10_monthly_ave.sample.py` and investigate the monthly average.
+
+Calculate monthly averages. Daily observations are aggregated into monthly mean values using the pandas resample() function.
+
+```python
+# 'ME' represents month-end frequency.
+#
+# numeric_only=True ensures that only numeric
+# variables are included in the averaging process.
+
+data_mnt = data_dly.resample('ME').mean(numeric_only=True)
+```
+
+----
+
+# Key Takeaways
+
+
+
+
