@@ -141,24 +141,55 @@ How might quality control or sensor timing affect the results?
 
 ---
 
-## Exercise: Daily to Monthly Average
+## Homework: Daily to Monthly Average
 
-Check the code in `w03_10_monthly_ave.sample.py` and investigate how monthly averages are calculated from daily climate observations.
+In this homework, use `w03_10_monthly_ave.sample.py` to calculate monthly averages from daily climate observations.
 
-Daily observations are aggregated into monthly mean values using the pandas `resample()` function.
+### Step 1. Copy the sample program
 
 ```python
-# Calculate monthly averages from daily observations
-# 'ME' represents month-end frequency.
-# numeric_only=True ensures that only numeric variables
-# are included in the averaging process.
-
-data_mnt = data_dly.resample('ME').mean(numeric_only=True)
+cp w03_10_monthly_ave.sample.py w03_10_monthly_ave.py
 ```
 
-The monthly average smooths short-term weather variability and highlights broader seasonal climate patterns.
+### Step 2. Complete the monthly resampling code
 
-Compare the original daily observations with the calculated monthly averages.
+Find this line in the sample code:
+
+```python
+data_mnt = data_dly.resample('ADD_TIME_FREQUENCY').mean()
+```
+
+Replace ADD_TIME_FREQUENCY with the correct pandas monthly frequency code.
+
+Use:
+```python
+'ME'
+```
+to calculate monthly averages and assign each monthly value to the end of the month.
+
+### Step 3. Complete the plot commands
+
+Find the two empty plot commands:
+```python
+plt.plot()
+plt.plot()
+```
+
+Update them to plot:
+
+- Monthly average air temperature
+- Original daily air temperature observations
+
+- Use data_mnt.index and data_mnt[var] for the monthly average data.
+- Use data_dly.index and data_dly[var] for the original daily data.
+
+### Step 4. Run the script
+```python
+python w03_10_monthly_ave.py
+```
+
+### Step 5. Upload the script and JPEG outputs to Canvas (Homework3-Plot of monthly averaged data).
+
 
 ----
 
