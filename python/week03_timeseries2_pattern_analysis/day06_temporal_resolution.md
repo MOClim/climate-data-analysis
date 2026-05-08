@@ -36,6 +36,7 @@ plt.subplot(2, 2, 4)
 ---
 
 ## Exercise: Plot Two Panels
+In this exercise, students update `w03_06_2_panels.sample.py` to compare time series and bar plots.
 
 ### Step 1: Copy the sample program and run it
 ```bash
