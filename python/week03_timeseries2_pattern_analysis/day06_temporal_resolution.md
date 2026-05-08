@@ -1,4 +1,4 @@
-#Week 03 (Day 6): Temporal Resolution and Panel Plots
+# Week 03 (Day 6): Temporal Resolution and Panel Plots
 
 ## Overview
 
