@@ -73,7 +73,13 @@ Save all downloaded CSV files into the:
 
 Follow the steps in the sample code and update the missing sections.
 
+### Step 4. Run the script
+```bash
+python w03_06_2_panels.py
+```
+
 ---
+
 ### Zooming into a Narrow Time Range
 
 A shorter time window is used to better visualize differences among the datasets.
@@ -89,14 +95,6 @@ Hourly temperature fluctuations
 Minute-scale variability
 
 This comparison demonstrates how temporal resolution influences the interpretation of climate observations.
----
-
-### Step 4. Run the script
-```bash
-python w03_06_2_panels.py
-```
-
----
 
 
 
