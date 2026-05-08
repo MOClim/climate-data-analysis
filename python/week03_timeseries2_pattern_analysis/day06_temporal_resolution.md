@@ -81,8 +81,11 @@ python w03_06_2_panels.py
 ---
 ## Exercise: Narrow Time Resolution
 
-In this exercise, copy and run `w03_08_compare_temporal_resolution.sample.py` with a zoomed narrow time range.
+In this exercise, copy and run:
 
+`w03_08_compare_temporal_resolution.sample.py`
+
+This example uses a zoomed narrow time range to compare climate datasets with different temporal resolutions.
 
 ### Zooming into a Narrow Time Range
 
@@ -100,5 +103,5 @@ Minute-scale variability
 
 This comparison demonstrates how temporal resolution influences the interpretation of climate observations.
 
-
+---
 
