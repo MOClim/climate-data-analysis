@@ -1,4 +1,4 @@
-# Week 03 (Day 5): Reading and Plotting Climate Time Series part 2
+# Week 04 (Day 7): Reading and Plotting Climate Time Series part 2
 
 ## Overview
 This module introduces
