@@ -1,15 +1,27 @@
 # Week 04 (Day 7): Reading and Plotting Climate Time Series part 2
 
 ## Overview
-This module introduces
+This lecture introduces Quality Assurance (QA) and Quality Control (QC) methods for atmospheric observations. Students learn how to detect unrealistic measurements using basic QC algorithms and scientific visualization with Python.
 
 ## Learning Objectives
 
 By the end of this module, you will be able to:
-- 
+- explain QA and QC concepts,
+- identify common sensor errors,
+- create time-series plots,
+- use Python subroutines,
+- apply QC1 data range tests,
+- apply QC2 time-derivative tests.
 
 ## Topics Covered
--
+- Meteorological observations
+- Sensor errors
+- QA and QC concepts
+- Python subroutines
+- Time-series visualization
+- QC1: Data range tests
+- QC2: Time-derivative tests
+- Scientific plotting with `fig, ax`
 
 ---
 
