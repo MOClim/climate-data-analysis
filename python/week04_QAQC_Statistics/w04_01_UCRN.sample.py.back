@@ -7,29 +7,27 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-def plot_data(data, var, title, ylabel):
-    """
-    Plot time series data on a specified axis.
-    """
+# Source URL for the dataset
+# This data is downloaded from the Utah Climate Center
+# URL: https://climate.usu.edu/mchd/
+# Location: UCRN Cedar City
 
-    plt.plot(
-        data.index,
-        data[var],
-        marker='.',
-        linestyle='-',
-        linewidth=2,
-        label=var
-    )
+def plot_data(data,kr,var,varname,unit):
 
-    plt.title(title)
-    plt.ylabel(ylabel)
+  plt.plot(data.index, data[var]*kr, marker='.', linestyle='-', color="green", label=var,zorder=1, linewidth=2)
 
-    plt.xlim(data.index.min(), data.index.max())
-    plt.grid(True)
-    plt.legend()
+  # Adding title and labels
+  plt.title(varname)
+  plt.ylabel(varname+' ('+unit+')')
+  plt.grid(True)
 
-    return plt
+  # Set the x-axis limits to cover the full date range
+  plt.xlim([data.index.min(), data.index.max()])
 
+  # Add legend labels to distinguish between different datasets on the plot.
+  plt.legend()
+
+  return plt
 
 # --- Read Data ---
 
@@ -66,7 +64,8 @@ main_title = 'Minutes Data at Cedar City in 2016'
 plt.suptitle(main_title, fontsize=16)
 
 # Plot data
-plt = plot_data(data_min,'PRT1','Temperature (Original data) (C)','Temp')
+kr = 1.
+plt = plot_data(data_min,kr,'PRT1','Temperature (Original data)','C')
 
 # Adjust layout to prevent overlap
 plt.tight_layout()

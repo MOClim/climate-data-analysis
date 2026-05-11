@@ -182,7 +182,7 @@ plot_data(ax[3], data_qc2,'forward_diff','Temperature Time Derivative Square (C)
 
 
 main_title = 'Minute QC data at Cedar City in 2016'
-plt.suptitle(main_title, fontsize=16)
+plt.suptitle(main_title, fontsize=12)
 plt.tight_layout()
 
 # Save the plot as a JPEG file
