@@ -123,4 +123,9 @@ criteria = ??
 ---
 
 ## Key Takeaways
-- 
+- Learned the concepts of Quality Assurance (QA) and Quality Control (QC).
+- Gained knowledge of meteorological sensors and measurement errors.
+- Developed basic QC programming skills using:
+  - data range tests,
+  - time-derivative tests,
+  - scientific visualization.
