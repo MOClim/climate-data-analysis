@@ -26,68 +26,44 @@ By the end of this module, you will be able to:
 - Station-to-station variability
 
 ---
+## Exercise: Read and Plot All Station Data
 
-## Reading Multiple Station Files Automatically
-
-In this exercise, students learn how to read all station CSV files from a directory without manually typing each file name.
-
-Instead of reading one file at a time, Python can search a folder and create a list of all matching CSV files.
-
-Example:
-
-```python
-from pathlib import Path
-  filenames = list(Path('../../data/UCRN').glob('*.csv'))
-```
-
-This command:
-- specifies the directory containing the UCRN station data,
-- searches for all files ending with .csv,
-- stores the file paths in a list called filenames.
-This approach is useful when working with many climate station files because the same workflow can be applied to all stations automatically.
-
----
-## Exercise: Plot All Station Data
-
-File:
-`w04_05_daily_allloc.sample.py`
+File: `w04_05_daily_allloc.sample.py`
 
 Copy the sample script:
-```bash
-cp w04_05_daily_allloc.sample.py w04_05_daily_allloc.py
-```
 
-In this exercise, students learn how to automatically read multiple UCRN station datasets stored in a directory.
+    cp w04_05_daily_allloc.sample.py w04_05_daily_allloc.py
 
-The datasets are already prepared in:
+In this exercise, students read multiple UCRN station files automatically and plot all station time series on the same figure.
 
-```bash
-../../data/UCRN/
-```
-
-Python can automatically search this directory and create a list of all station CSV files:
+Python first searches the data directory and creates a list of all CSV files:
 ```python
-from pathlib import Path
-   filenames = list(Path('../../data/UCRN').glob('*.csv'))
+    filenames = list(Path('../../data/UCRN').glob('*.csv'))
 ```
+This command finds all files ending with `.csv` in the `../../data/UCRN/` directory. This is useful because students do not need to type each station file name manually.
 
-Students can check the detected files using:
+Each station file is then read into a pandas DataFrame and stored in a list:
 ```python
-print(filenames)
-```
-or print only the file names:
-```python
-for f in filenames:
-    print(f.name)
-```
-This workflow avoids manually specifying each station file and allows the same analysis to be applied automatically to all stations.
+    dataframes = []
 
-In this exercise, students create a time-series plot using daily observations from multiple UCRN stations.
-The loop below plots each station's time series:
-```python
-for dat, loc in zip(monthly_dats, location_info):
-    plt.plot(dat.index, dat, label=loc)
+    for file_path in filenames:
+        df = pd.read_csv(file_path, index_col='date_time',
+                         parse_dates=True, header=0, skiprows=26,
+                         usecols=['date_time', varname])
+        dataframes.append(df[varname])
 ```
+`dataframes` is a list that stores data from all station files.
+`dataframe` or `df` represents one station dataset at a time inside the loop.
+
+After the data are read, each station time series can be plotted using `zip()`:
+```python
+    for dat, loc in zip(dataframes, location_info):
+        plt.plot(dat.index, dat, label=loc)
+```
+`zip()` combines the station data and station names so that Python can loop through them together.
+
+This allows each time series to be plotted with its corresponding station label.
+
 This command:
 - loops through monthly data and station names together,
 - plots each station on the same figure,
