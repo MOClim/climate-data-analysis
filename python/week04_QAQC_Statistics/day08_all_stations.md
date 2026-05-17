@@ -47,7 +47,15 @@ This command:
 This approach is useful when working with many climate station files because the same workflow can be applied to all stations automatically.
 
 ---
-## Exercise: Read All Station Data
+## Exercise: Read All Station Data and Plot All Station Data
+
+File:
+`w04_05_daily_allloc.sample.py`
+
+Copy the sample script:
+```bash
+cp w04_05_daily_allloc.sample.py w04_05_daily_allloc.py
+```
 
 In this exercise, students learn how to automatically read multiple UCRN station datasets stored in a directory.
 
@@ -74,8 +82,25 @@ for f in filenames:
 ```
 This workflow avoids manually specifying each station file and allows the same analysis to be applied automatically to all stations.
 
+In this exercise, students create a time-series plot using daily observations from multiple UCRN stations.
+The loop below plots each station's time series:
+```python
+for dat, loc in zip(monthly_dats, location_info):
+    plt.plot(dat.index, dat, label=loc)
+```
+This command:
+- loops through monthly data and station names together,
+- plots each station on the same figure,
+- labels each line using the station location.
+
+
 ---
 ## Exercise: Monthly Mean Air Temperature for All Stations
+
+Copy the sample script:
+```bash
+cp w04_06_monthly_allloc.sample.py w04_06_monthly_allloc.py
+```
 
 Students read air temperature data from all station files and convert daily observations to monthly averages.
 
@@ -97,21 +122,12 @@ Students should understand that:
 - monthly_dats stores the monthly time series for all stations.
 
 ---
-## Exercise: Plot All Station Data
-
-Students create a time-series plot showing monthly air temperature from all stations.
-The loop below plots each station time series:
-```python
-for dat, loc in zip(monthly_dats, location_info):
-    plt.plot(dat.index, dat, label=loc)
-```
-This command:
-- loops through monthly data and station names together,
-- plots each station on the same figure,
-- labels each line using the station location.
-
----
 ## Exercise: Compare Station Variability
+
+Copy the sample script:
+```bash
+cp w04_07_maxmin_spread.sample.py w04_07_maxmin_spread.py
+```
 
 Students calculate statistics across all stations to examine spatial variability in climate observations.
 
@@ -121,6 +137,44 @@ Examples include:
 - ±1 standard deviation spread.
 
 These plots help students compare regional climate variability across Utah stations.
+
+---
+---
+
+## Exercise: +/- 1 Sigma Spread
+
+Files:
+`w04_08_std_spread.sample.py`  
+`w04_09_std_spread.prc.sample.py`
+
+In this exercise, students calculate the mean and standard deviation across multiple stations.
+
+Students practice:
+
+- calculating standard deviation using `.std()`,
+- computing ±1 sigma spread,
+- visualizing variability around the station mean,
+- comparing temperature and precipitation variability.
+
+These exercises introduce basic statistical analysis for climate datasets and demonstrate how uncertainty or spread can be visualized in time-series plots.
+
+---
+
+## Exercise: +/- 1 Sigma Spread
+
+Files:
+`w04_08_std_spread.sample.py`  
+`w04_09_std_spread.prc.sample.py`
+
+In this exercise, students calculate the mean and standard deviation across multiple stations.
+
+Students practice:
+- calculating standard deviation using `.std()`,
+- computing ±1 sigma spread,
+- visualizing variability around the station mean,
+- comparing temperature and precipitation variability.
+
+These exercises introduce basic statistical analysis for climate datasets and demonstrate how uncertainty or spread can be visualized in time-series plots.
 
 ---
 ## Key Takeaways
