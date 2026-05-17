@@ -37,7 +37,7 @@ Example:
 
 ```python
 from pathlib import Path
-filenames = list(Path('../../data/UCRN').glob('*.csv'))
+  filenames = list(Path('../../data/UCRN').glob('*.csv'))
 ```
 
 This command:
@@ -47,7 +47,7 @@ This command:
 This approach is useful when working with many climate station files because the same workflow can be applied to all stations automatically.
 
 ---
-## Exercise: Read All Station Data and Plot All Station Data
+## Exercise: Plot All Station Data
 
 File:
 `w04_05_daily_allloc.sample.py`
@@ -68,7 +68,7 @@ The datasets are already prepared in:
 Python can automatically search this directory and create a list of all station CSV files:
 ```python
 from pathlib import Path
-filenames = list(Path('../../data/UCRN').glob('*.csv'))
+   filenames = list(Path('../../data/UCRN').glob('*.csv'))
 ```
 
 Students can check the detected files using:
@@ -92,7 +92,6 @@ This command:
 - loops through monthly data and station names together,
 - plots each station on the same figure,
 - labels each line using the station location.
-
 
 ---
 ## Exercise: Monthly Mean Air Temperature for All Stations
