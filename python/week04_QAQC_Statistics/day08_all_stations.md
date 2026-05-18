@@ -106,15 +106,6 @@ cp w04_07_maxmin_spread.sample.py w04_07_maxmin_spread.py
 
 In this exercise, students compare climate variability across multiple stations using maximum and minimum ranges.
 
-## Exercise: Compare Station Variability
-
-Copy the sample script: 
-```bash
-cp w04_07_maxmin_spread.sample.py w04_07_maxmin_spread.py
-```
-
-In this exercise, students compare climate variability across multiple stations using maximum and minimum envelopes.
-
 Students first combine all station datasets into a single DataFrame:
 ```python
     combined_data = pd.concat(monthly_dats, axis=1)
