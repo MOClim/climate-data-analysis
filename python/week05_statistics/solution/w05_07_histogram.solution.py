@@ -65,8 +65,7 @@ from pathlib import Path
 # Step 1:
 # EDIT HERE:
 # Add the path to the downloaded CSV file
-filename = Path('')
-
+filename = Path('../../data_raw/map-server-report-1779136575/COOP/425186/dly-report.csv')
 
 # Step 2:
 # EDIT HERE:
@@ -76,9 +75,9 @@ filename = Path('')
 #   na_values -> missing value text in the dataset
 df = pd.read_csv(
     filename,
-    header=,
-    skiprows=,
-    na_values=''
+    header=0,
+    skiprows=19,
+    na_values='nan'
 )
 
 # Display column names and first few rows
