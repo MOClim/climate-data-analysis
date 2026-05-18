@@ -2,13 +2,12 @@
 Exercise: Plot Weather Station Air Temperature on a Map using PyGMT
 
 This script reads monthly averaged weather station air temperature data
-and plots station observations on a simple map using PyGMT.
-
+and plots the station observations on a topographic map using PyGMT.
 
 Learning Objectives:
 - Read and combine multiple climate-data files
 - Calculate monthly averaged station data
-- Create simple maps using PyGMT
+- Create maps using PyGMT
 - Plot station observations using latitude and longitude
 - Apply colormaps to climate variables
 - Save map figures as image files
@@ -27,6 +26,38 @@ def create_map(data, minlon, maxlon, minlat, maxlat, title):
     # Create figure
     fig = pygmt.Figure()
 
+    # Topography colormap
+    pygmt.makecpt(
+        cmap='topo',
+        series='-5000/8000/1000',
+        continuous=True
+    )
+
+    # Plot topography
+    # With shading:
+    # - brightness changes depending on slope direction
+    # - terrain looks more realistic
+    # - but colors no longer exactly match the colorbar
+
+    fig.grdimage(
+        grid='@earth_relief_30s',
+        region=[minlon, maxlon, minlat, maxlat],
+        projection='M4i',
+        shading=True,
+        frame=True
+    )
+
+    # Plot coastlines and borders
+    fig.coast(
+        shorelines=True,
+        borders=["2/0.5p,red"]
+    )
+
+    # Topography colorbar
+    fig.colorbar(
+      frame='+l"Topography (m)"',
+      position="x11.5c/6.6c+w6c+jTC+v"
+    )
 
     # Temperature colormap
     pygmt.makecpt(
@@ -139,7 +170,7 @@ for year in years:
         )
 
         # Save figure
-        figfile = figdir + f"temp_{year}-{month:02d}.png"
+        figfile = figdir + f"temp_highres_{year}-{month:02d}.png"
 
         fig.savefig(figfile, dpi=180)
 

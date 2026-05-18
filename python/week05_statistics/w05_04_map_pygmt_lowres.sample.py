@@ -1,145 +1,179 @@
-import pandas as pd
+"""
+Exercise: Plot Weather Station Air Temperature on a Map using PyGMT
+
+This script reads monthly averaged weather station air temperature data
+and plots the observations on a low-resolution topographic map using PyGMT.
+
+Learning Objectives:
+- Read and combine multiple climate-data files
+- Calculate monthly averaged station data
+- Create maps using PyGMT
+- Compare high- and low-resolution topography datasets
+- Plot station observations using latitude and longitude
+- Apply colormaps to climate variables
+- Save map figures as image files
+"""
+
+import os,sys
+from pathlib import Path
+
 import numpy as np
-import sys, os
-import glob
+import pandas as pd
 import pygmt
 
-def create_maps(dat,lons,lats,minlon,maxlon,minlat,maxlat,titleX):
 
- # Visualization
- fig = pygmt.Figure()
+def create_map(data, minlon, maxlon, minlat, maxlat, title):
 
- # make color pallets
- pygmt.makecpt(
-    cmap='topo',
-    series='-8000/8000/1000',
-    continuous=True
- )
+    # Create figure
+    fig = pygmt.Figure()
 
-## #define etopo data file
-## topo_data = '@earth_relief_30s' #30 arc second global relief (SRTM15+V2.1 @ 1.0 km)
-# Load Earth relief dataset at 30 arc-minute resolution
- topo_data = pygmt.datasets.load_earth_relief(resolution="30m")
-
-# #plot high res topography
- fig.grdimage(
-    grid=topo_data,
-    region=[minlon, maxlon, minlat, maxlat],
-    projection='M4i',
-    shading=True,
-    frame=True
+    # Topography colormap
+    pygmt.makecpt(
+        cmap='topo',
+#        series='0/4000/500',
+        series='-5000/8000/1000',
+        continuous=True
     )
 
- # plot coastlines
- fig.coast(
-    region=[minlon, maxlon, minlat, maxlat],
-    projection='M4i',
-    shorelines=True,
-    frame=True
-    )
- fig.coast(borders=["2/0.5p,red"])
+    # Plot topography
+    # With shading:
+    # - brightness changes depending on slope direction
+    # - terrain looks more realistic
+    # - but colors no longer exactly match the colorbar
 
- ## Plot colorbar
- # Default is horizontal colorbar
- fig.colorbar(
-    frame='+l"Topography (m)"',
-    position="x11.5c/6.6c+w6c+jTC+v"
+    fig.grdimage(
+        grid='@earth_relief_10m',
+        region=[minlon, maxlon, minlat, maxlat],
+        projection='M4i',
+        shading=True,
+        frame=True
     )
 
- # Color options and data range
- pygmt.makecpt(cmap="jet", series=[-20,40])
-
- # Plot temperature at each weather station
- fig.plot(
-    x=lons,
-    y=lats,
-    style='c0.1i',
-    color=dat['airt'],
-    cmap=True,
-    pen='black'
+    # Plot coastlines and borders
+    fig.coast(
+        shorelines=True,
+        borders=["2/0.5p,red"]
     )
 
-# Main and colorbar titles
- fig.basemap(frame=["a", f'WSne+t"{titleX}"'])
- fig.colorbar(frame='af+l"Air Temperature (oC)"')
+    # Topography colorbar
+    fig.colorbar(
+      frame='+l"Topography (m)"',
+      position="x11.5c/6.6c+w6c+jTC+v"
+    )
 
- return(fig)
+    # Temperature colormap
+    pygmt.makecpt(
+        cmap='jet',
+        series=[-20, 40]
+    )
+
+    # Plot station temperature
+    fig.plot(
+        x=data['longitude'],
+        y=data['latitude'],
+        style='c0.12i',
+        fill=data['airt'],
+        cmap=True,
+        pen='black'
+    )
+
+    # Add title
+    fig.basemap(frame=[f'+t"{title}"'])
+
+    # Temperature colorbar
+    fig.colorbar(
+        frame='af+l"Air Temperature (°C)"'
+    )
+
+    return fig
 
 
+#### Read station data ####
 
-#### Read the station data created by p09_03.py ###
+# Directory containing CSV files
+input_dir = Path("../../data_raw/UCRN.latlon")
 
-# Directory containing the data files
-indir = '../data_UCRN.latlon/'
+# Create a list of CSV files
+filenames = list(input_dir.glob('*.csv'))
 
-# List all CSV files in the directory
-file_paths = glob.glob(os.path.join(indir, '*.csv'))
-print("File Paths")
-print(file_paths)
-
-# Read the data from each file and merge with station location data
+# Store monthly averaged data
 monthly_dats = []
-for file_path in file_paths:
 
+for file_path in filenames:
+
+    # Read CSV file
     data = pd.read_csv(file_path)
+
+    # Convert date_time column
     data['date_time'] = pd.to_datetime(data['date_time'])
-    data.set_index('date_time',inplace=True)
 
-    # Calculate monthly averaged data
-    monthly_data = data.resample('M').mean()
+    # Set datetime index
+    data.set_index('date_time', inplace=True)
 
-    # Convert station_id back to integer
-    monthly_data['station_id'] = monthly_data['station_id'].astype(int)
+    # Calculate monthly average
+    monthly_data = data.resample('ME').mean()
 
-    # Adds monthly_data to a list called all_data.
+    # Add to list
     monthly_dats.append(monthly_data)
-    del data, monthly_data
 
-print(monthly_dats)
-
-
-# Combine all the dataframes stored in monthly_dats into a single dataframe
+# Combine all station data
 combined_data = pd.concat(monthly_dats)
-# For efficient data manipulation 
+
+# Convert index back to column
 combined_data.reset_index(inplace=True)
 
 # Create year and month columns
 combined_data['year'] = combined_data['date_time'].dt.year
 combined_data['month'] = combined_data['date_time'].dt.month
 
-print("Merged Data")
 print(combined_data)
 
-#-------
+#### Map settings ####
 
-## map range
 minlon, maxlon = -115, -108
 minlat, maxlat = 36.5, 42.5
 
-yrall = np.arange(2020,2024,dtype='int')
-mnall = np.arange(1,13,dtype='int')
+years = np.arange(2022, 2026)
+months = np.arange(1, 13)
+print(years)
+print(months)
+print(" ")
 
+# Output directory
 figdir = "fig_all/"
-# Create directory if it doesn't exist
 os.makedirs(figdir, exist_ok=True)
 
-for year in yrall:
-  for month in mnall:
+#### Create monthly maps ####
 
-   # Filter data for the specified year and month
-   dfig = combined_data[(combined_data['year'] == year) & (combined_data['month'] == month)]
-   print(dfig)
+for year in years:
+    for month in months:
 
-   if dfig.size == 0:
-     print('not fig')
-   else:
-     titleX = f'{year}-'+'{:02d}'.format(month)
-     print(titleX)
+        # Select year and month
+        dfig = combined_data[
+            (combined_data['year'] == year) &
+            (combined_data['month'] == month)
+        ]
 
-     ## Generate fake coordinates in the range for plotting
-     fig = create_maps(dfig,dfig['longitude'],dfig['latitude'],minlon,maxlon,minlat,maxlat,titleX)
+        # Skip empty data
+        if dfig.empty:
+            continue
 
-     # save figure as pdf
-     figfile = figdir + "temp_"+f'{year}-'+'{:02d}'.format(month)+'.png'
-     fig.savefig(figfile, crop=True, dpi=180)
+        # Create title
+        title = f"{year}-{month:02d}"
 
+        # Create map
+        fig = create_map(
+            dfig,
+            minlon,
+            maxlon,
+            minlat,
+            maxlat,
+            title
+        )
+
+        # Save figure
+        figfile = figdir + f"temp_lowres_{year}-{month:02d}.png"
+
+        fig.savefig(figfile, dpi=180)
+
+        print("Saved:", figfile)

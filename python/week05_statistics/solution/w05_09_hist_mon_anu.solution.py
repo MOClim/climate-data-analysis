@@ -63,10 +63,13 @@ df['pcpn'] = pd.to_numeric(df['pcpn'], errors='coerce')
 #   - Precipitation should use sum().
 #   - Monthly resampling uses 'ME'.
 #   - Annual resampling uses 'YE'.
-df_temp_mon = 
-df_temp_anu = 
-df_prc_mon = 
-df_prc_anu = 
+# Example:
+#  df_anu = df['tmid'].resample('YE').mean()
+ 
+df_temp_mon = df['tmid'].resample('ME').mean()
+df_temp_anu = df['tmid'].resample('YE').mean()
+df_prc_mon = df['pcpn'].resample('ME').sum()
+df_prc_anu = df['pcpn'].resample('YE').sum()
 
 
 # Convert resampled data into NumPy arrays and remove NaN values
@@ -82,7 +85,7 @@ plt.figure(figsize=(12, 6))
 plt.subplot(2, 2, 1)
 # Step 2: EDIT HERE
 # Change the bin number for monthly temperature.
-plt.hist(temp_mon, bins=, color='orange', edgecolor='black')
+plt.hist(temp_mon, bins=100, color='orange', edgecolor='black')
 plt.title('Monthly Temperature')
 plt.xlabel('Temperature (C)')
 plt.ylabel('Frequency (months)')
@@ -91,7 +94,7 @@ plt.grid(True)
 plt.subplot(2, 2, 3)
 # Step 3: EDIT HERE
 # Change the bin number for annual temperature.
-plt.hist(temp_anu, bins=, color='orange', edgecolor='black')
+plt.hist(temp_anu, bins=20, color='orange', edgecolor='black')
 plt.title('Annual-mean Temperature')
 plt.xlabel('Temperature (C)')
 plt.ylabel('Frequency (years)')
@@ -100,7 +103,7 @@ plt.grid(True)
 plt.subplot(2, 2, 2)
 # Step 4: EDIT HERE
 # Change the bin number for monthly precipitation.
-plt.hist(prc_mon, bins=, color='blue', edgecolor='black')
+plt.hist(prc_mon, bins=100, color='blue', edgecolor='black')
 plt.title('Monthly Precipitation')
 plt.xlabel('Precipitation (mm)')
 plt.ylabel('Frequency (months)')
@@ -109,7 +112,7 @@ plt.grid(True)
 plt.subplot(2, 2, 4)
 # Step 5: EDIT HERE
 # Change the bin number for annual precipitation.
-plt.hist(prc_anu, bins=, color='blue', edgecolor='black')
+plt.hist(prc_anu, bins=20, color='blue', edgecolor='black')
 plt.title('Annual Precipitation')
 plt.xlabel('Precipitation (mm)')
 plt.ylabel('Frequency (years)')
