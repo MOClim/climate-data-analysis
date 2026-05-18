@@ -23,6 +23,9 @@ dependencies:
   - cartopy
   - pyproj
   - shapely
+  
+  - pygmt
+  - gmt
 
   - cmocean
   - metpy
