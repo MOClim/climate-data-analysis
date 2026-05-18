@@ -104,23 +104,50 @@ Copy the sample script:
 cp w04_07_maxmin_spread.sample.py w04_07_maxmin_spread.py
 ```
 
-Students calculate statistics across all stations to examine spatial variability in climate observations.
+In this exercise, students compare climate variability across multiple stations using maximum and minimum ranges.
 
-Examples include:
-- station average,
-- maximum and minimum spread,
-- ±1 standard deviation spread.
+## Exercise: Compare Station Variability
 
-These plots help students compare regional climate variability across Utah stations.
+Copy the sample script: 
+```bash
+cp w04_07_maxmin_spread.sample.py w04_07_maxmin_spread.py
+```
 
----
+In this exercise, students compare climate variability across multiple stations using maximum and minimum envelopes.
+
+Students first combine all station datasets into a single DataFrame:
+```python
+    combined_data = pd.concat(monthly_dats, axis=1)
+```
+The maximum and minimum values across all stations are then calculated for each time step:
+```python
+    max_values = combined_data.max(axis=1)
+    min_values = combined_data.min(axis=1)
+```
+The shaded region between the maximum and minimum values represents the station-to-station spread:
+```python
+    plt.fill_between(combined_data.index,
+                     min_values,
+                     max_values,
+                     color='skyblue',
+                     alpha=0.4)
+```
+This shaded area shows the full range of climate variability across Utah stations.
+
+- Large spread:
+  indicates greater differences among stations.
+
+- Small spread:
+  indicates more similar climate conditions across stations.
+
 ---
 
 ## Exercise: +/- 1 Sigma Spread
 
-Files:
-`w04_08_std_spread.sample.py`  
-`w04_09_std_spread.prc.sample.py`
+Copy the sample script:
+```bash
+cp w04_08_std_spread.sample.py w04_08_std_spread.py   
+```
 
 In this exercise, students calculate the mean and standard deviation across multiple stations.
 
@@ -135,21 +162,39 @@ These exercises introduce basic statistical analysis for climate datasets and de
 
 ---
 
-## Exercise: +/- 1 Sigma Spread
+## Homework 4: Monthly Precipitation Variability
 
-Files:
-`w04_08_std_spread.sample.py`  
-`w04_09_std_spread.prc.sample.py`
+Create a precipitation version of the standard-deviation spread plot.
 
-In this exercise, students calculate the mean and standard deviation across multiple stations.
+Steps:
 
-Students practice:
-- calculating standard deviation using `.std()`,
-- computing ±1 sigma spread,
-- visualizing variability around the station mean,
-- comparing temperature and precipitation variability.
+1. Copy the sample script:
+```python
+    cp w04_08_std_spread.sample.py w04_09_std_spread.prc.py
+```
 
-These exercises introduce basic statistical analysis for climate datasets and demonstrate how uncertainty or spread can be visualized in time-series plots.
+2. Open the copied script and change the variable from air temperature to precipitation:
+```python
+    varname = 'precip'
+```
+
+3. Update the monthly calculation for precipitation accumulation:
+```python
+    monthly_df = dataframe.resample('ME').sum()
+```
+
+4. Update the plot title and y-axis label for precipitation.
+
+5. Run the script and confirm that a JPEG figure is created.
+
+6. Upload both files to Canvas:
+
+```text
+w04_09_std_spread.prc.py
+w04_09_std_spread.prc.jpg
+```
+
+Goal: Practice modifying an existing climate-data analysis script to examine monthly precipitation variability across multiple stations using ±1σ spread. 
 
 ---
 ## Key Takeaways
