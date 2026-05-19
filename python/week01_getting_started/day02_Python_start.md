@@ -1,4 +1,4 @@
-# Week 1: Getting Started
+# Week 1 Day2: Getting Python Started
 
 ## Goal
 
