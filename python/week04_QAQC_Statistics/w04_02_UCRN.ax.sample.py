@@ -53,7 +53,9 @@ def plot_data(ax, data, var, title, ylabel):
 
 # File path for the dataset
 # Minute climate observations for 2016
-file_min_path = Path('../../data/Cedar_Min.2016.csv')
+data_dir = Path('../../data')
+
+file_min_path = data_dir / 'Cedar_Min.2016.csv'
 
 
 # Read the CSV file

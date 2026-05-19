@@ -98,7 +98,17 @@ def plot_data(ax, data, var, title, ylabel, funclog=False):
 
 # File paths for the dataset.
 # Daily climate observations for 2016
-file_min_path = Path('../../data/Cedar_Min.2016.csv')
+#data_dir = Path('../../data/')
+
+script_dir = Path(__file__).resolve().parent
+if script_dir.name == "solution":
+    repo_dir = script_dir.parents[2]
+else:
+    repo_dir = script_dir.parents[1]
+data_dir = repo_dir / "data"
+
+file_min_path = data_dir / 'Cedar_Min.2016.csv'
+
 
 data_min = pd.read_csv(file_min_path, header=0, comment="#")
 

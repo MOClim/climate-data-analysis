@@ -33,18 +33,8 @@
 #        ../../data_raw/map-server-report-xxxxxxxxx/COOP/425186/dly-report.csv
 #
 # Code Processing Steps:
-#   1. Read the CSV dataset using pandas.
-#   2. Skip metadata rows at the top of the file.
-#   3. Convert the 'day' column into a DatetimeIndex.
-#   4. Resample daily temperature into monthly means.
-#   5. Remove missing values (NaN).
-#   6. Generate a histogram of monthly mean temperature.
-#   7. Automatically calculate:
-#        - analysis start year
-#        - analysis end year
-#        - total months
-#        - total years
-#   8. Save the figure as a JPEG image.
+# Step 1. Read the CSV dataset using pandas.
+# Step 2. Skip metadata rows at the top of the file.
 #
 # CSV Configuration:
 #   header=0
@@ -65,7 +55,23 @@ from pathlib import Path
 # Step 1:
 # EDIT HERE:
 # Add the path to the downloaded CSV file
-filename = Path('../../data_raw/map-server-report-1779136575/COOP/425186/dly-report.csv')
+#data_dir = Path('../../data_raw/map-server-report-1779136575/COOP/425186')
+
+# Get the directory where this script is located
+script_dir = Path(__file__).resolve().parent
+
+# Check whether the script is inside the "solution" directory
+if script_dir.name == "solution":
+    # Move up two directory levels to reach the repository root
+    repo_dir = script_dir.parents[2]
+else:
+    # Move up two directory levels to reach the repository root
+    repo_dir = script_dir.parents[1]
+# Define the path to the USU data directory
+data_dir = repo_dir / 'data_raw/map-server-report-1779136575/COOP/425186'
+
+filename = data_dir/ 'dly-report.csv'
+
 
 # Step 2:
 # EDIT HERE:
@@ -106,7 +112,7 @@ single_series = df_mon.values.flatten()
 all_data = single_series[~np.isnan(single_series)]
 
 # ---- Plotting ----
-# Step 3: Create and plot the histogram
+# Create and plot the histogram
 plt.figure(figsize=(10, 6))
 plt.hist(all_data, bins=100, color='orange', edgecolor='black')
 

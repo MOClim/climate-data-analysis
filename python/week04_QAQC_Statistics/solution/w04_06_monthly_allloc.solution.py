@@ -31,7 +31,17 @@ from pathlib import Path
 # Path('../../data_raw/UCRN') specifies the folder location
 # .glob('*.csv') searches for all files ending with .csv
 # list(...) converts the search results into a Python list
-filenames = list(Path('../../data/UCRN').glob('*.csv'))
+
+##data_dir = Path('../../data/UCRN/')
+
+script_dir = Path(__file__).resolve().parent
+if script_dir.name == "solution":
+    repo_dir = script_dir.parents[2]
+else:
+    repo_dir = script_dir.parents[1]
+data_dir = repo_dir / "data" / "UCRN"
+
+filenames = list(data_dir.glob('*.csv'))
 
 # Extract the location information
 location_info = [] 
