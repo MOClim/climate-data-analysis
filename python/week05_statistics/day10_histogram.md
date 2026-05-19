@@ -271,3 +271,21 @@ w05_09_hist_mon_anu.HW.jpg
 
 ---
 ## Key takeaway
+- NetCDF stores multidimensional climate data
+  Example:
+  ```text
+  (time, latitude, longitude)
+  ```
+- Different map projections display the Earth differently.
+- Scientific Python formats serve different purposes:
+  - Pandas
+  - NumPy
+  - Xarray
+  - NetCDF
+- Histograms visualize climate variability and distributions.
+- Temperature uses `.mean()`, while precipitation uses `.sum()`.
+- Trace precipitation (T) requires preprocessing before analysis.
+- Climate-data analysis combines:
+  - statistics
+  - time-series analysis
+  - geospatial visualization.
