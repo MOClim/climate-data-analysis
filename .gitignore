@@ -4,9 +4,13 @@
 __pycache__/
 *.py[codz]
 *$py.class
-data_raw/
 */*/fig_all/
 mailmap.txt
+
+# Ignore all raw datasets
+data_raw/*
+# Keep directory structure
+!data_raw/.gitkeep
 
 # C extensions
 *.so
