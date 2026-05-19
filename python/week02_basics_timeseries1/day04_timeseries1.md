@@ -1,40 +1,25 @@
 # Week 02 (Day 4): Reading and Plotting Climate Time Series
 
 ## Overview
-
-This module introduces basic time-series analysis using a NOAA global ocean temperature anomaly dataset. Students will inspect a climate data file, read it with pandas, examine its structure, and create a simple x-y plot.
+This lesson introduces time series analysis using observational climate datasets.
 
 ## Learning Objectives
-
-By the end of this module, you will be able to:
-
-* Inspect the structure of a climate data file
-* Read a CSV file using pandas
-* Interpret basic DataFrame information
-* Create an x-y plot of a climate time series
-* Save a figure as a JPEG file
-* Open the saved figure from the command line
-
-## Topics Covered
-
-* CSV data structure
-* Metadata and tabular data
-* pandas DataFrame basics
-* x-y plotting with matplotlib
-* Figure output and file opening commands
-
+- Read climate datasets using Pandas
+- Understand datetime indexing
+- Create basic time series plots
+- Calculate simple statistics
+ 
 ---
 
-## Exercise: Inspect and read a climate data file
+### Exercise 1: Inspect and read a climate data file
 
-### Step 1: Inspect the data file
-
+#### Step 1: Inspect the data file
 ```bash
 cd python/week02_basics_timeseries1
 less ../../data/NOAA.1850-2025.OCN.csv
 ```
 
-### Step 2: Understand the data structure
+#### Step 2: Understand the data structure
 The file has metadata lines followed by tabular data:
 
 ```text
@@ -57,7 +42,7 @@ The two columns are:
 - `Year`: calendar year
 - `Anomaly`: global ocean temperature anomaly in degrees Celsius, relative to the 1901–2000 base period
 
-### Step 3: Run the sample script:
+#### Step 3: Run the sample script:
 
 ```bash
 cp w02_07_read-data.sample.py w02_07_read-data.py
@@ -65,7 +50,7 @@ python w02_07_read-data.py
 ```
 The script reads the CSV file and prints basic information about the DataFrame, including column names, data types, dimensions, and summary information.
 
-### Step 5: Recommended reading method
+#### Step 4: Recommended reading method
 
 ```python
 from pathlib import Path
@@ -85,18 +70,18 @@ The option `comment='#'` tells `pandas` to ignore metadata lines beginning with 
 
 ---
 
-## Exercise: Make an x-y plot of the ocean temperature anomaly
+### Exercise 2: Make an x-y plot of the ocean temperature anomaly
 
 In this exercise, we will make a time-series plot of the NOAA global ocean temperature anomaly data.
 
-### Step 1: Run the sample script:
+#### Step 1: Run the sample script:
 
 ```bash
 cp w02_08_xy-plot.ocn.sample.py w02_08_xy-plot.ocn.py
 python w02_08_xy-plot.ocn.py
 ```
 
-### Step 2: Check what the script does
+#### Step 2: Check what the script does
 
 The script should:
 
@@ -104,7 +89,7 @@ The script should:
 2. plot `Year` on the x-axis and `Anomaly` on the y-axis,
 3. save the figure as a JPEG file with the same base name as the Python script.
 
-### Step 3: Examine the code
+#### Step 3: Examine the code
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -124,7 +109,7 @@ plt.plot(data['Year'], data['Anomaly'], marker='o')
   - `Anomaly` (temperature anomaly, °C) is plotted on the y-axis
 - The anomaly represents the deviation from a climatological baseline (1901–2000 mean, °C)
  
-### Step 4: Understand the output filename
+#### Step 4: Understand the output filename
 
 ```python
 Path(__file__).with_suffix('.jpg')
@@ -132,13 +117,12 @@ Path(__file__).with_suffix('.jpg')
 
 This creates an output filename using the same name as the Python script, but changes the extension from `.py` to `.jpg`.
 
-For example:
-
+Example:
 ```text
 w02_08_xy-plot.ocn.py  ->  w02_08_xy-plot.ocn.jpg
 ```
 
-### Step 4: Open the saved JPEG file
+#### Step 4: Open the saved JPEG file
 
 On macOS:
 
@@ -159,7 +143,7 @@ start .\w02_08_xy-plot.ocn.jpg
 ```
 ---
 
-## Exercise: Modify the plotting script
+### Exercise 3: Modify the plotting script
 
 Open `w02_08_xy-plot.ocn.py` and update the plotting section:
 
@@ -174,15 +158,15 @@ plt.grid(True)
 
 ---
 
-## Exercise: Land Data Download
+### Exercise 4: Land Data Download
 
 In this exercise, you will apply the same workflow to a different dataset.
 
-### Step 1: Open the NOAA website
+#### Step 1: Open the NOAA website
 
 https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/global/time-series
 
-### Step 2: Set the options
+#### Step 2: Set the options
 
 - Time Scale: 12-Month
 - Month: December
@@ -191,15 +175,15 @@ https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/global/time-seri
 - Region: Global
 - Surface: Land
 
-### Step 3: Generate the plot
+#### Step 3: Generate the plot
 
 Click the "Plot" button.
 
-### Step 4: Download the data
+#### Step 4: Download the data
 
 Click "CSV" to download the dataset.
 
-### Step 5: Save the file
+#### Step 5: Save the file
 
 Save the file to your project directory:
 ```bash
@@ -212,9 +196,9 @@ mv ~/Download/data.csv data_raw/NOAA.1850-2000.LND.csv
 
 ---
 
-## Homework: Plot land temperature anomalies
+### Homework 2: Plot land temperature anomalies
 
-### Step 1: Create a new script
+#### Step 1: Create a new script
 
 Copy the ocean plotting script:
 
@@ -222,7 +206,7 @@ Copy the ocean plotting script:
 cp w02_08_xy-plot.ocn.sample.py w02_09_xy-plot.lnd.py
 ```
 
-### Step 2: Modify the script
+#### Step 2: Modify the script
 
 Update the following:
 
@@ -230,14 +214,14 @@ Update the following:
 - Update the plot title (e.g., "Global Land Temperature Anomalies")
 - ensure the column names match (`Year`, `Anomaly`)
 
-### Step 3: Run the script
+#### Step 3: Run the script
 
 ```bash
 python w02_09_xy-plot.lnd.py
 ```
 The output image will be saved in the same directory as the Python script.
 
-### Step 4: Check the output
+#### Step 4: Check the output
 
 Confirm that:
 
@@ -245,7 +229,7 @@ Confirm that:
 - The axes are labeled correctly
 - The plot shows land temperature anomalies
 
-### Step 5: Upload files
+#### Step 5: Upload files
 
 Submit the modified code and the resulting plot to Canvas (Homework2 – Python Land Data) by the due date.
 
