@@ -204,4 +204,70 @@ Meaning:
   → treat "nan" as missing values
 
 ---
+### Exercise 4: Monthly Precipitation Histogram
 
+```bash
+cp w05_08_historgram_precip.sample.py w05_08_historgram_precip.py
+```
+
+#### Trace Precipitation
+
+In precipitation datasets, T means trace precipitation.
+A trace value indicates that precipitation was observed, but the amount was too small to measure accurately.
+
+Because T is text, pandas may read the precipitation column as a string instead of numeric data.
+
+Convert it before analysis:
+```python
+df['pcpn'] = df['pcpn'].replace('T', 0.0)
+df['pcpn'] = pd.to_numeric(df['pcpn'], errors='coerce')
+```
+- `replace('T', 0.0)` treats trace precipitation as 0.0 mm
+- `pd.to_numeric()` converts the column to numbers
+- `errors='coerce'` changes invalid values into NaN
+
+Then monthly precipitation can be calculated:
+```python
+df_mon = df['pcpn'].resample('ME').mean()
+```
+
+---
+### Homework 5: Monthly vs Annual Histogram Analysis
+
+```bash
+cp w05_09_hist_mon_anu.HW_sample.py w05_09_hist_mon_anu.HW.py
+```
+
+#### Homework Tasks
+1. Create:
+  - monthly datasets
+  - annual datasets
+    
+2. Calculate:
+  - monthly mean temperature
+  - annual mean temperature
+  - monthly precipitation totals
+  - annual precipitation totals
+
+3. Create histograms for:
+  - monthly temperature
+  - annual temperature
+  - monthly precipitation
+  - annual precipitation
+
+4. Compare:
+  - monthly vs annual distributions
+  - temperature vs precipitation variability
+
+5. Modify histogram bin numbers for each panel.
+
+#### Submission
+
+Upload the following files to the Canvas Homework 5 page:
+```bash
+w05_09_hist_mon_anu.HW.py
+w05_09_hist_mon_anu.HW.jpg
+```
+
+---
+## Key takeaway
