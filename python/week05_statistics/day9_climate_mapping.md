@@ -65,23 +65,55 @@ projection=ccrs.Robinson()
 ```
 
 ---
-## Exercise: PyGMT Global Maps
+### Exercise: PyGMT Global Maps
 
 Copy the sample script:
 ```bash
 cp w05_02_pygmt.sample.py w05_02_pygmt.py
 ```
 
+In this exercise, students will create a simple global map using PyGMT and learn the basic workflow for geographic visualization.
+
+Topics include:
+- creating a PyGMT Figure object
+- configuring map projections
+- creating a basemap
+
+#### Create a Figure object
+A Figure object represents the plotting canvas.
+Example:
+```python
+fig = pygmt.Figure()
+```
+
+#### Create a basemap
+`fig.basemap()` creates the map frame and projection.
+Example:
+```python
+fig.basemap(
+    region="g",
+    projection="N12i",
+    frame=True
+)
+```
+- `region="g"` → global map
+- `projection="N12i"` → Robinson projection
+- `12i` → map width = 12 inches
+- frame=True → draw map frame
+
 ---
-## Exercise: Adding Latitude and Longitude Information
+### Exercise: Adding Latitude and Longitude Information
 
 Copy the sample script:
 ```bash
 cp w05_03_create_wlatlon.sample.py w05_03_create_wlatlon.py
 ```
 
+In this exercise, students will combine weather station observations with station metadata containing latitude and longitude information.
+The updated datasets will then be saved as new CSV files for later mapping exercises.
+
 ---
-## Exercise: Mapping Weather Station Data with PyGMT
+### Exercise: Mapping Weather Station Data with PyGMT
 
 Files:
 Copy the sample script:
@@ -91,7 +123,65 @@ w05_04_map_pygmt_lowres.sample.py
 w05_04_map_pygmt_notop.sample.py
 ```
 
-## How to make an animated GIF
+In this exercise, students will visualize monthly averaged weather-station air temperature data using PyGMT.
+
+The exercises demonstrate how to:
+- read multiple climate-data files
+- calculate monthly averages
+- plot station observations using latitude and longitude
+- create topographic maps
+- compare different map styles and resolutions
+
+#### Convert datetime information
+This converts the time column into a datetime index.
+Example:
+```python
+data['date_time'] = pd.to_datetime(data['date_time'])
+data.set_index('date_time', inplace=True)
+```
+
+#### Calculate monthly averages
+Example:
+```python
+monthly_data = data.resample('ME').mean()
+```
+- `ME` → monthly end frequency
+- `.mean()` → monthly average
+
+#### Combine multiple station datasets
+This combines all station observations into one dataset.
+Example:
+```python
+combined_data = pd.concat(monthly_dats)
+```
+
+---
+
+### Create an Animated GIF
+After generating multiple PNG map figures, students can combine the images into an animated GIF using the ImageMagick magick command.
+
+This is useful for:
+- visualizing monthly climate variability
+- creating time-evolving climate animations
+
+Example Command:
+```bash
+magick -delay 50 -loop 2 fig_all/*.png airt_movie.gif
+```
+- `-delay 50` → animation speed
+- `loop 2` → repeat animation twice
+- `fig_all/*.png` → read all PNG files
+- `airt_movie.gif` → output GIF filename
+
+#### Open the GIF
+MacOS:
+```bash
+open airt_movie.gif
+```
+Windows:
+```bash
+start airt_movie.gif
+```
 
 ---
 ## Key Takeaways
