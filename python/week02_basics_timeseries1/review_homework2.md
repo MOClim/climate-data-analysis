@@ -1,4 +1,4 @@
-# Homework 2 Review
+# Review Homework 2
 
 This exercise updates `w02_08_xy-plot.ocn.sample.py` to create `w02_09_xy-plot.lnd.sample.py`.
 
