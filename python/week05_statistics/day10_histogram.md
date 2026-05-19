@@ -28,8 +28,81 @@ Students will visualize climate datasets using Cartopy, NetCDF, Xarray, and hist
 cp w05_05_various_projection_cartopy.sample.py w05_05_various_projection_cartopy.py
 ```
 
+This exercise visualizes global sea surface temperature (SST) using several Cartopy map projections.
+
+#### Download SST datasets
+1. Download
+Access to https://www.metoffice.gov.uk/hadobs/hadisst/data/download.html and download NetCDF format datasets.
+```bash
+mv ~Download/HadISST_sst.nc.gz .
+```
+
+2. Data 
+To extract `HadISST_sst.nc.gz on Mac:
+```bash
+gunzip HadISST_sst.nc.gz
+```
+On Windows:
+```bash
+gzip -d HadISST_sst.nc.gz
+```
+or
+```bash
+tar -xzf HadISST_sst.nc.gz
+```
+
+3. Check the netCDF data
+```bash
+ncdump HadISST_sst.nc |less
+```
+
+4. Save the data
+Move `HadISST_sst.nc` to data_raw directory.
+```bash
+mv HadISST_sst.nc ../../data_raw/
+```
+
+#### Read NetCDF data
+Example:
+```python
+data_dir = Path('../../data_raw')
+filename = data_dir / 'HadISST_sst.nc'
+
+f = Dataset(filename, mode='r')
+
+# Read longitude, latitude, and SST data
+lons = f.variables['longitude'][:]
+lats = f.variables['latitude'][:]
+sst = f.variables['sst'][0, :, :]
+```
+This extracts one 2-dimensional SST map:
+```python
+(latitude, longitude)
+```
+from a 3-dimensional dataset:
+```python
+(time, latitude, longitude)
+```
+
+---
+### Exercise 2: Compare Scientific Data Formats
+```bash
+cp w05_06_data_format4.sample.py w05_06_data_format4.py
+```
+
+#### Topics
+- Pandas DataFrame
+- NumPy Array
+- Xarray DataArray
+- NetCDF Dataset
+- Multi-panel visualization
+
+---
+### Exercise 3: Monthly Temperature Histogram
+This exercise is to learn how to download specific station data from the Utah Climate Center and create a histogram from long time series datasets.
+
 #### Dataset Source
-Utah Climate Center / Southwest Climate Observations (SWCO)
+Utah Climate Center / Surface Weather and Climate Observations (SWCO)
 https://climate.usu.edu/swco/
 
 #### Download Instructions
