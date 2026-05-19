@@ -27,6 +27,14 @@ def create_map(data, minlon, maxlon, minlat, maxlat, title):
     # Create figure
     fig = pygmt.Figure()
 
+    # Plot coastlines and borders
+    fig.coast(
+      region=[minlon, maxlon, minlat, maxlat],
+      projection='M4i',
+      shorelines=True,
+      frame=True
+      )
+    fig.coast(borders=["2/0.5p,red"])
 
     # Temperature colormap
     pygmt.makecpt(
@@ -45,7 +53,7 @@ def create_map(data, minlon, maxlon, minlat, maxlat, title):
     )
 
     # Add title
-    fig.basemap(frame=[f'+t"{title}"'])
+    fig.basemap(frame=[f'+t{title}'])
 
     # Temperature colorbar
     fig.colorbar(
@@ -58,10 +66,10 @@ def create_map(data, minlon, maxlon, minlat, maxlat, title):
 #### Read station data ####
 
 # Directory containing CSV files
-input_dir = Path("../../data_raw/UCRN.latlon")
-
 # Create a list of CSV files
-filenames = list(input_dir.glob('*.csv'))
+data_dir = Path("../../data_raw/UCRN.latlon")
+
+filenames = list(data_dir.glob('*.csv'))
 
 # Store monthly averaged data
 monthly_dats = []
@@ -139,7 +147,7 @@ for year in years:
         )
 
         # Save figure
-        figfile = figdir + f"temp_{year}-{month:02d}.png"
+        figfile = figdir + f"temp_notop_{year}-{month:02d}.png"
 
         fig.savefig(figfile, dpi=180)
 

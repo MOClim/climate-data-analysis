@@ -78,7 +78,7 @@ def create_map(data, minlon, maxlon, minlat, maxlat, title):
     )
 
     # Add title
-    fig.basemap(frame=[f'+t"{title}"'])
+    fig.basemap(frame=[f'+t{title}'])
 
     # Temperature colorbar
     fig.colorbar(
@@ -91,10 +91,10 @@ def create_map(data, minlon, maxlon, minlat, maxlat, title):
 #### Read station data ####
 
 # Directory containing CSV files
-input_dir = Path("../../data_raw/UCRN.latlon")
-
 # Create a list of CSV files
-filenames = list(input_dir.glob('*.csv'))
+data_dir = Path("../../data_raw/UCRN.latlon")
+
+filenames = list(data_dir.glob('*.csv'))
 
 # Store monthly averaged data
 monthly_dats = []
