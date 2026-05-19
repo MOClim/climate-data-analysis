@@ -28,7 +28,9 @@ from pathlib import Path
 # Path('../../data/UCRN') specifies the folder location
 # .glob('*.csv') searches for all files ending with .csv
 # list(...) converts the search results into a Python list
-filenames = list(Path('../../data/UCRN').glob('*.csv'))
+data_dir = Path('../../data/UCRN')
+
+filenames = list(data_dir.glob('*.csv'))
 
 # Print the complete list of file paths
 print(filenames)

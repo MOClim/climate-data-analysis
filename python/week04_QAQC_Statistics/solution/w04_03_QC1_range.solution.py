@@ -68,7 +68,25 @@ def plot_data(ax, data, var, title, unit):
 
 # File paths for the dataset.
 # Daily climate observations for 2016
-file_min_path = Path('../../data/Cedar_Min.2016.csv')
+
+# Define the relative path to the data directory
+#data_dir = Path("../../data/")
+
+# Get the directory where this script is located
+script_dir = Path(__file__).resolve().parent
+
+# Check whether the script is inside the "solution" directory
+if script_dir.name == "solution":
+    # Move up two directory levels to reach the repository root
+    repo_dir = script_dir.parents[2]
+else:
+    # Move up two directory levels to reach the repository root
+    repo_dir = script_dir.parents[1]
+# Define the path to the UCRN data directory
+data_dir = repo_dir / "data" 
+
+file_min_path = data_dir/"Cedar_Min.2016.csv"
+
 
 # Read the CSV file, assuming the header at the 1st line
 data_min = pd.read_csv(file_min_path, header=0, comment="#")

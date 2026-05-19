@@ -25,7 +25,9 @@ from pathlib import Path
 
 # Specify the directory path
 # List all CSV files in the directory
-filenames = list(Path('../../data/UCRN').glob('*.csv'))
+data_dir = Path('../../data/UCRN')
+
+filenames = list(data_dir.glob('*.csv'))
 
 
 # Extract the location information

@@ -1,7 +1,7 @@
 ###############################################################################
-# Exercise: Monthly vs Annual Histogram Analysis
+# Homework 5: Monthly vs Annual Histogram Analysis
 #
-# Homework objectives:
+# Objectives:
 #   1. Resample daily station observations into monthly and annual datasets.
 #   2. Calculate:
 #        - monthly mean temperature
