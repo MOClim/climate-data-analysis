@@ -30,34 +30,37 @@ cp w05_05_various_projection_cartopy.sample.py w05_05_various_projection_cartopy
 
 This exercise visualizes global sea surface temperature (SST) using several Cartopy map projections.
 
-#### Download SST datasets
-1. Download
-Access to https://www.metoffice.gov.uk/hadobs/hadisst/data/download.html and download NetCDF format datasets.
+#### Download SST Datasets
+Dataset source: HadISST sea surface temperature
+https://www.metoffice.gov.uk/hadobs/hadisst/data/download.html
+
+1. Download the NetCDF file:
 ```bash
-mv ~Download/HadISST_sst.nc.gz .
+HadISST_sst.nc.gz
 ```
 
-2. Data 
-To extract `HadISST_sst.nc.gz on Mac:
+2. Move the downloaded file to your working directory:
+```bash
+mv ~Downloads/HadISST_sst.nc.gz .
+```
+
+2. Unzip the file
+On Mac/Linux:
 ```bash
 gunzip HadISST_sst.nc.gz
 ```
-On Windows:
+On Windows, use one of the following:
 ```bash
 gzip -d HadISST_sst.nc.gz
 ```
-or
-```bash
-tar -xzf HadISST_sst.nc.gz
-```
+or unzip it using File Explorer or 7-Zip.
 
-3. Check the netCDF data
+3. Check the NetCDF file:
 ```bash
 ncdump HadISST_sst.nc |less
 ```
 
-4. Save the data
-Move `HadISST_sst.nc` to data_raw directory.
+4. Move the NetCDF file to the `data_raw` directory:
 ```bash
 mv HadISST_sst.nc ../../data_raw/
 ```
@@ -67,20 +70,24 @@ Example:
 ```python
 data_dir = Path('../../data_raw')
 filename = data_dir / 'HadISST_sst.nc'
-
+```
+Opens the NetCDF file in read-only mode.
+```python
 f = Dataset(filename, mode='r')
-
+```
+Reads longitude and latitude values and extract SST at the first time step for all latitudes and longitudes.
+```python
 # Read longitude, latitude, and SST data
 lons = f.variables['longitude'][:]
 lats = f.variables['latitude'][:]
 sst = f.variables['sst'][0, :, :]
 ```
 This extracts one 2-dimensional SST map:
-```python
+```text
 (latitude, longitude)
 ```
 from a 3-dimensional dataset:
-```python
+```text
 (time, latitude, longitude)
 ```
 
@@ -99,45 +106,64 @@ cp w05_06_data_format4.sample.py w05_06_data_format4.py
 
 ---
 ### Exercise 3: Monthly Temperature Histogram
-This exercise is to learn how to download specific station data from the Utah Climate Center and create a histogram from long time series datasets.
+
+This exercise demonstrates how to download weather-station observations from the Utah Climate Center and create a histogram from long-term climate datasets.
 
 #### Dataset Source
 Utah Climate Center / Surface Weather and Climate Observations (SWCO)
 https://climate.usu.edu/swco/
 
+---
+
 #### Download Instructions
-1.  Open the SWCO website.
-2.  Use the interactive station map and zoom in to Logan
-3.  Select
-    temperature, precipitation
-4.  Select the USU weather station:
-  COOP 425186
-5.  Select:
-  metric units
-  Modify: Missing Data Value: M --> Nan
-6. Click COOP, then select 
-  Mean Temperature
-  Precipitation
-  --> Get Preview
-8. Download all
-9. received the link of the ZIP archive and click the link
-10. Unzip the downloaded file.
+1. Open the SWCO website.
+
+2. Use the interactive station map and zoom into Logan, Utah.
+
+3. Select:
+   - Temperature
+   - Precipitation
+
+4. Select the USU weather station:
+   - COOP 425186
+
+5. Select:
+   - Metric units
+   - Missing Data Value:
+     `M → nan`
+
+6. Click:
+   - COOP
+   - Mean Temperature
+   - Precipitation
+
+7. Click:
+   - Get Preview
+
+8. Download all files.
+
+9. Open the download link for the ZIP archive.
+
+10. Move and unzip the downloaded file:
    ```bash
    mv ~Download/xxx.zip .
    unzip xxx.zip
    ```
-11. Move:
+
+11. Move the extracted directory:
     ```bash
     mv map-server-report-xxxxxxxxx ../../data_raw/
     ```
+    
 12. Confirm the CSV file exists:
     ```bash
     less ../../data_raw/map-server-report-xxxxxxxxx/COOP/425186/dly-report.csv
     ```
+    
 ---
 #### Coding Steps
 
-Step 1: Define the data directory
+#### Step 1: Define the data directory
 Example:
 ```python
 from pathlib import Path
@@ -146,15 +172,20 @@ data_dir = Path(
     '../../data_raw/map-server-report-1779136575/COOP/425186'
 )
 ```
-Caution: `solution/w05_07_histogram.solution.py` uses the absolute path instead of the relative path like above. 
+Caution:
+```bash
+solution/w05_07_histogram.solution.py
+```
+uses an absolute path instead of the relative path above.
 
-Define the CSV filename
+#### Step 2: Define the CSV filename
 Example:
 ```python
 filename = data_dir / 'dly-report.csv'
 ```
+This creates the full path to the CSV file.
 
-Step 2: Read the CSV file
+#### Step 3: Read the CSV file
 Example:
 ```python
 df = pd.read_csv(
@@ -164,4 +195,13 @@ df = pd.read_csv(
     na_values='nan'
 )
 ```
+Meaning:
+- `header=0`
+  → first row contains variable names
+- `skiprows=19`
+  → skip metadata rows
+- `na_values='nan'`
+  → treat "nan" as missing values
+
+---
 
