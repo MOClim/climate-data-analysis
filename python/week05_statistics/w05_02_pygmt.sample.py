@@ -31,7 +31,7 @@ title = "Global Map using Robinson Projection"
 fig.basemap(
     region="g",
     projection="N12i",
-    frame=["af", f'+t"{title}"']
+    frame=["af", f'+t{title}']
 )
 
 

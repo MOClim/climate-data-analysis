@@ -28,7 +28,10 @@ import warnings
 warnings.filterwarnings("ignore", message="invalid value encountered in create_collection")
 
 # reading in netCDF file
-filename = Path('../../data/HadISST_sst.nc')
+data_dir = Path('../../data_raw')
+
+filename = data_dir / 'HadISST_sst.nc'
+
 
 # Open the netCDF dataset
 f = Dataset(filename, mode='r')

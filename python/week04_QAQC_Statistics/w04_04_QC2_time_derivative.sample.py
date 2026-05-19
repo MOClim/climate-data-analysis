@@ -98,7 +98,9 @@ def plot_data(ax, data, var, title, ylabel, funclog=False):
 
 # File paths for the dataset.
 # Daily climate observations for 2016
-file_min_path = Path('../../data/Cedar_Min.2016.csv')
+data_dir = Path('../../data')
+
+file_min_path = data_dir / 'Cedar_Min.2016.csv'
 
 data_min = pd.read_csv(file_min_path, header=0, comment="#")
 
