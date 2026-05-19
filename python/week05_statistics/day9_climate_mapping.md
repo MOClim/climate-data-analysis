@@ -21,7 +21,7 @@ By the end of this module, students will be able to:
 - Save figures as image files
 
 ---
-## Exercise: Cartopy Global Maps
+### Exercise: Cartopy Global Maps
 
 Copy the sample script:
 ```bash
@@ -33,21 +33,21 @@ Topics include:
 - creating a Figure and GeoAxes object
 - adding coastlines and geographic features
 
-### Creating a Figure object
+#### Creating a Figure object
 A Figure object represents the entire plotting canvas. `figsize` controls the figure size in inches.
 Example:
 ```python
 fig = plt.figure(figsize=(10, 5))
 ```
 
-### Creating an Axes object
+#### Creating an Axes object
 An Axes object represents the plotting region inside the Figure. 
 Example: add_subplot(rows, columns, panel_number)
 ```python
 ax = fig.add_subplot(1, 1, 1)
 ```
 
-### Creating a Cartopy GeoAxes object
+#### Creating a Cartopy GeoAxes object
 In Cartopy, the Axes object becomes a GeoAxes object when a map projection is added.
 Example:
 ```python
@@ -57,7 +57,7 @@ ax = fig.add_subplot(
 )
 ```
 
-### Applying the Robinson map projection
+#### Applying the Robinson map projection
 The Robinson projection is commonly used for global climate visualization.
 Example:
 ```python
