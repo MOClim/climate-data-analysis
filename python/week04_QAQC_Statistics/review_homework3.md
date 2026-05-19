@@ -1,4 +1,4 @@
-# Homework 4 Review: Monthly Climate Averages
+# Homework 3 Review: Monthly Climate Averages
 
 This exercise updates `w03_10_monthly_ave.sample.py` to create `w03_10_monthly_ave.solution.py`.
 
