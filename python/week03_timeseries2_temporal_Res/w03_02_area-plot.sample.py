@@ -9,8 +9,11 @@ from pathlib import Path
 # --- Read Data ---
 
 # File paths for both datasets. Add data name for each path.
-land_file_path = Path('../../data_raw/NOAA.1850-2025.LND.csv')
-ocean_file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
+data_dir = Path('../../data')
+data_dir2 = Path('../../data_raw')
+
+ocean_file_path = data_dir / 'NOAA.1850-2025.OCN.csv'
+land_file_path = data_dir2 / 'NOAA.1850-2025.LND.csv'
 
 # Read the CSV files, assuming data starts from the 5th row
 land_data = pd.read_csv(land_file_path, comment="#")

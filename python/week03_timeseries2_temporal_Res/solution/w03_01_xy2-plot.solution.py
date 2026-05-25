@@ -12,8 +12,24 @@ from pathlib import Path
 # Example (different folder): Path('../data/filename.csv')
 # Example (absolute path): Path('/Users/yourname/data/filename.csv')
 
-land_file_path = Path('../../data_raw/NOAA.1850-2025.LND.csv')
-ocean_file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
+# File paths for both datasets. Add data name for each path.
+# Get the directory where this script is located
+script_dir = Path(__file__).resolve().parent
+
+# If the script is inside the "solution" folder,
+# move up one additional directory level
+if script_dir.name == "solution":
+    repo_dir = script_dir.parents[2]
+else:
+    repo_dir = script_dir.parents[1]
+
+# Create the path to the data directory
+# using an absolute path based on the repository location
+data_dir = repo_dir / "data"
+data_dir2 = repo_dir / "data_raw"
+
+ocean_file_path = data_dir / 'NOAA.1850-2025.OCN.csv'
+land_file_path = data_dir2 / 'NOAA.1850-2025.LND.csv'
 
 # --- Read the CSV files ---
 land_data = pd.read_csv(land_file_path, comment="#")

@@ -26,8 +26,10 @@ from pathlib import Path
 
 
 # File paths for the dataset.
+data_dir = Path('../../data')
+
 # Daily climate observations for 2025
-file_dly_path = Path('../../data/cedar-city-zion-np-kolob.daily_2025.csv')
+file_dly_path = data_dir / 'cedar-city-zion-np-kolob.daily_2025.csv'
 
 
 # Read the CSV files
