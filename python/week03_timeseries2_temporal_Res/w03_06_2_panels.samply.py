@@ -15,8 +15,10 @@ from pathlib import Path
 # --- Read Data ---
 
 # File paths for the dataset.
+data_dir Path('../../data_raw')
+
 # Add data name for the path. 
-file_path = Path('../../data_raw/beaver-big-flat-nfs-ucrn.csv')
+file_path = data_dir / 'beaver-big-flat-nfs-ucrn.csv'
 
 # Read the CSV file, assuming data starts from the first row (so no skiprow command)
 data = pd.read_csv(file_path)

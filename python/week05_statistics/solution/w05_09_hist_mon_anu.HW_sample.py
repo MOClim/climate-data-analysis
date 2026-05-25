@@ -30,7 +30,22 @@ from pathlib import Path
 ### Read Main ###
 
 # Path of the downloaded CSV file
-filename = Path('../../data_raw/map-server-report-1779136575/COOP/425186/dly-report.csv')
+#data_dir  = Path('../../data_raw/map-server-report-1779136575/COOP/425186')
+
+# Get the directory where this script is located
+script_dir = Path(__file__).resolve().parent
+
+# Check whether the script is inside the "solution" directory
+if script_dir.name == "solution":
+    # Move up two directory levels to reach the repository root
+    repo_dir = script_dir.parents[2]
+else:
+    # Move up two directory levels to reach the repository root
+    repo_dir = script_dir.parents[1]
+# Define the path to the USU data directory
+data_dir = repo_dir / 'data_raw/map-server-report-1779136575/COOP/425186'
+
+filename = data_dir / 'dly-report.csv'
 
 
 # Read the CSV file

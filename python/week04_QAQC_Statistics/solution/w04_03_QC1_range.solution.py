@@ -66,12 +66,6 @@ def plot_data(ax, data, var, title, unit):
 
 # --- Read Data ---
 
-# File paths for the dataset.
-# Daily climate observations for 2016
-
-# Define the relative path to the data directory
-#data_dir = Path("../../data/")
-
 # Get the directory where this script is located
 script_dir = Path(__file__).resolve().parent
 
@@ -85,6 +79,7 @@ else:
 # Define the path to the UCRN data directory
 data_dir = repo_dir / "data" 
 
+# Daily climate observations for 2016
 file_min_path = data_dir/"Cedar_Min.2016.csv"
 
 

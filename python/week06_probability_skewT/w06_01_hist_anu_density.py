@@ -68,7 +68,9 @@ def plot_histogram(data, nbins, xmin, xmax, color, title, x_label, show_probabil
 # -----------------------------
 
 # Set data path
-filename = Path("../../data_raw/map-server-report-1779136575/COOP/425186/dly-report.csv")
+data_dir = Path('../../data_raw/map-server-report-1779136575/COOP/425186')
+
+filename = data_dir / 'dly-report.csv'
 
 # Set analysis period
 start_year = "1893"

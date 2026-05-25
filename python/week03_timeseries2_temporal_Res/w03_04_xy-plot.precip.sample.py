@@ -14,15 +14,17 @@ from pathlib import Path
 
 # --- Read Data ---
 
-# File paths for the dataset. 
 
 # Tips: easy copy and paste by Mac
 # 1. click filename and command C on terminal
 # 2. move cursol to the location where you want to add filename
 # 3. command v
 
+# File paths for the dataset. 
+data_dir = Path('../../data_raw')
+
 # Add data name for the path. 
-file_path = Path('../../data_raw/beaver-big-flat-nfs-ucrn.csv')
+file_path = data_dir / 'beaver-big-flat-nfs-ucrn.csv'
 
 # Read the CSV file: Skip metadata lines beginning with '#'
 data = pd.read_csv(file_path, header=0, comment="#")
