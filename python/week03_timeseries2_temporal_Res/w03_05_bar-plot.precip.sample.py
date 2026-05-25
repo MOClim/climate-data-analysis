@@ -22,7 +22,9 @@ from pathlib import Path
 # 3. command v
 
 # Add data name for the path. 
-file_path = Path('../../data_raw/beaver-big-flat-nfs-ucrn.csv')
+data_dir = Path('../../data_raw')
+
+file_path = data_dir / 'beaver-big-flat-nfs-ucrn.csv'
 
 # Read the CSV file, assuming data starts from the first row (so no skiprow command)
 data = pd.read_csv(file_path, header=0, comment="#")

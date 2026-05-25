@@ -27,18 +27,18 @@ from pathlib import Path
 
 # --- Read Data ---
 
-# Create a list of all CSV files inside the ../../data/UCRN directory
-# Path('../../data_raw/UCRN') specifies the folder location
-# .glob('*.csv') searches for all files ending with .csv
-# list(...) converts the search results into a Python list
-
-##data_dir = Path('../../data/UCRN/')
-
+# Get the directory where this script is located
 script_dir = Path(__file__).resolve().parent
+
+# If the script is inside the "solution" folder,
+# move up one additional directory level
 if script_dir.name == "solution":
     repo_dir = script_dir.parents[2]
 else:
     repo_dir = script_dir.parents[1]
+
+# Create the path to the data directory
+# using an absolute path based on the repository location
 data_dir = repo_dir / "data" / "UCRN"
 
 filenames = list(data_dir.glob('*.csv'))

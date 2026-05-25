@@ -21,8 +21,11 @@ from pathlib import Path
 # Example (different folder): Path('../data/filename.csv')
 # Example (absolute path): Path('/Users/yourname/data/filename.csv')
 
-land_file_path = Path('ENTER_FULL_PATH_TO_LAND_FILE.csv')
-ocean_file_path = Path('ENTER_FULL_PATH_TO_OCEAN_FILE.csv')
+data_dir = Path('ENTER_FULL_PATH')
+data_dir2 = Path('ENTER_FULL_PATH')
+
+ocean_file_path = data_dir / 'ENTER_OCEAN_FILE.csv'
+land_file_path = data_dir2 / 'ENTER_LAND_FILE.csv'
 
 # --- Read the CSV files ---
 land_data = pd.read_csv(land_file_path, comment="#")

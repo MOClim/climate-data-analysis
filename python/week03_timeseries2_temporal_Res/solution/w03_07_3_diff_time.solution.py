@@ -23,9 +23,24 @@ from pathlib import Path
 # Step 1. Define file paths
 # Replace the file names below with your own full paths.
 
-file_dly_path = Path('../../data_raw/cedar-city-zion-np-kolob.daily.csv')
-file_hly_path = Path('../../data_raw/cedar-city-zion-np-kolob.hourly.csv')
-file_min_path = Path('../../data_raw/cedar-city-zion-np-kolob.min.csv')
+# File paths for both datasets. Add data name for each path.
+# Get the directory where this script is located
+script_dir = Path(__file__).resolve().parent
+
+# If the script is inside the "solution" folder,
+# move up one additional directory level
+if script_dir.name == "solution":
+    repo_dir = script_dir.parents[2]
+else:
+    repo_dir = script_dir.parents[1]
+
+# Create the path to the data directory
+# using an absolute path based on the repository location
+data_dir = repo_dir / "data_raw"
+
+file_dly_path = data_dir / 'cedar-city-zion-np-kolob.daily.csv'
+file_hly_path = data_dir / 'cedar-city-zion-np-kolob.hourly.csv'
+file_min_path = data_dir / 'cedar-city-zion-np-kolob.min.csv'
 
 
 # Read the CSV files
