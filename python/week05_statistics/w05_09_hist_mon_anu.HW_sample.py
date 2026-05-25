@@ -30,7 +30,8 @@ from pathlib import Path
 ### Read Main ###
 
 # Path of the downloaded CSV file
-filename = Path('../../data_raw/map-server-report-1779136575/COOP/425186/dly-report.csv')
+data_dir = Path('../../data_raw')
+filename = data_dir / 'map-server-report-1779136575/COOP/425186/dly-report.csv'
 
 
 # Read the CSV file

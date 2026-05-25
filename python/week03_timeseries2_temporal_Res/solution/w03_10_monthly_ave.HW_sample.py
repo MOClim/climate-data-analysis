@@ -26,9 +26,23 @@ from pathlib import Path
 
 
 # File paths for the dataset.
-# Daily climate observations for 2025
+# File paths for both datasets. Add data name for each path.
+# Get the directory where this script is located
+script_dir = Path(__file__).resolve().parent
 
-file_dly_path = Path('../../data/cedar-city-zion-np-kolob.daily_2025.csv')
+# If the script is inside the "solution" folder,
+# move up one additional directory level
+if script_dir.name == "solution":
+    repo_dir = script_dir.parents[2]
+else:
+    repo_dir = script_dir.parents[1]
+
+# Create the path to the data directory
+# using an absolute path based on the repository location
+data_dir = repo_dir / "data"
+
+# Daily climate observations for 2025
+file_dly_path = data_dir / 'cedar-city-zion-np-kolob.daily_2025.csv'
 
 
 # Read the CSV files

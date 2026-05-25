@@ -5,11 +5,15 @@ from pathlib import Path
 import sys
 
 # File paths for both datasets. Add data name for each path.
-ocean_file_path = Path('../../data/NOAA.1850-2025.OCN.csv')
+data_dir = Path('../../data')
+
+ocean_file_path = data_dir / 'NOAA.1850-2025.OCN.csv'
 # Students should have downloaded land CO2 flux from NOAA website 
 # (see details in week2 slide).
 # https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/global/time-series
-land_file_path = Path('../../data_raw/NOAA.1850-2025.LND.csv')
+data_dir2 = Path('../../data_raw')
+
+land_file_path = data_dir2 / 'NOAA.1850-2025.LND.csv'
 
 # Read the CSV files
 tland_data = pd.read_csv(land_file_path, comment='#',index_col='Year')

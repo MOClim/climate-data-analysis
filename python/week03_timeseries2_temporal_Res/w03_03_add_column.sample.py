@@ -9,7 +9,9 @@ from pathlib import Path
 # --- Read Data ---
 
 # File paths for both datasets. Add data name for each path.
-file_path = Path('../../data_raw/co2_daily_mlo.csv')
+data_dir = Path('../../data_raw')
+
+file_path = data_dir / 'co2_daily_mlo.csv'
 
 # Assuming columns are year, month, day, decimal year, and CO2 level
 column_names = ['Year', 'Month', 'Day', 'Decimal_Year', 'CO2']

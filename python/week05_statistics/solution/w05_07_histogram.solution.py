@@ -55,7 +55,7 @@ from pathlib import Path
 # Step 1:
 # EDIT HERE:
 # Add the path to the downloaded CSV file
-#data_dir = Path('../../data_raw/map-server-report-1779136575/COOP/425186')
+#data_dir = Path('../../data_raw')
 
 # Get the directory where this script is located
 script_dir = Path(__file__).resolve().parent
@@ -70,7 +70,7 @@ else:
 # Define the path to the USU data directory
 data_dir = repo_dir / 'data_raw/map-server-report-1779136575/COOP/425186'
 
-filename = data_dir/ 'dly-report.csv'
+filename = data_dir / 'dly-report.csv'
 
 
 # Step 2:

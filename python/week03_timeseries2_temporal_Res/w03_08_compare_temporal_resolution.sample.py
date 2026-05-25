@@ -21,9 +21,11 @@ from pathlib import Path
 # --- Read Data ---
 
 # File paths for the dataset.
-file_dly_path = Path('../../data_raw/cedar-city-zion-np-kolob.daily.csv')
-file_hly_path = Path('../../data_raw/cedar-city-zion-np-kolob.hourly.csv')
-file_min_path = Path('../../data_raw/cedar-city-zion-np-kolob.min.csv')
+data_dir = Path('../../data_raw')
+
+file_dly_path = data_dir / 'cedar-city-zion-np-kolob.daily.csv'
+file_hly_path = data_dir / 'cedar-city-zion-np-kolob.hourly.csv'
+file_min_path = data_dir / 'cedar-city-zion-np-kolob.min.csv'
 
 
 # Read the CSV file, assuming data starts from the 5th row

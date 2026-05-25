@@ -23,10 +23,11 @@ from pathlib import Path
 
 # Step 1. Define file paths
 # Replace the file names below with your own full paths.
+data_dir = Path('ENTER_FULL_PATH')
 
-file_dly_path = Path('ENTER_FULL_PATH_TO_DAILY_FILE.csv')
-file_hly_path = Path('ENTER_FULL_PATH_TO_HOURLY_FILE.csv')
-file_min_path = Path('ENTER_FULL_PATH_TO_MINITUES_FILE.csv')
+file_dly_path = data_dir / 'ENTER_DAILY_FILE.csv'
+file_hly_path = data_dir / 'ENTER_HOURLY_FILE.csv'
+file_min_path = data_dir / 'ENTERL_MINITUES_FILE.csv'
 
 
 # Read the CSV files

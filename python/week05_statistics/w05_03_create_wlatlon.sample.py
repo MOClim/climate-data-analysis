@@ -12,7 +12,9 @@ import pandas as pd
 
 
 # Read station metadata
-station_latlon = pd.read_csv('../../data/station_locate.csv')
+data_dir = Path('../../data')
+
+station_latlon = pd.read_csv(data_dir / 'station_locate.csv')
 
 # Convert station_id to string for merging
 station_latlon['station_id'] = station_latlon['station_id'].astype(str)
