@@ -23,6 +23,7 @@ dependencies:
   - cartopy
   - pyproj
   - shapely
+  - siphon
   
   - pygmt
   - gmt
