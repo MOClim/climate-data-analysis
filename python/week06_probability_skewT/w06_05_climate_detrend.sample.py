@@ -8,6 +8,16 @@
 # 4. Compare detrended land and ocean variability
 # 5. Calculate correlation after detrending
 #
+# Student Exercise:
+# - Change start_year and end_year to analyze
+#   different climate periods.
+# - Compare how the land-ocean correlation changes
+#   between different time ranges.
+# - Test periods such as:
+#     1950-2025
+#     1980-2025
+#     2000-2025
+#
 # Detrending is commonly used in climate analysis
 # to isolate short-term variability by removing
 # long-term warming trends.
@@ -24,23 +34,40 @@ import sys
 # ----------------------------------------------------------
 
 def cal_regression(years, data):
+   """
+   Calculate a linear trend and remove it from the data.
 
-   # Use the original data as temporary detrended data
-   # (replace this later with actual detrending)
-   dtrd_data = data
+   Parameters
+   ----------
+   years : array-like
+      Year values.
+   data : pandas Series
+      Temperature anomaly data.
 
-   # Example slope value for a linear trend
-   slope = 0.02
+   Returns
+   -------
+   dtrd_data : pandas Series
+      Detrended anomaly data.
+   trend : array
+      Linear trend line.
+   slope : float
+      Linear trend slope per year.
+   """
 
-   # Example intercept value for a linear trend
-   intercept = -38.
+   # Calculate linear regression
+   result = linregress(years, data)
+
+   # Extract slope and intercept
+   slope = result.slope
+   intercept = result.intercept
 
    # Calculate the linear trend line
-   # using slope and intercept
    trend = slope * years + intercept
 
-   return dtrd_data, trend, slope
+   # Remove the linear trend from the original data
+   dtrd_data = data - trend
 
+   return dtrd_data, trend, slope
 
 # ----------------------------------------------------------
 # Example dataset:
@@ -58,9 +85,14 @@ land_file_path = data2_dir / 'NOAA.1850-2025.LND.csv'
 tland_data = pd.read_csv(land_file_path, comment="#",index_col='Year')
 tocean_data = pd.read_csv(ocean_file_path, comment="#",index_col='Year')
 
-# Select the analysis period
+# Step 1: Select the analysis period
+# Students can change these two values to test how the
+# land-ocean correlation changes for different time periods.
+# For example, try 1950-2025, 1980-2025, or 2000-2025.
+
 start_year = 1950
 end_year = 2025
+
 ocean_data = tocean_data['Anomaly'].loc[start_year:end_year]
 land_data = tland_data['Anomaly'].loc[start_year:end_year]
 
