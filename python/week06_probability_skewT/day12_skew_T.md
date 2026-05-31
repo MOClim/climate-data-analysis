@@ -137,6 +137,36 @@ requests.exceptions.HTTPError: Server Error (503)
 wait briefly and retry the program.
 
 ---
+## Exercise 4: Typhoon-Related Skew-T Analysis
+
+```bash
+cp w06_09_skew_T.typhoon.sample.py w06_09_skew_T.typhoon.py
+```
+This exercise uses radiosonde data from Hachijojima, Japan, to examine a typhoon-related atmospheric environment using a Skew-T log-P diagram.
+- Sounding Information
+- Station ID: 47678
+- Station: Hachijojima, Japan
+- Date: 2024-08-14 afternoon local time
+- Japan Standard Time: JST = UTC + 9 hours
+
+Radiosonde archives use UTC time.
+To examine the afternoon environment in Japan, remember to subtract 9 hours from Japan local time when selecting the UTC sounding time.
+
+### Step 1: Check that the station ID is set to Hachijojima:
+station = "47678"
+
+### Step 2: Select the sounding date and time for the typhoon-related case.
+Date: 2024-08-14 afternoon local time
+
+### Step 3: Run and examine the Skew-T diagram and identify
+- temperature profile
+- dewpoint profile
+- wind barbs
+- LCL
+- LFC
+- CAPE region
+
+---
 ## Key Takeaways
 - Radiosondes provide vertical atmospheric observations including temperature, humidity, pressure, and wind.
 - Skew-T diagrams help visualize atmospheric stability and moisture structure.
