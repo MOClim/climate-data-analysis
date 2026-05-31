@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import metpy.plots as mpplots
 import metpy.calc as mpcalc
 import numpy as np
+import pandas as pd
 import sys
 from pathlib import Path
 
@@ -27,16 +28,16 @@ from pathlib import Path
 #   Use this website to find station IDs and sounding data.
 #
 # Student Tasks:
-#   Step 1:
+#   Steps 1 & 2:
 #      Run the program and inspect the downloaded data.
 #      After checking the data, comment out sys.exit().
 #
-#   Step 2:
+#   Step 3:
 #      Enable plotting of temperature and dew point
 #      profiles by setting:
 #         func_pltdat = True
 #
-#   Step 3:
+#   Step 4:
 #      Add atmospheric analysis information by setting:
 #         func_addinfo = True
 #
@@ -55,13 +56,23 @@ doi = datetime(2025, 10, 10, 0)
 sid = "SLC"
 sname = 'Salt Lake City UT (USA)'
 
+
 # ---------------------------------------------------------
 # Read radiosonde sounding data into a Pandas DataFrame
 # ---------------------------------------------------------
 df = WyomingUpperAir.request_data(doi, sid)
 
-# Display downloaded data
+## or read downloaded data
+#filename = Path('../../data/2025101000-72572.csv')
+#df = pd.read_csv(filename)
+
 print(df)
+
+# ---------------------------------------------------------
+# Step 1:
+# Display downloaded data
+# ---------------------------------------------------------
+sys.exit()
 
 # ---------------------------------------------------------
 # Remove duplicated pressure rows
@@ -83,7 +94,7 @@ u = df['u_wind'].to_numpy() * units(df.units['u_wind'])           # knots
 v = df['v_wind'].to_numpy() * units(df.units['v_wind'])           # knots
 
 # ---------------------------------------------------------
-# Step 1:
+# Step 2:
 # Check the downloaded data first.
 #
 # After confirming the data looks correct,
@@ -100,7 +111,7 @@ fig = plt.figure(figsize=(3.98, 5.5))
 skewt = mpplots.SkewT(fig)
 
 # ---------------------------------------------------------
-# Step 2:
+# Step 3:
 # Set to True after checking the baseline plot
 # ---------------------------------------------------------
 func_pltdat = False
@@ -116,7 +127,7 @@ if func_pltdat:
               label='Dew Point')
 
 # ---------------------------------------------------------
-# Step 3:
+# Step 4:
 # Add atmospheric stability analysis information
 # ---------------------------------------------------------
 func_addinfo = False
