@@ -167,6 +167,29 @@ Date: 2024-08-14 afternoon local time
 - CAPE region
 
 ---
+## Homework 6: Skew-T Diagram for an Inversion Day
+
+### Task
+Create a Skew-T diagram for an inversion day in Salt Lake City.
+
+Required information
+- Date: January 29, 2024
+- Time: Morning sounding
+- Best UTC Time: ?? UTC
+- Local Time: Morning in MST
+- Station ID: Find ID of SLC 
+- Location: Salt Lake City, Utah
+
+Mountain Time is 7 hours behind UTC.
+
+### Submission
+Upload the following files to the Canvas Homework 6 page:
+```bash
+w06_10_skew_T.Inversion.HW.py
+w06_10_skew_T.Inversion.HW.jpg
+```
+
+---
 ## Key Takeaways
 - Radiosondes provide vertical atmospheric observations including temperature, humidity, pressure, and wind.
 - Skew-T diagrams help visualize atmospheric stability and moisture structure.
