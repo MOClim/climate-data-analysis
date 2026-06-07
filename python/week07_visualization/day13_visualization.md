@@ -26,15 +26,16 @@ By the end of this lesson, students should be able to:
 
 File: `w07_01_global_temp_map.py`
 
-This exercise shows how to read a global surface air temperature climatology file and visualize one month on a world map.
+Exercise 1: Global Temperature Map
+
+File: w07_01_global_temp_map.py
+
+This exercise introduces the concept of a colormap (cmap) for scientific visualization.
 
 Students learn how to:
-
-- Open a NetCDF file using `xarray`
-- Select one month using `isel(time=month_idx)`
-- Plot gridded temperature data on a global map
-- Add coastlines, gridlines, a colorbar, and a title
-- Save the output figure as a JPEG file
+- Read global temperature data from a NetCDF file
+- Plot data on a global map using Cartopy
+- Apply a colormap to visualize temperature differences
 
 ### Key Data Step: Read NetCDF Data
 
@@ -65,27 +66,6 @@ img = ax.pcolormesh(
 )
 ```
 
-### Suggested Student Direction
-
-Try changing:
-
-```python
-month_idx = 0
-```
-
-to another value between `0` and `11`.
-
-Also try different diverging colormaps:
-
-```python
-color_name = 'bwr'
-color_name = 'seismic'
-color_name = 'coolwarm'
-color_name = 'RdBu_r'
-```
-
-Diverging colormaps are useful for temperature fields when the color scale is centered around a reference value or when colder and warmer regions should be visually separated.
-
 ---
 
 ## Exercise 2: Global Precipitation Map
@@ -104,16 +84,7 @@ Students learn how to:
 ### Data Source
 
 NOAA PSL UDel Air Temperature and Precipitation data:
-
 https://psl.noaa.gov/data/gridded/data.UDel_AirT_Precip.html
-
-### Key Data Step
-
-```python
-filename = indir / 'precip.mon.v401.ltm.1981-2010.nc'
-ds = xr.open_dataset(filename, use_cftime=True)
-dat = ds['precip'].isel(time=month_idx)
-```
 
 ### Choosing an Appropriate Colormap
 
@@ -135,40 +106,22 @@ Diverging colormaps such as `bwr` or `seismic` are better for anomaly data with 
 
 https://matplotlib.org/stable/users/explain/colors/colormaps.html
 
-### Important Note: Save Output Safely
-
-Use a separate output filename so the original NetCDF file is not overwritten.
-
-```python
-output_path = Path(__file__).with_suffix('.jpg')
-plt.savefig(output_path, dpi=300)
-```
-
-This saves the figure with the same base name as the script and a `.jpg` extension.
-
 ---
 
 ## Exercise 3: Visualization Tips for Scientific Figures
 
 File: `w07_03_visualization.py`
 
-This exercise introduces basic design principles for scientific figures.
+This exercise demonstrates several basic visualization techniques used in scientific graphics.
 
-Students compare:
-
-- High contrast colors
-- Patterns and textures
+Topics include:
 - Colorblind-friendly palettes
+- High-contrast colors
+- Patterns and textures
 
-The script creates one merged JPEG figure with three panels.
-
-### Key Function: Multi-Panel Figure
-
-```python
-fig, axes = plt.subplots(3, 1, figsize=(10, 6))
-```
-
-This creates three vertically stacked panels in one figure.
+Students also learn how to manually choose:
+- Colors using color names or hexadecimal color codes
+- Line and pattern styles using Matplotlib options
 
 ### Panel 1: High Contrast Colors
 
@@ -180,8 +133,6 @@ axes[0].bar(
     edgecolor='black'
 )
 ```
-
-Students can compare how different color combinations affect readability.
 
 ### Panel 2: Patterns and Textures
 
@@ -205,26 +156,8 @@ colors = ['#440154', '#31688e', '#35b779', '#fde725']
 
 This example uses colors from the Viridis-style palette, which is commonly used for scientific visualization.
 
-### Save One Merged JPEG File
-
-```python
-output_path = Path(__file__).with_suffix('.jpg')
-plt.savefig(output_path, dpi=300)
-```
-
-This saves all three panels into one JPEG file.
-
----
-
-## Suggested Discussion
-
-Why should temperature and precipitation maps use different types of colormaps?
-
-Temperature maps often benefit from diverging colormaps when showing colder and warmer values relative to a central reference. Precipitation is generally non-negative, so sequential colormaps better represent increasing precipitation intensity.
-
-Why might patterns or hatching be useful in scientific figures?
-
-Patterns help communicate categories when colors are difficult to distinguish, especially for printed figures, grayscale figures, or viewers with color vision deficiency.
+### Discussion
+Why is figure design important for scientific communication?
 
 ---
 
