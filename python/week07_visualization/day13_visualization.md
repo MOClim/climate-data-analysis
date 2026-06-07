@@ -169,5 +169,4 @@ Why is figure design important for scientific communication?
 - Colormap choice should match the structure of the data.
 - Sequential colormaps are appropriate for non-negative variables such as precipitation.
 - Diverging colormaps are useful for anomaly-like or signed data.
-- `Path(__file__).with_suffix('.jpg')` safely creates an output figure name from the script name.
 - High contrast, hatching, and colorblind-friendly palettes improve scientific communication.
