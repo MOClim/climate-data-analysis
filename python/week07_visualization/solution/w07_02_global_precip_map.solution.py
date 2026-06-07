@@ -77,7 +77,7 @@ ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
 # Examples: 'viridis', 'viridis_r', 'Blues', 'GnBu', 'YlGnBu'
 # Full list: https://matplotlib.org/stable/users/explain/colors/colormaps.html
 #color_name = 'rainbow'
-color_name = 'BrBG'
+color_name = 'gist_earth_r'
 cmap = plt.get_cmap(color_name)
 
 # Plotting using the defined axes
