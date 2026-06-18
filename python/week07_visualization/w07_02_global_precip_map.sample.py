@@ -24,6 +24,9 @@ import xarray as xr
 import sys
 from pathlib import Path
 
+import matplotlib.ticker as mticker
+from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+
 import warnings
 
 warnings.filterwarnings(
@@ -76,8 +79,24 @@ img = ax.pcolormesh(dat['lon'], dat['lat'], dat.squeeze(), cmap=cmap, transform=
 ax.coastlines()
 
 # Add gridlines
-ax.gridlines()
+#ax.gridlines()
 
+gl = ax.gridlines(
+    draw_labels=True,
+    linewidth=0.5,
+    color='gray',
+    alpha=0.5,
+    linestyle='--'
+)
+
+gl.top_labels = False
+gl.right_labels = False
+
+gl.xformatter = LONGITUDE_FORMATTER
+gl.yformatter = LATITUDE_FORMATTER
+
+gl.xlocator = mticker.FixedLocator(np.arange(-180, 181, 60))
+gl.ylocator = mticker.FixedLocator(np.arange(-90, 91, 30))
 # Add a colorbar
 cbar = fig.colorbar(img, ax=ax, orientation='vertical', shrink=0.7)
 cbar.set_label('Precipitation (cm)')
