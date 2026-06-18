@@ -10,16 +10,16 @@ Compute area-weighted regional averages
 Compare temperature variability among different regions
 Understand the concepts of climatology and anomalies
 
----
-## Dataset
+### Dataset
 This lesson uses monthly 2-m air temperature from the NOAA NCEP/NCAR Reanalysis. 
 
-### Data source
+#### Data source
 NOAA NCEP/NCAR Reanalysis Data
+```bash
 air.2m.mon.mean.nc
-
+```
 ---
-## Examine the NetCDF Structure
+### Examine the NetCDF Structure
 
 Before performing any analysis, inspect the file structure using ncdump.
 
