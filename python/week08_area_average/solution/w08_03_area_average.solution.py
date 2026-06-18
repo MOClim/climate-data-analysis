@@ -22,7 +22,7 @@
 #
 # North America
 # lat_start, lat_end = 75, 15
-# lon_start, lon_end = 190, 310
+# lon_start, lon_end = 190, 300
 #
 # Arctic
 # lat_start, lat_end = 90, 60
