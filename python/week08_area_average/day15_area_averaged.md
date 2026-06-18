@@ -53,6 +53,14 @@ w08_01_global_temp_map_rotated.py
 This script visualizes monthly climatological temperature on a global map and demonstrates Cartopy projections. 
 It also shows how to change the map center using `central_longitude`.
 
+```python
+# Create a Atlantic-centered map (0° longitude at the center).
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+
+# Create a Pacific-centered map (180° longitude at the center).
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree(central_longitude=180))
+```
+
 ---
 ### Exercise 2: Compute a Regional Average
 
