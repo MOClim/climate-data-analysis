@@ -104,7 +104,7 @@ air.attrs["units"] = "degC"
 # ---------------------------------------------------------
 # Approximate North America box
 lat_str, lat_end = 75, 15
-lon_str, lon_end = 190, 310   # 0–360 longitude: 190E=170W, 310E=50W
+lon_str, lon_end = 190, 300   # 0–360 longitude: 190E=170W, 300E=60W
 
 air_na_mean = regional_weighted_mean(air, lat_str, lat_end, lon_str, lon_end)
 
