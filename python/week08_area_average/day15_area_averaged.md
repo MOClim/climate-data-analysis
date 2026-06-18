@@ -107,6 +107,16 @@ To compare climate variability, we remove the average seasonal cycle:
 ```
 Anomaly = Temperature − Monthly Climatology
 ```
+```python
+# Monthly climatology
+clim = regional_mean.groupby("time.month").mean("time")
+
+# Monthly anomaly
+anom = regional_mean.groupby("time.month") - clim
+
+# Annual mean anomaly
+anom_ann = anom.resample(time="YS").mean()
+```    
 Positive anomalies indicate warmer-than-average conditions.
 Negative anomalies indicate cooler-than-average conditions.
 
