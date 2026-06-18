@@ -94,7 +94,7 @@ filein = indir / "air.2m.mon.mean.nc"
 # Region 1: North America
 region1_name = "North America"
 lat1_start, lat1_end = 75, 15
-lon1_start, lon1_end = 190, 310
+lon1_start, lon1_end = 190, 300
 
 # Region 2: Tropical Pacific
 region2_name = "Tropical Pacific"

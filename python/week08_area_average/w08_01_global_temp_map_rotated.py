@@ -44,8 +44,8 @@ month_name = ["January","February", "March", "April", "May", "June",
 month_idx = 0
 
 # Path to your NetCDF file
-
-filename = Path('../../data/air.2x2.250.mon.1991-2020.ltm.comb.nc')
+indir = Path('../../data')
+filename = indir / 'air.2x2.250.mon.1991-2020.ltm.comb.nc'
  
 # Open the NetCDF dataset
 ds = xr.open_dataset(filename, use_cftime=True)
