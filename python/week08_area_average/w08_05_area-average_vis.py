@@ -1,46 +1,35 @@
 # ---------------------------------------------------------
-# Area-Averaged Temperature Anomaly
+# North America Area-Averaged Temperature Anomaly
 # ---------------------------------------------------------
 # This program reads NOAA NCEP/NCAR Reanalysis monthly
 # 2-m air temperature data and calculates an area-weighted
-# temperature anomaly for a selected region.
+# average temperature anomaly over North America.
+#
+# Students can:
+#   - Change the analysis region
+#   - Calculate climatology and anomalies
+#   - Compare different geographic regions
+#   - Investigate long-term climate variability
 #
 # Data source:
 # NOAA Physical Sciences Laboratory (PSL)
+# NCEP/NCAR Reanalysis Project
 # https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html
 #
 # Dataset:
 # air.2m.mon.mean.nc
 #
-# Exercise:
-# 1. Change the latitude and longitude boundaries below
-#    to select a different region.
-# 2. Update the plot title with the region name.
-# 3. Compare temperature variability among regions.
-#
-# Example regions:
-#
-# North America
-# lat_start, lat_end = 75, 15
-# lon_start, lon_end = 190, 300
-#
-# Arctic
-# lat_start, lat_end = 90, 60
-# lon_start, lon_end = 0, 360
-#
-# Europe
-# lat_start, lat_end = 70, 35
-# lon_start, lon_end = -10, 40
-#
-# Tropics
-# lat_start, lat_end = 20, -20
-# lon_start, lon_end = 0, 360
+# Reference:
+# Kalnay et al. (1996), The NCEP/NCAR 40-Year Reanalysis
+# Project, Bulletin of the American Meteorological Society.
 # ---------------------------------------------------------
 
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
+import sys
+from matplotlib.ticker import MultipleLocator
 
 def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
     """
@@ -79,21 +68,27 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 
     return dat_region_mean
 
+def calculate_annual_anomaly(regional_mean):
+    """
+    Calculate monthly anomalies and annual mean anomalies.
+    """
+
+    # Monthly climatology
+    clim = regional_mean.groupby("time.month").mean("time")
+
+    # Monthly anomaly
+    anom = regional_mean.groupby("time.month") - clim
+
+    # Annual mean anomaly
+    anom_ann = anom.resample(time="YS").mean()
+
+    return anom_ann
+
 # -----------------------------
 # User settings
 # -----------------------------
-# Get the directory where this script is located
-script_dir = Path(__file__).resolve().parent
-
-# Check whether the script is inside the "solution" directory
-if script_dir.name == "solution":
-    # Move up two directory levels to reach the repository root
-    repo_dir = script_dir.parents[2]
-else:
-    # Move up two directory levels to reach the repository root
-    repo_dir = script_dir.parents[1]
-
-filein = repo_dir / "data/air.2m.mon.mean.nc"
+indir = filename = Path('../../data/')
+filein = indir / "air.2m.mon.mean.nc"
 
 
 # -----------------------------
@@ -103,7 +98,13 @@ ds = xr.open_dataset(filein)
 print(ds)
 
 # Common variable name in NCEP/NCAR air.2m file
-air = ds["air"]
+
+# The latest year may contain only a few months of data.
+# Exclude the final two records to ensure that only complete
+# months are used in the annual-average calculation.
+
+air = ds["air"][:-2]
+print(air)
 
 # -----------------------------
 # Convert K to degC 
@@ -118,31 +119,41 @@ air.attrs["units"] = "degC"
 # Cosine(latitude) weighting accounts for the
 # changing area represented by each grid cell.
 # ---------------------------------------------------------
+# Approximate North America box
+lat_str, lat_end = 75, 15
+lon_str, lon_end = 190, 300   # 0–360 longitude: 190E=170W, 300E=60W
 
-# Step 1: Select region
-# Modify these values for your analysis
-lat_str, lat_end = 20., -20. 
-lon_str, lon_end = 120., 280. 
-
-# Step 2: Add Region name
-region_name = 'Tropical Pacific'
-
-air_mean = regional_weighted_mean(air, lat_str, lat_end, lon_str, lon_end)
+air_na_mean = regional_weighted_mean(air, lat_str, lat_end, lon_str, lon_end)
 
 # Annual mean anomaly
-air_mean_ann = air_mean.resample(time="YS").mean()
+air_na_ann = calculate_annual_anomaly(air_na_mean)
 
 # -----------------------------
 # Plot
 # -----------------------------
 plt.figure(figsize=(10, 4))
-plt.plot(air_mean_ann.time.dt.year, air_mean_ann, color="black", linewidth=1.5)
+plt.plot(air_na_ann.time.dt.year, air_na_ann, color="black", linewidth=1.5)
+plt.axhline(0, color='gray', linestyle="-")
+
 
 plt.xlabel("Year")
 plt.ylabel("2-m air temperature anomaly (°C)")
-plt.title(f"{region_name} area-averaged 2-m air temperature anomaly")
+plt.title("North America area-averaged 2-m air temperature anomaly")
 plt.grid(alpha=0.3)
 plt.tight_layout()
+
+# Major ticks
+plt.xticks(np.arange(1950, 2025, 10))
+plt.yticks(np.arange(-1, 1, 0.2))
+
+# Minor ticks
+plt.gca().xaxis.set_minor_locator(MultipleLocator(1))
+plt.gca().yaxis.set_minor_locator(MultipleLocator(0.2))
+
+# Grid
+plt.grid(which='major', linestyle='-', linewidth=0.7, alpha=0.7)
+plt.grid(which='minor', linestyle='--', linewidth=0.4, alpha=0.5)
+
 
 # Save the plot as a JPEG file
 output_path = Path(__file__).with_suffix('.jpg')
