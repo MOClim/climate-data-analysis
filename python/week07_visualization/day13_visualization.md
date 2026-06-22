@@ -7,7 +7,6 @@ This lesson introduces basic geoscience visualization methods for gridded climat
 Students will practice reading NetCDF files, selecting variables and months, plotting global maps with `Cartopy`, choosing appropriate colormaps, and applying basic accessibility principles such as contrast, patterns, and colorblind-friendly palettes.
 
 ---
-
 ## Learning Objectives
 
 By the end of this lesson, students should be able to:
