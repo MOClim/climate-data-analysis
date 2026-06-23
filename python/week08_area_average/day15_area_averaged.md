@@ -121,6 +121,42 @@ Positive anomalies indicate warmer-than-average conditions.
 Negative anomalies indicate cooler-than-average conditions.
 
 ---
+### Exercise 5: Customized Visualization of North America Temperature Anomaly
+Script:
+```bash
+w08_05_area-average_vis.py
+```
+This exercise extends the area-averaged temperature analysis by improving the figure appearance using customized axis settings, minor ticks, and grid lines.
+
+Improve the figure by adding:
+- Major and minor ticks
+- Grid lines
+- Horizontal zero reference line
+- Customized axis ranges
+
+Key Visualization Commands
+
+Major ticks:
+```python
+plt.xticks(np.arange(1950, 2025, 10))
+plt.yticks(np.arange(-1, 1, 0.2))
+```
+Minor ticks:
+```python
+plt.gca().xaxis.set_minor_locator(MultipleLocator(1))
+plt.gca().yaxis.set_minor_locator(MultipleLocator(0.2))
+```
+Reference line:
+```python
+plt.axhline(0, color='gray', linestyle='-')
+```
+Grid lines:
+```python
+plt.grid(which='major', linestyle='-', linewidth=0.7, alpha=0.7)
+plt.grid(which='minor', linestyle='--', linewidth=0.4, alpha=0.5)
+```
+
+---
 ## Key Takeaways
 - NetCDF files contain dimensions, variables, and metadata.
 - Cartopy can visualize global climate fields using different map projections.
