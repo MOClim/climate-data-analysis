@@ -244,6 +244,87 @@ plt.grid(which="minor")
 ```
 ---
 
+### Homework 7: Regional Temperature and Precipitation Anomalies
+
+## Task
+Create a two-panel time series plot showing:
+1. Regional mean 2-m air temperature anomaly
+2. Regional mean precipitation rate anomaly
+
+Choose **one region** and analyze both variables for the same latitude–longitude box.
+Use the sample program as a reference:
+```text
+cp w08_09_global_temp_precip_twopanel.py w08_10_regional_temp_precip_twopanel.HW.py
+```
+
+## Required Information
+Choose one region from the list below or define your own region.
+
+### Example Regions
+
+```text
+North America
+Latitude : 75°N to 15°N
+Longitude: 190°E to 310°E
+
+Tropical Pacific
+Latitude : 20°N to 20°S
+Longitude: 120°E to 280°E
+
+Southern Ocean
+Latitude : 90°S to 60°S
+Longitude: 0°E to 360°E
+
+Europe
+Latitude : 70°N to 35°N
+Longitude: 10°W to 40°E
+```
+
+## Datasets
+### Dataset 1: Air Temperature
+```text
+File name: air.2m.mon.mean.nc
+Variable name: air
+Unit: °C
+```
+
+### Dataset 2: Precipitation Rate
+```text
+File name: prate.mon.mean.nc
+Variable name: prate
+Unit: mm/day
+```
+
+Data source: NOAA Physical Sciences Laboratory
+https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html
+
+## Requirements
+Your figure must include:
+- Two panels using `plt.subplots()`
+- Regional area-weighted averages using cosine-latitude weighting
+- Annual anomalies relative to monthly climatology
+- Region name in the figure title
+- Proper axis labels and units
+- Panel labels for temperature and precipitation
+
+## Questions
+Answer in 2–4 sentences on word/google docs:
+1. Does your selected region show a clear warming trend?
+2. Does precipitation show a similar long-term trend?
+3. Which variable has stronger year-to-year variability?
+4. Why might temperature and precipitation behave differently?
+
+## Submission
+Upload the following files to the Canvas Homework 7 page:
+```text
+w08_10_regional_temp_precip_twopanel.HW.py
+w08_10_regional_temp_precip_twopanel.HW.jpg
+questions.pdf
+```
+
+
+---
+
 ### Homework 7: Global Temperature and Precipitation Anomalies
 
 ### Task
