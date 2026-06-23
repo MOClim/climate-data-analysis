@@ -14,7 +14,10 @@ By the end of this lesson, students will be able to:
 * Plot temperature and precipitation anomalies
 * Interpret regional and global climate variability
 
-## Dataset
+---
+## Excersie 1: Understand the Reanalysis Dataset
+
+### Step 1: Download of the Reanalysis Dataset
 
 This lesson uses NOAA NCEP/NCAR Reanalysis monthly data. Temperature data is available at `../../data/air.2m.mon.mean.nc`.
 Download monthly precipitation rate data (`prate.mon.mean.nc`).
@@ -28,7 +31,7 @@ Required files:
 mv ~/Downloads/prate.mon.mean.nc ../../data_raw/
 ```
 
-## Step 1: Check NetCDF File Structure
+### Step 2: Check NetCDF File Structure
 
 Before running the scripts, check the data structure using `ncdump`.
 
@@ -61,7 +64,7 @@ Important points:
 
 ---
 
-### Exercise 1: Regional Precipitation Anomaly
+### Exercise 2: Regional Precipitation Anomaly
 
 Script:
 
@@ -104,7 +107,7 @@ Exercise:
 
 ---
 
-### Exercise 2: Three-Panel Regional Temperature Time Series
+### Exercise 3: Three-Panel Regional Temperature Time Series
 
 Script:
 ```text
@@ -140,7 +143,7 @@ Exercise:
 4. Explain why the Arctic and Tropical Pacific behave differently.
 
 ---
-### Exercise 3: Three Regional Time Series on One Panel
+### Exercise 4: Three Regional Time Series on One Panel
 
 Script:
 ```bash
@@ -178,7 +181,7 @@ Exercise:
 
 ---
 
-### Exercise 4: Global Temperature and Precipitation Two-Panel Plot
+### Exercise 5: Global Temperature and Precipitation Two-Panel Plot
 
 Script:
 ```bash
@@ -241,64 +244,78 @@ plt.grid(which="minor")
 ```
 ---
 
-### Homework 7: Global Temperature and Precipitation Anomalies
+### Homework 7: Regional Temperature and Precipitation Anomalies
 
-### Task
+## Task
 Create a two-panel time series plot showing:
-1. Global mean 2-m air temperature anomaly
-2. Global mean precipitation rate anomaly
+1. Regional mean 2-m air temperature anomaly
+2. Regional mean precipitation rate anomaly
 
-using NOAA NCEP/NCAR Reanalysis data.
+Choose **one region** and analyze both variables for the same latitude–longitude box.
+Use the sample program as a reference:
+```text
+cp w08_09_global_temp_precip_twopanel.py w08_10_regional_temp_precip_twopanel.HW.py
+```
 
-Use the sample program:
+## Required Information
+Choose the North America region  or define your own region.
+
+### Example Regions
 
 ```text
-cp w08_09_global_temp_precip_twopanel.py w08_10_global_temp_precip_twopanel.HW.py
+North America
+Latitude : 75°N to 15°N
+Longitude: 190°E to 310°E
+
+Tropical Pacific
+Latitude : 20°N to 20°S
+Longitude: 120°E to 280°E
+
+Europe
+Latitude : 70°N to 35°N
+Longitude: 10°W to 40°E
 ```
 
-### Required Information
-
-#### Dataset 1: Global Air Temperature
-
-File name:
+## Datasets
+### Dataset 1: Air Temperature
 ```text
-air.2m.mon.mean.nc
+File name: air.2m.mon.mean.nc
+Variable name: air
+Unit: °C
 ```
 
-Variable name:
-```python
-air (°C)
-```
-
-#### Dataset 2: Global Precipitation Rate
-
-File name:
+### Dataset 2: Precipitation Rate
 ```text
-prate.mon.mean.nc
+File name: prate.mon.mean.nc
+Variable name: prate
+Unit: mm/day
 ```
 
-Variable name:
-```python
-prate (mm/day)
-```
-
-#### Data Source
-NOAA Physical Sciences Laboratory (PSL)
+Data source: NOAA Physical Sciences Laboratory
 https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html
 
-#### Requirements
+## Requirements
 Your figure must include:
 - Two panels using `plt.subplots()`
-- Global area-weighted averages using cosine-latitude weighting
+- Regional area-weighted averages using cosine-latitude weighting
 - Annual anomalies relative to monthly climatology
+- Region name in the figure title
 - Proper axis labels and units
-- Figure title and panel labels
+- Panel labels for temperature and precipitation
 
-#### Submission
+## Questions
+Answer in 2–4 sentences on word/google docs:
+1. Does your selected region show a clear warming trend?
+2. Does precipitation show a similar long-term trend?
+3. Which variable has stronger year-to-year variability?
+4. Why might temperature and precipitation behave differently?
+
+## Submission
 Upload the following files to the Canvas Homework 7 page:
 ```text
-w08_10_global_temp_precip_twopanel.HW.py
-w08_10_global_temp_precip_twopanel.HW.jpg
+w08_10_regional_temp_precip_twopanel.HW.py
+w08_10_regional_temp_precip_twopanel.HW.jpg
+questions.pdf (or Word document)
 ```
 
 ---
