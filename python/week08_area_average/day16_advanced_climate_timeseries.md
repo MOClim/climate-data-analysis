@@ -258,7 +258,7 @@ cp w08_09_global_temp_precip_twopanel.py w08_10_regional_temp_precip_twopanel.HW
 ```
 
 ## Required Information
-Choose one region from the list below or define your own region.
+Choose the North America region  or define your own region.
 
 ### Example Regions
 
@@ -270,10 +270,6 @@ Longitude: 190°E to 310°E
 Tropical Pacific
 Latitude : 20°N to 20°S
 Longitude: 120°E to 280°E
-
-Southern Ocean
-Latitude : 90°S to 60°S
-Longitude: 0°E to 360°E
 
 Europe
 Latitude : 70°N to 35°N
@@ -319,70 +315,7 @@ Upload the following files to the Canvas Homework 7 page:
 ```text
 w08_10_regional_temp_precip_twopanel.HW.py
 w08_10_regional_temp_precip_twopanel.HW.jpg
-questions.pdf
-```
-
-
----
-
-### Homework 7: Global Temperature and Precipitation Anomalies
-
-### Task
-Create a two-panel time series plot showing:
-1. Global mean 2-m air temperature anomaly
-2. Global mean precipitation rate anomaly
-
-using NOAA NCEP/NCAR Reanalysis data.
-
-Use the sample program:
-
-```text
-cp w08_09_global_temp_precip_twopanel.py w08_10_global_temp_precip_twopanel.HW.py
-```
-
-### Required Information
-
-#### Dataset 1: Global Air Temperature
-
-File name:
-```text
-air.2m.mon.mean.nc
-```
-
-Variable name:
-```python
-air (°C)
-```
-
-#### Dataset 2: Global Precipitation Rate
-
-File name:
-```text
-prate.mon.mean.nc
-```
-
-Variable name:
-```python
-prate (mm/day)
-```
-
-#### Data Source
-NOAA Physical Sciences Laboratory (PSL)
-https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html
-
-#### Requirements
-Your figure must include:
-- Two panels using `plt.subplots()`
-- Global area-weighted averages using cosine-latitude weighting
-- Annual anomalies relative to monthly climatology
-- Proper axis labels and units
-- Figure title and panel labels
-
-#### Submission
-Upload the following files to the Canvas Homework 7 page:
-```text
-w08_10_global_temp_precip_twopanel.HW.py
-w08_10_global_temp_precip_twopanel.HW.jpg
+questions.pdf (or Word document)
 ```
 
 ---
