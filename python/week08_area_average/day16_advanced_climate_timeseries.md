@@ -15,7 +15,7 @@ By the end of this lesson, students will be able to:
 * Interpret regional and global climate variability
 
 ---
-## Understand the Reanalysis Dataset
+## Excersie 1: Understand the Reanalysis Dataset
 
 ### Step 1: Download of the Reanalysis Dataset
 
@@ -64,7 +64,7 @@ Important points:
 
 ---
 
-### Exercise 1: Regional Precipitation Anomaly
+### Exercise 2: Regional Precipitation Anomaly
 
 Script:
 
@@ -107,7 +107,7 @@ Exercise:
 
 ---
 
-### Exercise 2: Three-Panel Regional Temperature Time Series
+### Exercise 3: Three-Panel Regional Temperature Time Series
 
 Script:
 ```text
@@ -143,7 +143,7 @@ Exercise:
 4. Explain why the Arctic and Tropical Pacific behave differently.
 
 ---
-### Exercise 3: Three Regional Time Series on One Panel
+### Exercise 4: Three Regional Time Series on One Panel
 
 Script:
 ```bash
@@ -181,7 +181,7 @@ Exercise:
 
 ---
 
-### Exercise 4: Global Temperature and Precipitation Two-Panel Plot
+### Exercise 5: Global Temperature and Precipitation Two-Panel Plot
 
 Script:
 ```bash
