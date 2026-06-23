@@ -14,7 +14,10 @@ By the end of this lesson, students will be able to:
 * Plot temperature and precipitation anomalies
 * Interpret regional and global climate variability
 
-## Dataset
+---
+## Understand the Reanalysis Dataset
+
+### Step 1: Download of the Reanalysis Dataset
 
 This lesson uses NOAA NCEP/NCAR Reanalysis monthly data. Temperature data is available at `../../data/air.2m.mon.mean.nc`.
 Download monthly precipitation rate data (`prate.mon.mean.nc`).
@@ -28,7 +31,7 @@ Required files:
 mv ~/Downloads/prate.mon.mean.nc ../../data_raw/
 ```
 
-## Step 1: Check NetCDF File Structure
+### Step 2: Check NetCDF File Structure
 
 Before running the scripts, check the data structure using `ncdump`.
 
