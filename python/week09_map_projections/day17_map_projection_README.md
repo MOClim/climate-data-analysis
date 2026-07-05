@@ -71,7 +71,7 @@ Important points:
 - Calculate January 2026 2-m air temperature anomaly.
 - Plot the anomaly on a latitude–longitude map.
 
-##OPeNDAP dataset
+**OPeNDAP dataset**
 ```python
 # Example NOAA PSL OPeNDAP URLs
 air_url = "https://psl.noaa.gov/thredds/dodsC/Datasets/ncep.reanalysis.derived/surface/air.mon.mean.nc"
@@ -88,7 +88,7 @@ print(ds.time[-1].values)
 # so the script can proceed to the remaining steps.
 ```
 
-##Calculate January 2026 temperature anomaly
+**Calculate January 2026 temperature anomaly**
 ```python
 # Example: January climatology
 jan_clim = air_c.sel(time=slice("1991-01-01", "2020-12-31")).where(
@@ -100,7 +100,7 @@ jan_2026 = air_c.sel(time="2026-01-01")
 anom = jan_2026 - jan_clim
 ```
 
-##Projection and transform setting
+**Projection and transform setting**
 ```python
 # projection: map coordinate system (output)
 # transform : data coordinate system (input)
@@ -120,7 +120,7 @@ cf = ax.contourf(
 ---
 ### Exercise 2: Robinson projection
 ```bash
-python w09_02_robinson_airT_anomaly.sample.py
+cp w09_02_robinson_airT_anomaly.sample.py w09_02_robinson_airT_anomaly.py
 ```
 
 This script introduces the Robinson projection for global climate visualization. Robinson projection provides a visually balanced global view and is often used for world maps.
@@ -131,7 +131,8 @@ Student task:
 ax = plt.axes(projection=ccrs.Robinson())
 ```
 
-### 3. Pacific-Centered Robinson Projection
+---
+### Exercise 3: Pacific-Centered Robinson Projection
 
 ```bash
 python w09_03_robinson_rotated.py
@@ -146,127 +147,104 @@ ax = plt.axes(projection=ccrs.Robinson(central_longitude=180.))
 This is useful for oceanographic and climate variability analysis, especially when studying the Pacific Ocean, ENSO, or basin-scale climate anomalies.
 
 Because the longitude coordinate runs from 0° to 360°, a blank seam can appear at the map boundary. To avoid this, the script adds a cyclic point:
-
 ```python
 anom_cyclic, lon_cyclic = add_cyclic_point(anom.values, coord=anom.lon)
 ```
 
-### 4. Pacific-Centered Precipitation Anomaly
+---
+### Exercise 4: Pacific-Centered Precipitation Anomaly
 
 ```bash
-python w09_04_robinson_precip.sample.py
+cp w09_04_robinson_precip.sample.py w09_04_robinson_precip.py
 ```
 
 This script applies the same Pacific-centered Robinson projection to precipitation rate anomalies.
 
 Important points:
-
 - Use precipitation rate from NOAA PSL.
 - Convert units from `kg m-2 s-1` to `mm/day`.
 - Calculate January 2026 precipitation anomaly.
 - Add a cyclic point before plotting.
 
 Unit conversion:
-
 ```python
 dat_c = dat * 86400
+dat_c.attrs["units"] = "mm/day"
 ```
 
-### 5. Lambert Conformal Projection for North America
-
+If the output displays:
 ```bash
-python w09_06_Lambert_airT_anomaly.py
+2026-02-01T00:00:00.000000000
+0.0
+0.0
 ```
+the dataset was not read correctly. If this occurs, run the program again until the dataset is loaded successfully.
 
-This script introduces the Lambert Conformal projection for regional climate analysis. Lambert Conformal is commonly used for mid-latitude weather and climate maps because it preserves shape reasonably well over limited regional domains.
-
-Example projection:
-
-```python
-ax = plt.axes(
-    projection=ccrs.LambertConformal(
-        central_longitude=-100,
-        central_latitude=45
-    )
-)
-```
-
-Example regional extent:
-
-```python
-ax.set_extent(
-    [-150, -50, 15, 75],
-    crs=ccrs.PlateCarree()
-)
-```
-
-### 6. Lambert Conformal Projection over the United States
-
+When the dataset is read successfully, you should see output similar to:
 ```bash
-python w09_07_Lambert_USA.sample.py
+2026-02-01T00:00:00.000000000
+-13.739066753187217
+12.310793255455792
 ```
 
-This exercise focuses on the contiguous United States. Students complete the projection center, color levels, and map extent.
+---
+### Exercise 5: NetCDF 
 
-Recommended values:
+In this exercise, you will modify the previous precipitation example to read data from a local NetCDF file instead of an online OPeNDAP server. You will also select a more suitable color map and color range for precipitation anomalies.
 
+Before editing the program, inspect the NetCDF file from the command line:
+```bash
+ncdump ../../data_raw/prate.mon.mean.nc | less
+```
+
+Create a new program:
+
+cp w09_04_robinson_precip.sample.py w09_05_robinson_precip_NetCDF.py
+
+Complete the following tasks:
+- Replace the OPeNDAP URL with the local NetCDF file.
+- Read the precipitation dataset from the local file.
+- Choose a color map that is suitable for precipitation anomalies.
+- Adjust the contour levels (color range) to improve the visualization.
+- Run the program and compare the result with the OPeNDAP version from Exercise 4.
+
+#### Tips:
+Replace the OPeNDAP reader:
 ```python
-central_longitude=-96
-central_latitude=39
+# OPeNDAP
+ds = xr.open_dataset(prate_url)
 ```
 
+with a local NetCDF file:
 ```python
-clevs = np.arange(-15, 15.1, 1)
+from pathlib import Path
+
+indir = Path("../../data_raw")
+prate_file = indir / "prate.mon.mean.nc"
+ds = xr.open_dataset(prate_file)
 ```
 
+Try different Matplotlib colormaps by changing the `cmap` argument:
 ```python
-ax.set_extent(
-    [-125, -66.5, 24, 50],
-    crs=ccrs.PlateCarree()
-)
+cmap="BrBG"
+cmap="PuOr"
+cmap="RdBu_r"
+cmap="BrBG_r"
 ```
+Ref: https://matplotlib.org/stable/users/explain/colors/colormaps.html
 
-The color range can be changed depending on the anomaly magnitude. For example:
-
+You can also adjust the contour levels to improve the visualization:
 ```python
-clevs = np.arange(-10, 10.1, 1)
+levels = range(-10, 11, 1)
+levels = range(-14, 15, 2)
+levels = range(-20, 21, 2)
 ```
 
-uses a smaller range, while
-
-```python
-clevs = np.arange(-20, 20.1, 2)
-```
-
-uses a wider range with 2°C intervals.
-
-## Suggested Exercise Flow
-
-1. Run the Plate Carree example and inspect the dataset.
-2. Complete the Robinson projection example.
-3. Compare the Plate Carree and Robinson maps.
-4. Run the Pacific-centered Robinson example and examine the map seam.
-5. Run the precipitation anomaly example and compare temperature and precipitation patterns.
-6. Complete the Lambert Conformal U.S. map exercise.
-7. Modify the map center, map extent, and color range.
-
-## Discussion Questions
-
-1. Why is Plate Carree easy to understand but not always ideal for global visualization?
-2. Why is Robinson projection useful for global climate maps?
-3. Why does a Pacific-centered map require special treatment near the longitude boundary?
-4. Why is Lambert Conformal appropriate for mid-latitude regional maps?
-5. How does changing the color range affect the interpretation of temperature anomalies?
-
-## Notes for Students
-
-- Always check whether the data longitude range is `0–360` or `-180–180`.
-- Use `transform=ccrs.PlateCarree()` when plotting regular latitude–longitude data.
-- Use `ax.set_global()` for global maps.
-- Use `ax.set_extent()` for regional maps.
-- For anomaly maps, choose a balanced color range around zero.
-- Use `extend="both"` when values exceed the selected color range.
-
-## Expected Output
-
-Students should create several map figures showing January 2026 climate anomalies using different projections. The final U.S. map should show 2-m air temperature anomalies over the contiguous United States using a Lambert Conformal projection.
+---
+## Key Takeaways
+- Compare Plate Carree, Robinson, and Lambert Conformal projections.
+- Shift the map center using `central_longitude`.
+- Focus on a region using `ax.set_extent()`.
+- Read climate data from OPeNDAP or local NetCDF files.
+- Choose appropriate colormaps and contour levels for effective visualization.
+- 
