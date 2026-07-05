@@ -247,4 +247,3 @@ levels = range(-20, 21, 2)
 - Focus on a region using `ax.set_extent()`.
 - Read climate data from OPeNDAP or local NetCDF files.
 - Choose appropriate colormaps and contour levels for effective visualization.
-- 
