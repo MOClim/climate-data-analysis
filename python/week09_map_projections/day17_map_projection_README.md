@@ -18,6 +18,28 @@ By the end of this lesson, students will be able to:
 
 ## Key Concepts
 
+### Remote data access
+
+Accessing remote climate datasets with **OPeNDAP**, using URLs such as
+  `https://psl.noaa.gov/thredds/dodsC/...` to read NetCDF files directly from NOAA servers without downloading them first.
+
+### OPeNDAP vs. Downloaded NetCDF Files
+
+**OPeNDAP (Remote Access)**
+- ✔ No need to download large datasets
+- ✔ Always accesses the latest available data
+- ✔ Saves local disk space
+- ✘ Requires an internet connection
+- ✘ Performance depends on network speed
+
+**Downloaded NetCDF Files (Local Access)**
+- ✔ Faster data access after download
+- ✔ Works without an internet connection
+- ✔ Suitable for repeated analyses
+- ✘ Requires local storage
+- ✘ Must be updated manually when newer data become available
+
+  
 ### Projection vs. Transform
 
 In Cartopy, `projection` and `transform` have different meanings.
@@ -34,25 +56,69 @@ transform=ccrs.PlateCarree()
 
 The `transform` tells Cartopy that the input data are arranged on a regular longitude–latitude grid. Most climate datasets downloaded from NOAA, NCAR, or similar archives use this type of grid.
 
-## Scripts
-
-### 1. Plate Carree Projection
+---
+### Exercise 1: Plate Carree Projection
 
 ```bash
-python w09_01_platecarree_airT_anomaly.sample.py
+cp w09_01_platecarree_airT_anomaly.sample.py w09_01_platecarree_airT_anomaly.py
 ```
 
-This script introduces a simple latitude–longitude map. Plate Carree is useful for understanding gridded climate data because longitude and latitude are displayed directly.
+This script introduces a simple latitude–longitude map. Plate Carree projection is useful for understanding gridded climate data because it displays longitude and latitude directly.
 
 Important points:
-
 - Open a NOAA PSL OPeNDAP dataset.
 - Inspect the data structure and available time range.
 - Calculate January 2026 2-m air temperature anomaly.
 - Plot the anomaly on a latitude–longitude map.
 
-### 2. Robinson Projection
+##OPeNDAP dataset
+```python
+# Example NOAA PSL OPeNDAP URLs
+air_url = "https://psl.noaa.gov/thredds/dodsC/Datasets/ncep.reanalysis.derived/surface/air.mon.mean.nc"
+prate_url = "https://psl.noaa.gov/thredds/dodsC/Datasets/ncep.reanalysis.derived/surface/prate.sfc.mon.mean.nc"
+sst_url = "https://psl.noaa.gov/thredds/dodsC/Datasets/COBE2/sst.mon.mean.nc"
 
+ds = xr.open_dataset(air_url)
+print(ds)
+print(ds.time[-1].values)
+
+# Step 1: Inspect the dataset structure and available time range.
+# Run this section first and check the printed output.
+# Once you understand the data format, comment out sys.exit()
+# so the script can proceed to the remaining steps.
+```
+
+##Calculate January 2026 temperature anomaly
+```python
+# Example: January climatology
+jan_clim = air_c.sel(time=slice("1991-01-01", "2020-12-31")).where(
+    air_c["time.month"] == 1, drop=True
+).mean("time")
+
+# Example: January 2026 anomaly
+jan_2026 = air_c.sel(time="2026-01-01")
+anom = jan_2026 - jan_clim
+```
+
+##Projection and transform setting
+```python
+# projection: map coordinate system (output)
+# transform : data coordinate system (input)
+
+ax = plt.axes(projection=ccrs.PlateCarree())
+
+cf = ax.contourf(
+    anom.lon,
+    anom.lat,
+    anom,
+    levels=levels,
+    cmap="RdBu_r",
+    transform=ccrs.PlateCarree()
+)
+```
+
+---
+### Exercise 2: Robinson projection
 ```bash
 python w09_02_robinson_airT_anomaly.sample.py
 ```
