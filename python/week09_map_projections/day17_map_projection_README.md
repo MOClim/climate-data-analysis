@@ -1,10 +1,8 @@
-# Day 16: Map Projections with Cartopy
+# Day 17: Map Projections with Cartopy
 
 ## Overview
 
-In this lesson, we will learn how map projections affect the visualization of weather and climate data. Climate datasets are usually stored on a latitude–longitude grid, but different map projections are useful for different scientific purposes. We will compare global map projections and then focus on a regional Lambert Conformal projection for North America and the contiguous United States.
-
-The examples use NOAA NCEP/NCAR Reanalysis monthly data and Cartopy. We will calculate January 2026 anomalies relative to the 1991–2020 climatology and display the results on different map projections.
+Learn how to visualize weather and climate data using different Cartopy map projections. This lesson covers global projections (Plate Carree and Robinson) and regional mapping with the Lambert Conformal projection.
 
 ## Learning Objectives
 
