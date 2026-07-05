@@ -1,4 +1,4 @@
-# Day 17: Map Projections with Cartopy
+# Day 17: Global Map Projections with Cartopy
 
 ## Overview
 
