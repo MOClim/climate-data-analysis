@@ -66,7 +66,7 @@ cp w09_01_platecarree_airT_anomaly.sample.py w09_01_platecarree_airT_anomaly.py
 This script introduces a simple latitude–longitude map. Plate Carree projection is useful for understanding gridded climate data because it displays longitude and latitude directly.
 
 Important points:
-- Open a NOAA PSL OPeNDAP dataset.
+- Open a NOAA OPeNDAP dataset.
 - Inspect the data structure and available time range.
 - Calculate January 2026 2-m air temperature anomaly.
 - Plot the anomaly on a latitude–longitude map.
