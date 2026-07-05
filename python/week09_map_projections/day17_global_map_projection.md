@@ -188,7 +188,7 @@ When the dataset is read successfully, you should see output similar to:
 ```
 
 ---
-### Exercise 5: NetCDF 
+### Exercise 5: Plot Precipitation Anomalies from a Local NetCDF File 
 
 In this exercise, you will modify the previous precipitation example to read data from a local NetCDF file instead of an online OPeNDAP server. You will also select a more suitable color map and color range for precipitation anomalies.
 
