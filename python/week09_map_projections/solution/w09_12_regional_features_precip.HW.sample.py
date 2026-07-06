@@ -1,0 +1,145 @@
+# ---------------------------------------------------------
+# Robinson Projection with Map Features
+# ---------------------------------------------------------
+# This program plots January 2026 precipitation
+# anomalies over the Africa.
+#
+# The purpose of this exercise is to improve regional
+# climate-map readability by adding common Cartopy map
+# features such as coastlines, borders, states, lakes,
+# rivers, land/ocean shading, and gridlines.
+#
+# Students can modify:
+#   1. map features added with ax.add_feature()
+#   2. gridline settings
+#   3. color range using clevs
+# ---------------------------------------------------------
+
+import xarray as xr
+import numpy as np
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+from pathlib import Path
+
+import warnings
+warnings.filterwarnings(
+    "ignore",
+    message="invalid value encountered in create_collection",
+    category=RuntimeWarning
+)
+
+# ---------------------------------------------------------
+# Read local NetCDF file
+# ---------------------------------------------------------
+script_dir = Path(__file__).resolve().parent
+
+# Check whether the script is inside the "solution" directory
+if script_dir.name == "solution":
+    repo_dir = script_dir.parents[2]
+else:
+    repo_dir = script_dir.parents[1]
+
+prate_file = repo_dir / "data_raw/prate.mon.mean.nc"
+ds = xr.open_dataset(prate_file)
+
+print(ds)
+print(ds.time[-1].values)
+
+# ---------------------------------------------------------
+# Calculate January 2026 precipitation anomaly
+# ---------------------------------------------------------
+dat = ds["prate"].load()
+
+# Convert 
+# Convert from kg m-2 s-1 to mm/day
+dat_c = dat * 86400
+dat_c.attrs["units"] = "mm/day"
+
+
+# January climatology: 1991-2020
+ref = dat_c.sel(time=slice("1991-01-01", "2020-12-31"))
+jan_clim = ref.groupby("time.month").mean("time").sel(month=1)
+
+# January 2026 anomaly
+jan_2026 = dat_c.sel(time="2026-01-01").squeeze()
+anom = jan_2026 - jan_clim
+
+print(anom.min().values)
+print(anom.max().values)
+
+# ---------------------------------------------------------
+# Create figure and map projection
+# ---------------------------------------------------------
+fig = plt.figure(figsize=(10, 6))
+
+ax = plt.axes(
+    projection=ccrs.Robinson(central_longitude=20))
+
+ax.set_extent(
+    [-30, 65, -50, 45],
+    crs=ccrs.PlateCarree()
+)
+
+# ---------------------------------------------------------
+# Add background map features
+# ---------------------------------------------------------
+# These features provide geographic context for interpreting
+# regional climate anomalies.
+
+ax.add_feature(cfeature.LAND, facecolor="lightgray", zorder=0)
+ax.add_feature(cfeature.OCEAN, facecolor="white", zorder=0)
+ax.add_feature(cfeature.LAKES, facecolor="white", edgecolor="gray", linewidth=0.4)
+ax.add_feature(cfeature.RIVERS, edgecolor="gray", linewidth=0.4)
+
+# Political and coastline boundaries
+ax.coastlines(linewidth=0.7)
+ax.add_feature(cfeature.BORDERS, linewidth=0.5)
+ax.add_feature(cfeature.STATES, linewidth=0.3)
+
+# ---------------------------------------------------------
+# Plot precipitation anomaly
+# ---------------------------------------------------------
+# Use a diverging color map because anomalies have both
+# negative and positive values relative to climatology.
+
+clevs = np.arange(-5, 5.1, 0.5)
+
+p = anom.plot(
+    ax=ax,
+    transform=ccrs.PlateCarree(),
+    cmap="BrBG",
+    levels=clevs,
+    extend="both",
+    cbar_kwargs={"label": "Precipitation Anomaly (mm/day)"}
+)
+
+# ---------------------------------------------------------
+# Add latitude-longitude gridlines
+# ---------------------------------------------------------
+# Gridlines help users connect the regional map to geographic
+# coordinates. Labels are kept only on the left and bottom to
+# avoid crowding the figure.
+
+gl = ax.gridlines(
+    crs=ccrs.PlateCarree(),
+    draw_labels=True,
+    linewidth=0.4,
+    color="gray",
+    alpha=0.6,
+    linestyle="--"
+)
+
+gl.top_labels = False
+gl.right_labels = False
+gl.xlabel_style = {"size": 8}
+gl.ylabel_style = {"size": 8}
+
+ax.set_title(
+    "January 2026 Precipitation Anomaly\n"
+    "Robinson Projection with Map Features"
+)
+
+output_path = Path(__file__).with_suffix(".jpg")
+plt.savefig(output_path, dpi=300, bbox_inches="tight")
+plt.show()
