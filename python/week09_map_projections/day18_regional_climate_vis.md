@@ -63,6 +63,21 @@ Try changing
 - `ax.set_extent()`
 - `clevs`
 
+**Setup the map range** 
+```python
+ax = plt.axes(
+    projection=ccrs.LambertConformal(
+        central_longitude=,
+        central_latitude=
+    )
+)
+```
+```python
+ax.set_extent(
+    [, , , ],
+    crs=ccrs.PlateCarree())
+```
+
 ---
 ### Exercise 3. Regional Projection Examples
 
