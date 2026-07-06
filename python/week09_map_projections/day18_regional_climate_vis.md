@@ -63,19 +63,19 @@ Try changing
 - `ax.set_extent()`
 - `clevs`
 
-**Setup the map range** 
+**Setup the map projection and region** 
 ```python
 ax = plt.axes(
     projection=ccrs.LambertConformal(
-        central_longitude=,
-        central_latitude=
+        central_longitude=..., # Projection center (longitude)
+        central_latitude=... # Projection center (latitude)
     )
 )
-```
-```python
+
 ax.set_extent(
-    [, , , ],
-    crs=ccrs.PlateCarree())
+    [west, east, south, north],  # Map extent (degrees)
+    crs=ccrs.PlateCarree()
+)
 ```
 
 ---
