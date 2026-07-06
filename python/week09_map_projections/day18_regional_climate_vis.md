@@ -125,6 +125,14 @@ ax.add_feature(cfeature.BORDERS, linewidth=0.5)
 ax.add_feature(cfeature.STATES, linewidth=0.3)
 ```
 
+#### Customize gridline labels
+```python
+gl.top_labels = False      # Hide top labels
+gl.right_labels = False    # Hide right labels
+gl.xlabel_style = {"size": 8}   # Longitude label size
+gl.ylabel_style = {"size": 8}   # Latitude label size
+```
+
 ---
 ### Exercise 5: Lambert Precipitation Projection with Map Features
 
