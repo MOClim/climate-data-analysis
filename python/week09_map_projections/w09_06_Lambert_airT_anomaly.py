@@ -61,7 +61,7 @@ print(anom.max().values)
 fig = plt.figure(figsize=(10, 6))
 
 #
-# Step 2: Use Lambert Conformal projection
+# Use Lambert Conformal projection
 #
 ax = plt.axes(
     projection=ccrs.LambertConformal(

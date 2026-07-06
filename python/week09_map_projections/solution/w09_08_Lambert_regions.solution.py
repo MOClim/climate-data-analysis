@@ -1,5 +1,5 @@
 # ---------------------------------------------------------
-# Lambert Projection Map over the United States
+# Lambert Projection Map over the Europe
 # ---------------------------------------------------------
 # This program plots January 2026 2-m air temperature
 # anomalies using NOAA NCEP/NCAR Reanalysis data.
@@ -7,13 +7,14 @@
 # The anomaly is calculated relative to the 1991–2020
 # January climatology. The Lambert Conformal projection is
 # used because it is well suited for mid-latitude regional
-# maps, including the contiguous United States.
+# maps.
 #
 # Students can modify:
 #   1. the map center in LambertConformal()
 #   2. the color range using clevs below
 #   3. the map domain in ax.set_extent()
 # ---------------------------------------------------------
+
 
 import xarray as xr
 import numpy as np
@@ -81,7 +82,6 @@ fig = plt.figure(figsize=(10, 6))
 
 #
 # Use Lambert Conformal projection
-# Step 1: Define the map projection.
 # The central longitude and latitude place the projection center
 # near the middle of the contiguous United States.
 # central_longitude=xx,
@@ -89,8 +89,8 @@ fig = plt.figure(figsize=(10, 6))
 #
 ax = plt.axes(
     projection=ccrs.LambertConformal(
-        central_longitude=,
-        central_latitude=
+        central_longitude=0.,
+        central_latitude=50.
     )
 )
 
@@ -101,7 +101,7 @@ ax = plt.axes(
 # For example:
 #   np.arange(-10, 10.1, 1)  -> -10 to +10 °C, every 1 °C
 #   np.arange(-15, 15.1, 1)  -> -15 to +15 °C, every 1 °C
-clevs = np.arange(, , )
+clevs = np.arange(-10, 10.1, 1)
 
 anom.plot(
     ax=ax,
@@ -118,7 +118,7 @@ anom.plot(
 # This range focuses on the contiguous United States.
 #
 ax.set_extent(
-    [, , , ], 
+    [-20, 20, 30, 70], 
     crs=ccrs.PlateCarree())
 
 ax.coastlines()
