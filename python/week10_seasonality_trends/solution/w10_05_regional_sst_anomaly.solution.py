@@ -14,9 +14,8 @@
 #           monthly_climatology_anomaly() function.
 #
 #   Step 3: Calculate annual mean anomalies by averaging the
-#           monthly anomalies for each year. Use
-#           resample(time="YE").mean() and keep only complete
-#           years with 12 monthly values.
+#           monthly anomalies for each year by using 
+#           resample(time="YE").mean().
 # ---------------------------------------------------------
 
 import xarray as xr

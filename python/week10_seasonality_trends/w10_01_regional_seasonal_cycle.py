@@ -61,16 +61,6 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
     return dat_region_mean
 
 
-def monthly_climatology(monthly_mean, clim_start="1991-01-01", clim_end="2020-12-31"):
-    """Calculate monthly climatology from regional monthly mean time series."""
-
-    clim = monthly_mean.sel(time=slice(clim_start, clim_end)).groupby(
-        "time.month"
-    ).mean("time")
-
-    return clim
-
-
 # ---------------------------------------------------------
 # Read data
 # ---------------------------------------------------------
@@ -117,8 +107,11 @@ pr_NA = regional_weighted_mean(prate, lat_str, lat_end, lon_str, lon_end)
 clim_start = "1991-01-01"
 clim_end = "2020-12-31"
 
-air_clim = monthly_climatology(air_NA, clim_start, clim_end)
-pr_clim = monthly_climatology(pr_NA, clim_start, clim_end)
+air_clim = air_NA.sel(time=slice(clim_start, clim_end)
+   ).groupby("time.month").mean("time")
+pr_clim = pr_NA.sel(time=slice(clim_start, clim_end)
+   ).groupby("time.month").mean("time")
+
 
 
 # ---------------------------------------------------------

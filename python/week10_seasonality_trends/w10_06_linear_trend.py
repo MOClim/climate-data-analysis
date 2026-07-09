@@ -13,13 +13,11 @@
 #   anomalies (black), and the linear trend (red).
 # ---------------------------------------------------------
 
-
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 from matplotlib.ticker import MultipleLocator
-
 
 # ---------------------------------------------------------
 # Functions
@@ -84,11 +82,8 @@ def monthly_climatology_anomaly(monthly_mean, clim_start="1991-01-01", clim_end=
     This removes the climatological seasonal cycle.
     """
 
-    clim = monthly_mean.sel(time=slice(clim_start, clim_end)).groupby(
-        "time.month"
-    ).mean("time")
-
-#    clim = monthly_climatology(monthly_mean, clim_start, clim_end)
+    clim = monthly_mean.sel(time=slice(clim_start, clim_end)
+      ).groupby("time.month").mean("time")
     anom = monthly_mean.groupby("time.month") - clim
 
     return anom
@@ -113,14 +108,15 @@ def linear_trend(da):
     x = np.arange(da.sizes["time"])
     y = da.values
 
+    # Fit a linear trend to the data
     slope, intercept = np.polyfit(x, y, 1)
 
+    # Calculate the fitted trend line
     trend = xr.DataArray(
         slope * x + intercept,
-        coords={"time": da.time},
-        dims=["time"]
-    )
+        coords={"time": da.time},dims=["time"])
 
+    # Convert the trend from per year to per decade
     slope_decade = slope * 10
 
     return trend, slope_decade

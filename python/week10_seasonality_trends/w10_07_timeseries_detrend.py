@@ -76,11 +76,8 @@ def monthly_climatology_anomaly(monthly_mean, clim_start="1991-01-01", clim_end=
     This removes the climatological seasonal cycle.
     """
 
-    clim = monthly_mean.sel(time=slice(clim_start, clim_end)).groupby(
-        "time.month"
-    ).mean("time")
-
-#    clim = monthly_climatology(monthly_mean, clim_start, clim_end)
+    clim = monthly_mean.sel(time=slice(clim_start, clim_end)
+       ).groupby("time.month").mean("time")
     anom = monthly_mean.groupby("time.month") - clim
 
     return anom
@@ -165,13 +162,11 @@ def linear_detrend(da, trend_start="1981-01-01", trend_end="2020-12-31"):
     x_all = year_all - year_mean
 
     # Fit linear trend: anomaly = slope * centered_year + intercept
-    coeff = np.polyfit(x_fit.values, da_fit.values, deg=1)
-    slope_per_year = coeff[0]
-    intercept = coeff[1]
+    slope, intercept = np.polyfit(x_fit.values, da_fit.values, deg=1)
 
     # Fitted linear trend line for all years
     trend_line = xr.DataArray(
-        slope_per_year * x_all + intercept,
+        slope * x_all + intercept,
         dims="time",
         coords={"time": da.time},
         name="linear_trend"
@@ -182,7 +177,7 @@ def linear_detrend(da, trend_start="1981-01-01", trend_end="2020-12-31"):
     da_detrended.name = "detrended_anomaly"
 
     # Convert trend unit to degC per decade
-    slope_decade = slope_per_year * 10.0
+    slope_decade = slope * 10.0
 
     return da_detrended, trend_line, slope_decade
 
@@ -249,8 +244,9 @@ sst_NA_anom_monthly = monthly_climatology_anomaly(sst_NA, clim_start, clim_end)
 sst_NA_anom_annual = sst_NA_anom_monthly.resample(time='YE').mean()
 
 
-## Calculate a linear trend of annual-mean anomaly
-sst_NA_trend, slope_decade = linear_trend(sst_NA_anom_annual)
+# Calculate a linear trend of annual-mean anomaly
+# Ignore the second returned value
+sst_NA_trend, __ = linear_trend(sst_NA_anom_annual)
 
 # Detrended annual anomaly
 sst_NA_detrended, trend_line, slope_decade = linear_detrend(

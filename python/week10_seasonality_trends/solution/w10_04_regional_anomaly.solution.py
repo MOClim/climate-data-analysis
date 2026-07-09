@@ -80,8 +80,6 @@ def monthly_climatology_anomaly(monthly_mean, clim_start="1991-01-01", clim_end=
     clim = monthly_mean.sel(time=slice(clim_start, clim_end)).groupby(
         "time.month"
     ).mean("time")
-
-#    clim = monthly_climatology(monthly_mean, clim_start, clim_end)
     anom = monthly_mean.groupby("time.month") - clim
 
     return anom
