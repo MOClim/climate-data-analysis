@@ -229,12 +229,8 @@ Annual mean anomaly
 ---
 
 ## Key Takeaways
-
-- Calculate monthly climatology.
-- Visualize regional seasonal cycles.
-- Plot global seasonal climatology maps.
-- Compare different anomaly definitions.
-- Calculate annual mean anomalies.
-- Apply the workflow to SST observations.
-
-These anomaly calculations provide the foundation for the trend analysis and detrending techniques introduced in the next lesson.
+- Monthly climatology represents the average seasonal cycle over a reference period.
+- Monthly climatology removes the regular seasonal cycle when calculating anomalies.
+- Monthly climatology anomalies highlight climate variability more clearly than anomalies relative to a single long-term mean.
+- Annual mean anomalies summarize year-to-year climate variability by averaging monthly anomalies.
+- The same climatology and anomaly workflow can be applied to different climate variables, including air temperature, precipitation, and sea surface temperature (SST).
