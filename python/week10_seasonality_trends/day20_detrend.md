@@ -18,7 +18,7 @@ In this lesson, you will calculate linear trends, compare anomaly and detrended 
 
 ---
 
-## Exercise 1: Linear Trend
+### Exercise 1: Linear Trend
 
 Estimate the long-term linear trend of annual mean SST anomalies.
 
@@ -49,7 +49,7 @@ Try changing the trend analysis period and compare how the estimated trend chang
 
 ---
 
-## Exercise 2: Detrended Time Series
+### Exercise 2: Detrended Time Series
 
 Remove the long-term linear trend from annual SST anomalies.
 
@@ -87,7 +87,7 @@ The right panel shows the detrended annual anomaly after removing the fitted tre
 
 ---
 
-## Exercise 3: Regional Detrending
+### Exercise 3: Regional Detrending
 
 Compare annual anomalies and detrended anomalies for multiple climate regions.
 
@@ -113,7 +113,7 @@ and compare how the estimated trends and detrended time series change.
 
 ---
 
-## Exercise 4: Global Detrended Maps
+### Exercise 4: Global Detrended Maps
 
 Compare annual mean temperature anomaly maps before and after removing the linear trend.
 
@@ -123,12 +123,33 @@ python w10_09_detrended_airt_anom_map.py
 
 The program:
 - Calculates annual mean temperature anomalies.
-- Estimates a linear trend at every grid point.
-- Removes the fitted trend.
+- Estimates a linear trend at each grid point.
+- Removes the fitted trend from each grid point.
 - Compares annual anomaly and detrended anomaly maps.
 - Displays the corresponding global mean time series.
 
-The four-panel figure illustrates the relationship between the spatial anomaly patterns and the global mean time series before and after detrending.
+```python
+# Fit linear trend at each grid point:
+# anomaly = slope * centered_year + intercept
+#
+# Compute the linear trend at all grid points simultaneously.
+# np.polyfit() is suitable for a 1-D time series, but a 3-D field
+# (time, lat, lon) would require looping over every grid point.
+# This vectorized calculation is much faster and more efficient.
+
+slope = (da_fit * x_fit).sum("time", skipna=True) / (
+        x_fit ** 2).sum("time", skipna=True)
+intercept = da_fit.mean("time", skipna=True)
+
+# Fitted linear trend line for all years
+trend_line = slope * x_all + intercept
+trend_line.name = "linear_trend"
+
+# Remove the full fitted trend line
+da_detrended = da - trend_line
+da_detrended.name = "detrended_anomaly"
+```
+The four-panel figure connects the map patterns with the global mean time series. This helps show how detrending changes both the spatial anomaly field and the time series for the selected year.
 
 ---
 
@@ -139,11 +160,10 @@ Complete the homework program to compare annual SST anomalies and detrended annu
 Create a working copy of the sample program.
 
 ```bash
-cp w10_10_detrended_sst_anom_map.HW.py w10_10_detrended_sst_anom_map.py
+cp w10_10_detrended_sst_anom_map.HW.sample.py w10_10_detrended_sst_anom_map.HW.py
 ```
 
 Complete the following tasks:
-
 - Calculate detrended annual SST anomalies using `linear_detrend()`.
 - Calculate the Tropical Pacific area-weighted annual mean time series.
 - Plot annual SST anomaly and detrended anomaly maps.
@@ -153,15 +173,15 @@ Complete the following tasks:
 Then execute
 
 ```bash
-python w10_10_detrended_sst_anom_map.py
+python w10_10_detrended_sst_anom_map.HW.py
 ```
 
 The completed figure should contain:
-
 - Annual SST anomaly map
 - Detrended annual SST anomaly map
 - Tropical Pacific annual anomaly with linear trend
 - Tropical Pacific detrended annual anomaly
+
 
 ---
 
@@ -220,9 +240,7 @@ The resulting detrended maps highlight regional climate variability after removi
 
 ---
 
-## Summary
-
-Today you learned how to:
+## Key Takeaways
 
 - Estimate linear trends from annual climate anomalies.
 - Express climate trends in °C per decade.
