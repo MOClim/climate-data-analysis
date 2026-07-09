@@ -18,7 +18,6 @@ import xarray as xr
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
-
 # ---------------------------------------------------------
 # Functions
 # ---------------------------------------------------------
@@ -58,9 +57,8 @@ def annual_anomaly(monthly_mean, clim_start="1991-01-01", clim_end="2020-12-31")
     """Calculate annual mean anomalies relative to monthly climatology."""
 
     # Monthly climatology
-    clim = monthly_mean.sel(time=slice(clim_start, clim_end)).groupby(
-        "time.month"
-    ).mean("time")
+    clim = monthly_mean.sel(time=slice(clim_start, clim_end)
+      ).groupby("time.month").mean("time")
 
     # Monthly anomaly
     anom = monthly_mean.groupby("time.month") - clim
@@ -123,13 +121,11 @@ def linear_detrend(da, trend_start="1981-01-01", trend_end="2020-12-31"):
     x_all = year_all - year_mean
 
     # Fit linear trend: anomaly = slope * centered_year + intercept
-    coeff = np.polyfit(x_fit.values, da_fit.values, deg=1)
-    slope_per_year = coeff[0]
-    intercept = coeff[1]
+    slope, intercept = np.polyfit(x_fit.values, da_fit.values, deg=1)
 
     # Fitted linear trend line for all years
     trend_line = xr.DataArray(
-        slope_per_year * x_all + intercept,
+        slope * x_all + intercept,
         dims="time",
         coords={"time": da.time},
         name="linear_trend"
@@ -140,7 +136,7 @@ def linear_detrend(da, trend_start="1981-01-01", trend_end="2020-12-31"):
     da_detrended.name = "detrended_anomaly"
 
     # Convert trend unit to degC per decade
-    slope_decade = slope_per_year * 10.0
+    slope_decade = slope * 10.0
 
     return da_detrended, trend_line, slope_decade
 
@@ -156,7 +152,6 @@ air = ds["air"]
 # Convert K to degC
 air = air - 273.15
 air.attrs["units"] = "degC"
-
 
 # ---------------------------------------------------------
 # Analysis settings

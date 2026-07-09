@@ -142,13 +142,18 @@ def linear_detrend(da, trend_start="1949-01-01", trend_end="2020-12-31"):
 
     # Fit linear trend at each grid point:
     # anomaly = slope * centered_year + intercept
-    slope_per_year = (da_fit * x_fit).sum("time", skipna=True) / (
-        x_fit ** 2
-    ).sum("time", skipna=True)
+    #
+    # Compute the linear trend at all grid points simultaneously.
+    # np.polyfit() is suitable for a 1-D time series, but a 3-D field
+    # (time, lat, lon) would require looping over every grid point.
+    # This vectorized calculation is much faster and more efficient.
+
+    slope = (da_fit * x_fit).sum("time", skipna=True) / (
+        x_fit ** 2).sum("time", skipna=True)
     intercept = da_fit.mean("time", skipna=True)
 
     # Fitted linear trend line for all years
-    trend_line = slope_per_year * x_all + intercept
+    trend_line = slope * x_all + intercept
     trend_line.name = "linear_trend"
 
     # Remove the full fitted trend line
@@ -156,7 +161,7 @@ def linear_detrend(da, trend_start="1949-01-01", trend_end="2020-12-31"):
     da_detrended.name = "detrended_anomaly"
 
     # Convert trend unit to degC per decade
-    slope_decade = slope_per_year * 10.0
+    slope_decade = slope * 10.0
     slope_decade.name = "linear_trend_per_decade"
 
     return da_detrended, trend_line, slope_decade

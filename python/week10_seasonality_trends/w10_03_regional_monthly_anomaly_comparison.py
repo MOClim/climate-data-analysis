@@ -97,17 +97,6 @@ def long_term_mean_anomaly(monthly_mean, clim_start="1991-01-01", clim_end="2020
 
     return anom_mean
 
-
-def monthly_climatology(monthly_mean, clim_start="1991-01-01", clim_end="2020-12-31"):
-    """Calculate monthly climatology for a selected reference period."""
-
-    clim = monthly_mean.sel(time=slice(clim_start, clim_end)).groupby(
-        "time.month"
-    ).mean("time")
-
-    return clim
-
-
 def monthly_climatology_anomaly(monthly_mean, clim_start="1991-01-01", clim_end="2020-12-31"):
     """
     Calculate monthly anomalies relative to monthly climatology.
@@ -115,7 +104,8 @@ def monthly_climatology_anomaly(monthly_mean, clim_start="1991-01-01", clim_end=
     This removes the climatological seasonal cycle.
     """
 
-    clim = monthly_climatology(monthly_mean, clim_start, clim_end)
+    clim = monthly_mean.sel(time=slice(clim_start,clim_end)
+       ).groupby("time.month").mean("time")
     anom = monthly_mean.groupby("time.month") - clim
 
     return anom

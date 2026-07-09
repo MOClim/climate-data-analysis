@@ -14,9 +14,8 @@
 #           monthly_climatology_anomaly() function.
 #
 #   Step 3: Calculate annual mean anomalies by averaging the
-#           monthly anomalies for each year. Use
-#           resample(time="YE").mean() and keep only complete
-#           years with 12 monthly values.
+#           monthly anomalies for each year by using
+#           resample(time="YE").mean().
 # ---------------------------------------------------------
 
 import xarray as xr
@@ -88,11 +87,8 @@ def monthly_climatology_anomaly(monthly_mean, clim_start="1991-01-01", clim_end=
     This removes the climatological seasonal cycle.
     """
 
-    clim = monthly_mean.sel(time=slice(clim_start, clim_end)).groupby(
-        "time.month"
-    ).mean("time")
-
-#    clim = monthly_climatology(monthly_mean, clim_start, clim_end)
+    clim = monthly_mean.sel(time=slice(clim_start, clim_end)
+      ).groupby("time.month").mean("time")
     anom = monthly_mean.groupby("time.month") - clim
 
     return anom
@@ -109,9 +105,6 @@ def monthly_climatology_anomaly(monthly_mean, clim_start="1991-01-01", clim_end=
 #
 #   ncdump -h ../../data_raw/HadISST_sst.nc
 # ---------------------------------------------------------
-
-
-
 
 sst =
 

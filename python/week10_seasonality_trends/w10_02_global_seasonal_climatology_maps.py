@@ -23,6 +23,9 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from cartopy.util import add_cyclic_point
+import sys
+from matplotlib.colors import CSS4_COLORS
+
 
 warnings.filterwarnings(
     "ignore",
@@ -100,7 +103,7 @@ fig, axes = plt.subplots(
 
 # Use the same color scale for all four seasons
 levels = np.arange(-40, 41, 5)
-cmap = "coolwarm"
+cmap = "turbo"
 
 season_titles = {
     "DJF": "December-January-February",
