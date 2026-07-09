@@ -244,12 +244,10 @@ The resulting detrended maps highlight regional climate variability after removi
 ---
 
 ## Key Takeaways
-
-- Estimate linear trends from annual climate anomalies.
-- Express climate trends in °C per decade.
-- Remove long-term linear trends from annual anomalies.
-- Compare anomaly and detrended anomaly time series.
-- Interpret detrended global temperature maps.
-- Apply detrending to Tropical Pacific SST as part of Homework 8.
-
-Detrending is a fundamental technique in climate data analysis because it separates long-term climate change from shorter-term natural variability.
+- A linear trend quantifies the long-term rate of climate change.
+- Climate trends are commonly expressed in units of °C per decade.
+- Detrending removes the long-term linear trend from a climate time series, making natural climate variability easier to identify.
+- Comparing anomaly and detrended anomaly time series reveals the contribution of long-term warming.
+- Detrending can be applied to both time series and spatial maps to separate long-term climate change from regional climate variability.
+- The same detrending workflow applies to different climate variables, including air temperature and sea surface temperature (SST).
+natural variability.
