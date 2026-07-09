@@ -182,6 +182,9 @@ The completed figure should contain:
 - Tropical Pacific annual anomaly with linear trend
 - Tropical Pacific detrended annual anomaly
 
+#### Submit
+- Python program
+- Output figure (PNG or JPG)
 
 ---
 
