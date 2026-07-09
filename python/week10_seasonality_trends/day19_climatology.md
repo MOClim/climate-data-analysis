@@ -137,38 +137,49 @@ while the annual mean anomalies smooth out the monthly fluctuations and highligh
 
 ---
 
-### 5. SST Example
+### Exercise 5: SST Example
 
 Apply the same climatology and anomaly calculations to sea surface temperature.
 
 Topics include:
-
 - Reading HadISST data
 - Monthly climatology
 - Monthly anomaly
 - Annual mean anomaly
 - Regional SST time series
 
-Sample program:
+To calculate the annual mean anomaly of North Atlantic SST, revise the sample program.
+```bash
+cp w10_05_regional_sst_anomaly.sample.py w10_05_regional_sst_anomaly.py
+```
 
+Complete the following steps:
+- Check a variable name of HadISST data using
+  ```bash
+  ncdump ../../data_raw/HadISST_sst.nc |less
+  ```
+- Read `../../data_raw/HadISST_sst.nc`
+- Extract the SST variable
+- Calculate monthly SST anomalies relative to the 1991–2020 monthly climatology using `monthly_climatology_anomaly()`
+- Calculate annual mean anomalies by averaging monthly anomalies within each year using `resample(time="YE").mean()`
+
+Then execute the program:
+```bash
+python w10_05_regional_sst_anomaly.py
 ```
-w10_05_regional_sst_anomaly.sample.py
-```
+This exercise applies the same anomaly calculation workflow to an ocean surface temperature dataset.
 
 ---
 
 ## Key Concepts
 
 ### Climatology
-
 A climatology is the average climate calculated over a specified reference period.
 
 For this course:
-
 ```
 1991–2020
 ```
-
 is used as the climatological reference period.
 
 ---
@@ -184,7 +195,6 @@ The seasonal cycle represents the regular annual variation caused primarily by E
 Monthly climatology is the average value for each calendar month.
 
 Example:
-
 ```
 January climatology
 = average of all January values
@@ -196,7 +206,6 @@ during 1991–2020.
 ### Monthly Anomaly
 
 Monthly anomaly is calculated as
-
 ```
 Monthly anomaly
 =
@@ -204,7 +213,6 @@ Monthly value
 −
 Monthly climatology
 ```
-
 This removes the regular seasonal cycle.
 
 ---
@@ -212,7 +220,6 @@ This removes the regular seasonal cycle.
 ### Annual Mean Anomaly
 
 Annual mean anomaly is obtained by averaging the twelve monthly anomalies within each year.
-
 ```
 12 monthly anomalies
         ↓
@@ -221,9 +228,7 @@ Annual mean anomaly
 
 ---
 
-## Summary
-
-Today you learned how to:
+## Takeaways
 
 - Calculate monthly climatology.
 - Visualize regional seasonal cycles.
