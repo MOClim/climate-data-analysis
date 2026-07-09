@@ -228,7 +228,7 @@ Annual mean anomaly
 
 ---
 
-## Takeaways
+## Key Takeaways
 
 - Calculate monthly climatology.
 - Visualize regional seasonal cycles.
