@@ -153,7 +153,7 @@ The four-panel figure connects the map patterns with the global mean time series
 
 ---
 
-## Homework 8: Tropical Pacific SST Detrended Anomaly
+## Homework 9: Tropical Pacific SST Detrended Anomaly
 
 Complete the homework program to compare annual SST anomalies and detrended annual SST anomalies.
 
