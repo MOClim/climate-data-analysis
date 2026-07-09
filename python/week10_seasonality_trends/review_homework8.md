@@ -1,4 +1,4 @@
-# Homework 9 Review — Regional Climate Visualization
+# Homework 8 Review — Regional Climate Visualization
 
 This review summarizes one possible solution for Homework 9. The objective was to calculate the **January 2026 precipitation anomaly** relative to the **1991–2020 January climatology** and visualize the anomaly on a regional map using an appropriate Cartopy projection. The sample solution demonstrates one implementation for **Africa** using the Robinson projection.
 
