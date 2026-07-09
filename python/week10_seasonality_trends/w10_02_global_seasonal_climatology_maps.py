@@ -148,7 +148,7 @@ cbar = plt.colorbar(
     cf,
     ax=axes,
     orientation="horizontal",
-    shrink=0.85,
+    shrink=0.7,
     pad=0.07
 )
 cbar.set_label("2-m air temperature climatology (°C)")
