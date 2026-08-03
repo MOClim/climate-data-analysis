@@ -31,3 +31,4 @@ dependencies:
   - cmocean
   - metpy
   - cf_xarray
+  - eofs
