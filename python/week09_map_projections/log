@@ -1,0 +1,38 @@
+<xarray.Dataset> Size: 39MB
+Dimensions:  (lon: 144, time: 938, lat: 73)
+Coordinates:
+  * lon      (lon) float32 576B 0.0 2.5 5.0 7.5 10.0 ... 350.0 352.5 355.0 357.5
+  * time     (time) datetime64[ns] 8kB 1948-01-01 1948-02-01 ... 2026-02-01
+  * lat      (lat) float32 292B 90.0 87.5 85.0 82.5 ... -82.5 -85.0 -87.5 -90.0
+Data variables:
+    air      (time, lat, lon) float32 39MB ...
+Attributes:
+    description:                     Data from NCEP initialized reanalysis (4...
+    platform:                        Model
+    Conventions:                     COARDS
+    NCO:                             20121012
+    history:                         Thu May  4 20:11:16 2000: ncrcat -d time...
+    title:                           monthly mean air.sig995 from the NCEP Re...
+    dataset_title:                   NCEP-NCAR Reanalysis 1
+    _NCProperties:                   version=2,netcdf=4.6.2,hdf5=1.8.20
+    References:                      http://www.psl.noaa.gov/data/gridded/dat...
+    DODS_EXTRA.Unlimited_Dimension:  time
+2026-02-01T00:00:00.000000000
+<xarray.DataArray 'air' (lat: 73, lon: 144)> Size: 42kB
+array([[-6.1035156e-05, -6.1035156e-05, -6.1035156e-05, ...,
+        -6.1035156e-05, -6.1035156e-05, -6.1035156e-05],
+       [-6.1035156e-05, -6.1035156e-05, -6.1035156e-05, ...,
+        -6.1035156e-05, -6.1035156e-05, -6.1035156e-05],
+       [-6.1035156e-05, -6.1035156e-05, -6.1035156e-05, ...,
+        -6.1035156e-05, -6.1035156e-05, -6.1035156e-05],
+       ...,
+       [-6.1035156e-05, -6.1035156e-05, -6.1035156e-05, ...,
+        -6.1035156e-05, -6.1035156e-05, -6.1035156e-05],
+       [-6.1035156e-05, -6.1035156e-05, -6.1035156e-05, ...,
+        -6.1035156e-05, -6.1035156e-05, -6.1035156e-05],
+       [-6.1035156e-05, -6.1035156e-05, -6.1035156e-05, ...,
+        -6.1035156e-05, -6.1035156e-05, -6.1035156e-05]], dtype=float32)
+Coordinates:
+  * lon      (lon) float32 576B 0.0 2.5 5.0 7.5 10.0 ... 350.0 352.5 355.0 357.5
+    time     datetime64[ns] 8B 2026-01-01
+  * lat      (lat) float32 292B 90.0 87.5 85.0 82.5 ... -82.5 -85.0 -87.5 -90.0

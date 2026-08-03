@@ -57,8 +57,8 @@ jan_clim = air_c.sel(time=slice("1991-01-01", "2020-12-31")).where(
 jan_2026 = air_c.sel(time="2026-01-01")
 anom = jan_2026 - jan_clim
 
-print(anom.min().values)
-print(anom.max().values)
+print("Anomaly Minimum = ",anom.min().values)
+print("Anomaly Maximum = ",anom.max().values)
 
 # Add cyclic point to close the 0/360 longitude seam
 anom_cyclic, lon_cyclic = add_cyclic_point(anom.values, coord=anom.lon)

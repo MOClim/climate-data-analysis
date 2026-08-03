@@ -25,6 +25,10 @@ warnings.filterwarnings(
     category=RuntimeWarning
 )
 
+# -----------------------------
+# Load data
+# -----------------------------
+
 # NOAA PSL OPeNDAP URL
 #air_url = (
 #    "https://psl.noaa.gov/thredds/dodsC/"
@@ -54,8 +58,8 @@ jan_clim = ref.groupby("time.month").mean("time").sel(month=1)
 jan_2026 = air_c.sel(time="2026-01-01").squeeze()
 anom = jan_2026 - jan_clim
 
-print(anom.min().values)
-print(anom.max().values)
+print("Anomaly Minimum = ",anom.min().values)
+print("Anomaly Maximum = ",anom.max().values)
 
 # Create figure
 fig = plt.figure(figsize=(10, 6))
