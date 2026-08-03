@@ -7,8 +7,8 @@
 # 3. Convert units:
 #      air   : K to °C
 #      prate : kg m-2 s-1 to mm/day
-# 4. Calculate regional area-weighted mean time series.
-# 5. Calculate monthly climatology for 1991-2020.
+# 4. Calculate monthly climatology for 1991-2020.
+# 5. Calculate regional area-weighted mean time series.
 # 6. Plot the seasonal cycles of temperature and precipitation
 #    in two panels.
 # ---------------------------------------------------------
@@ -89,6 +89,17 @@ air.attrs["units"] = "°C"
 prate = prate * 86400
 prate.attrs["units"] = "mm/day"
 
+# ---------------------------------------------------------
+# Calculate monthly climatology
+# ---------------------------------------------------------
+clim_start = "1991-01-01"
+clim_end = "2020-12-31"
+
+air_clim = air.sel(time=slice(clim_start, clim_end)
+   ).groupby("time.month").mean("time")
+pr_clim = prate.sel(time=slice(clim_start, clim_end)
+   ).groupby("time.month").mean("time")
+
 
 # ---------------------------------------------------------
 # Calculate regional area-weighted means
@@ -97,21 +108,8 @@ prate.attrs["units"] = "mm/day"
 lat_str, lat_end = 75, 15
 lon_str, lon_end = 190, 300   # 0-360 longitude: 190E=170W, 300E=60W
 
-air_NA = regional_weighted_mean(air, lat_str, lat_end, lon_str, lon_end)
-pr_NA = regional_weighted_mean(prate, lat_str, lat_end, lon_str, lon_end)
-
-
-# ---------------------------------------------------------
-# Calculate monthly climatology
-# ---------------------------------------------------------
-clim_start = "1991-01-01"
-clim_end = "2020-12-31"
-
-air_clim = air_NA.sel(time=slice(clim_start, clim_end)
-   ).groupby("time.month").mean("time")
-pr_clim = pr_NA.sel(time=slice(clim_start, clim_end)
-   ).groupby("time.month").mean("time")
-
+air_NA = regional_weighted_mean(air_clim, lat_str, lat_end, lon_str, lon_end)
+pr_NA = regional_weighted_mean(pr_clim, lat_str, lat_end, lon_str, lon_end)
 
 
 # ---------------------------------------------------------
@@ -130,8 +128,8 @@ fig, axes = plt.subplots(
 
 # Panel 1: Temperature seasonal cycle
 axes[0].plot(
-    air_clim.month,
-    air_clim,
+    air_NA.month,
+    air_NA,
     marker="o",
     linewidth=1.8,
     color="black"
@@ -149,8 +147,8 @@ axes[0].grid(which="minor", linestyle="--", alpha=0.3)
 
 # Panel 2: Precipitation seasonal cycle
 axes[1].plot(
-    pr_clim.month,
-    pr_clim,
+    pr_NA.month,
+    pr_NA,
     marker="o",
     linewidth=1.8,
     color="black"
