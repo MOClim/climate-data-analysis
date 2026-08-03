@@ -15,7 +15,6 @@
 #   3. the map domain in ax.set_extent()
 # ---------------------------------------------------------
 
-
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
@@ -31,6 +30,10 @@ warnings.filterwarnings(
     category=RuntimeWarning
 )
 
+
+# -----------------------------
+# Load data
+# -----------------------------
 # NOAA PSL OPeNDAP URL
 #air_url = (
 #    "https://psl.noaa.gov/thredds/dodsC/"

@@ -62,8 +62,8 @@ jan_clim = ref.groupby("time.month").mean("time").sel(month=1)
 jan_2026 = air_c.sel(time="2026-01-01").squeeze()
 anom = jan_2026 - jan_clim
 
-print(anom.min().values)
-print(anom.max().values)
+print("Anomaly Minimum = ",anom.min().values)
+print("Anomaly Maximum = ",anom.max().values)
 
 # ---------------------------------------------------------
 # Create figure and map projection
@@ -105,7 +105,7 @@ ax.add_feature(cfeature.STATES, linewidth=0.3)
 # Use a diverging color map because anomalies have both
 # negative and positive values relative to climatology.
 
-clevs = np.arange(-10, 10.1, 1)
+clevs = np.arange(-5, 5.1, 0.5)
 
 p = anom.plot(
     ax=ax,

@@ -33,6 +33,11 @@ warnings.filterwarnings(
     category=RuntimeWarning
 )
 
+
+# -----------------------------
+# Load data
+# -----------------------------
+
 # Example NOAA PSL OPeNDAP URLs
 #air_url = "https://psl.noaa.gov/thredds/dodsC/Datasets/ncep.reanalysis.derived/surface/air.mon.mean.nc"
 #prate_url = "https://psl.noaa.gov/thredds/dodsC/Datasets/ncep.reanalysis.derived/surface_gauss/prate.sfc.mon.mean.nc"
@@ -72,8 +77,9 @@ jan_clim = ref.groupby("time.month").mean("time").sel(month=1)
 jan_2026 = dat_c.sel(time="2026-01-01")
 anom = jan_2026 - jan_clim
 
-print(anom.min().values)
-print(anom.max().values)
+print("Anomaly Minimum = ",anom.min().values)
+print("Anomaly Maximum = ",anom.max().values)
+
 
 # Add cyclic point to close the 0/360 longitude seam
 anom_cyclic, lon_cyclic = add_cyclic_point(anom.values, coord=anom.lon)

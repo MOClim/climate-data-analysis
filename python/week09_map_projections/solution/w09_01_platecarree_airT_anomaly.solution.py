@@ -41,6 +41,17 @@ import cartopy.feature as cfeature
 from pathlib import Path
 import sys
 
+import warnings
+warnings.filterwarnings(
+    "ignore",
+    message="invalid value encountered in create_collection",
+    category=RuntimeWarning
+)
+
+# -----------------------------
+# Load data
+# -----------------------------
+
 # Example NOAA PSL OPeNDAP URLs
 air_url = "https://psl.noaa.gov/thredds/dodsC/Datasets/ncep.reanalysis.derived/surface/air.mon.mean.nc"
 prate_url = "https://psl.noaa.gov/thredds/dodsC/Datasets/ncep.reanalysis.derived/surface/prate.sfc.mon.mean.nc"
@@ -63,13 +74,15 @@ air = ds["air"]
 air_c = air - 273.15
 
 # Example: January climatology
-jan_clim = air_c.sel(time=slice("1991-01-01", "2020-12-31")).where(
-    air_c["time.month"] == 1, drop=True
-).mean("time")
+jan_clim = air_c.sel(time=slice("1991-01-01", "2020-12-31")
+    ).where(air_c["time.month"] == 1, drop=True).mean("time")
 
 # Example: January 2026 anomaly
 jan_2026 = air_c.sel(time="2026-01-01")
 anom = jan_2026 - jan_clim
+
+print("Anomaly Minimum = ",anom.min().values)
+print("Anomaly Maximum = ",anom.max().values)
 
 # Plot
 fig = plt.figure(figsize=(10, 5))
