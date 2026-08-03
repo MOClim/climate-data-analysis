@@ -10,9 +10,9 @@
 # 3. Converts units:
 #      air   : K to degC
 #      prate : kg m-2 s-1 to mm/day
-# 4. Calculates regional area-weighted mean time series.
-# 5. Calculates anomalies relative to the long-term mean.
-# 6. Calculates anomalies relative to monthly climatology.
+# 4. Calculates anomalies relative to the long-term mean.
+# 5. Calculates anomalies relative to monthly climatology.
+# 6. Calculates regional area-weighted mean time series.
 # 7. Plots both anomaly definitions for comparison.
 #
 # Concept:
@@ -33,7 +33,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 from matplotlib.ticker import MultipleLocator
-
+import sys
 
 # ---------------------------------------------------------
 # Functions
@@ -84,7 +84,7 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
     return dat_region_mean
 
 
-def long_term_mean_anomaly(monthly_mean, clim_start="1991-01-01", clim_end="2020-12-31"):
+def long_term_mean_anom(dat, clim_period=None):
     """
     Calculate anomaly relative to one long-term mean.
 
@@ -92,23 +92,77 @@ def long_term_mean_anomaly(monthly_mean, clim_start="1991-01-01", clim_end="2020
     remains in the anomaly time series.
     """
 
-    clim_mean = monthly_mean.sel(time=slice(clim_start, clim_end)).mean("time")
-    anom_mean = monthly_mean - clim_mean
+    if clim_period is None:
+        dat_mean = dat.mean("time")
+    else:
+        start, end = clim_period
+        dat_mean = dat.sel(time=slice(start, end)).mean("time")
+
+    anom_mean = dat - dat_mean
 
     return anom_mean
 
-def monthly_climatology_anomaly(monthly_mean, clim_start="1991-01-01", clim_end="2020-12-31"):
+
+def calc_seasonal_anom(dat, window=5, end_month=1,clim_period=None):
     """
-    Calculate monthly anomalies relative to monthly climatology.
+    Calculate seasonal mean anomaly using a trailing running mean, extract the final month (e.g., Mar for NDJFM),
+    convert to year-lat-lon DataArray, apply minimum coverage mask, and optionally remove trend.
 
-    This removes the climatological seasonal cycle.
+    Parameters:
+    -----------
+    dat : xr.DataArray
+        Input data with dimensions (time, lat, lon) and datetime64 'time'.
+    window : int
+        Running mean window size (default is 5).
+    end_month : int
+        Target month used to extract seasonal means (final month of the trailing average).
+    min_coverage : float
+        Minimum fraction of year coverage required for masking (default 0.9).
+    dtrend : bool
+        If True, remove linear trend after applying coverage mask.
+
+    Returns:
+    --------
+    dat_out : xr.DataArray
+        Seasonal mean anomaly with dimensions (year, lat, lon).
     """
 
-    clim = monthly_mean.sel(time=slice(clim_start,clim_end)
-       ).groupby("time.month").mean("time")
-    anom = monthly_mean.groupby("time.month") - clim
+    # Compute monthly anomalies
+    if clim_period is None:
+        clm = dat.groupby("time.month").mean("time")
+    else:
+        start, end = clim_period
+        clm = (
+            dat.sel(time=slice(start, end))
+            .groupby("time.month")
+            .mean("time")
+        )
 
-    return anom
+    anm = dat.groupby("time.month") - clm
+
+    # Apply trailing running mean
+    dat_rm = anm.rolling(time=window, center=False, min_periods=window).mean()
+
+    # Filter for entries where month == end_month
+    dat_tmp = dat_rm.sel(time=dat_rm["time"].dt.month == end_month)
+
+    # Extract year from the end_month timestamps
+    years = dat_tmp["time"].dt.year
+
+    # Create clean DataArray with dimensions ['year', 'lat', 'lon']
+    datS = xr.DataArray(
+        data=dat_tmp.values,
+        dims=["year", "lat", "lon"],
+        coords={
+            "year": years.values,
+            "lat": dat_tmp["lat"].values,
+            "lon": dat_tmp["lon"].values,
+        },
+        name=dat.name if hasattr(dat, "name") else "SeasonalMean",
+        attrs=dat.attrs.copy(),
+    )
+
+    return datS
 
 
 # ---------------------------------------------------------
@@ -138,6 +192,19 @@ air.attrs["units"] = "degC"
 prate = prate * 86400
 prate.attrs["units"] = "mm/day"
 
+# ---------------------------------------------------------
+# Calculate anomalies
+# ---------------------------------------------------------
+clim_start = "1991-01-01"
+clim_end = "2020-12-31"
+
+# Anomaly relative to one long-term mean
+air_long_anom = long_term_mean_anom(air, clim_period=[clim_start, clim_end])
+pr_long_anom  = long_term_mean_anom(prate, clim_period=[clim_start, clim_end])
+
+# Anomaly relative to monthly climatology
+air_anom = calc_seasonal_anom(air, clim_period=[clim_start, clim_end])
+pr_anom  = calc_seasonal_anom(prate, clim_period=[clim_start, clim_end])
 
 # ---------------------------------------------------------
 # Calculate regional area-weighted means
@@ -146,24 +213,18 @@ prate.attrs["units"] = "mm/day"
 lat_str, lat_end = 75, 15
 lon_str, lon_end = 190, 300   # 0-360 longitude: 190E=170W, 300E=60W
 
-air_NA = regional_weighted_mean(air, lat_str, lat_end, lon_str, lon_end)
-pr_NA = regional_weighted_mean(prate, lat_str, lat_end, lon_str, lon_end)
+air_long_anom_NA = regional_weighted_mean(air_long_anom, lat_str, lat_end, lon_str, lon_end)
+pr_long_anom_NA = regional_weighted_mean(pr_long_anom, lat_str, lat_end, lon_str, lon_end)
 
+air_anom_NA = regional_weighted_mean(air_anom, lat_str, lat_end, lon_str, lon_end)
+pr_anom_NA = regional_weighted_mean(pr_anom, lat_str, lat_end, lon_str, lon_end)
 
-# ---------------------------------------------------------
-# Calculate anomalies
-# ---------------------------------------------------------
-clim_start = "1991-01-01"
-clim_end = "2020-12-31"
+print(air_anom_NA.dims)
+print(air_long_anom_NA.dims)
 
-# Anomaly relative to one long-term mean
-air_anom_mean = long_term_mean_anomaly(air_NA, clim_start, clim_end)
-pr_anom_mean = long_term_mean_anomaly(pr_NA, clim_start, clim_end)
-
-# Anomaly relative to monthly climatology
-air_anom_monthly = monthly_climatology_anomaly(air_NA, clim_start, clim_end)
-pr_anom_monthly = monthly_climatology_anomaly(pr_NA, clim_start, clim_end)
-
+# Convert year coordinates to datetime for plotting
+air_time = np.array([np.datetime64(f"{y}-01-01") for y in air_anom_NA.year.values])
+pr_time = np.array([np.datetime64(f"{y}-01-01") for y in pr_anom_NA.year.values])
 
 # ---------------------------------------------------------
 # Plot four panels
@@ -171,15 +232,15 @@ pr_anom_monthly = monthly_climatology_anomaly(pr_NA, clim_start, clim_end)
 fig, axes = plt.subplots(
     2, 2,
     figsize=(13, 7),
-    sharex=True
+    sharex=False
 )
 
 # ---------------------------------------------------------
 # Panel 1: Temperature anomaly relative to long-term mean
 # ---------------------------------------------------------
 axes[0, 0].plot(
-    air_anom_mean.time,
-    air_anom_mean,
+    air_long_anom_NA.time,
+    air_long_anom_NA,
     linewidth=0.8,
     color="black"
 )
@@ -199,8 +260,8 @@ axes[0, 0].grid(which="minor", linestyle="--", alpha=0.3)
 # Panel 2: Temperature anomaly relative to monthly climatology
 # ---------------------------------------------------------
 axes[0, 1].plot(
-    air_anom_monthly.time,
-    air_anom_monthly,
+    air_time,
+    air_anom_NA,
     linewidth=0.8,
     color="black"
 )
@@ -219,8 +280,8 @@ axes[0, 1].grid(which="minor", linestyle="--", alpha=0.3)
 # Panel 3: Precipitation anomaly relative to long-term mean
 # ---------------------------------------------------------
 axes[1, 0].plot(
-    pr_anom_mean.time,
-    pr_anom_mean,
+    pr_long_anom_NA.time,
+    pr_long_anom_NA,
     linewidth=0.8,
     color="black"
 )
@@ -241,8 +302,8 @@ axes[1, 0].grid(which="minor", linestyle="--", alpha=0.3)
 # Panel 4: Precipitation anomaly relative to monthly climatology
 # ---------------------------------------------------------
 axes[1, 1].plot(
-    pr_anom_monthly.time,
-    pr_anom_monthly,
+    pr_time,
+    pr_anom_NA,
     linewidth=0.8,
     color="black"
 )

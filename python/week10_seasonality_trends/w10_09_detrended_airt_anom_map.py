@@ -16,7 +16,6 @@
 #   from the annual anomaly field.
 # ---------------------------------------------------------
 
-import warnings
 from pathlib import Path
 
 import numpy as np
@@ -26,7 +25,9 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from cartopy.util import add_cyclic_point
 from matplotlib.ticker import MultipleLocator
+import sys
 
+import warnings
 warnings.filterwarnings(
     "ignore",
     message="invalid value encountered in create_collection",
@@ -91,80 +92,141 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 
     return regional_mean
 
-def annual_anomaly(monthly_mean, clim_start="1991-01-01", clim_end="2020-12-31"):
-    """Calculate annual mean anomalies relative to monthly climatology."""
+def calc_seasonal_anom(dat, window=5, end_month=1, clim_period=None):
+    """
+    Calculate seasonal mean anomaly using a trailing running mean, extract the final month (e.g., Mar for NDJFM),
+    convert to year-lat-lon DataArray, apply minimum coverage mask, and optionally remove trend.
+
+    Parameters:
+    -----------
+    dat : xr.DataArray
+        Input data with dimensions (time, lat, lon) and datetime64 'time'.
+    window : int
+        Running mean window size (default is 5).
+    end_month : int
+        Target month used to extract seasonal means (final month of the trailing average).
+    min_coverage : float
+        Minimum fraction of year coverage required for masking (default 0.9).
+    dtrend : bool
+        If True, remove linear trend after applying coverage mask.
+
+    Returns:
+    --------
+    dat_out : xr.DataArray
+        Seasonal mean anomaly with dimensions (year, lat, lon).
+    """
 
     # Monthly climatology
-    clim = monthly_mean.sel(time=slice(clim_start, clim_end)).groupby(
-        "time.month"
-    ).mean("time")
+    if clim_period is None:
+        clm = dat.groupby("time.month").mean("time")
+    else:
+        start, end = clim_period
+        clm = (
+            dat.sel(time=slice(start, end))
+            .groupby("time.month")
+            .mean("time")
+        )
 
-    # Monthly anomaly
-    anom = monthly_mean.groupby("time.month") - clim
+    # Monthly anomalies
+    anm = dat.groupby("time.month") - clm
 
-    # Annual mean anomaly
-    anom_ann = anom.resample(time="YS").mean()
-    count_ann = anom.resample(time="YS").count()
+    # Apply trailing running mean
+    dat_rm = anm.rolling(time=window, center=False, min_periods=window).mean()
 
-    # Keep only complete years
-    anom_ann = anom_ann.where(count_ann == 12, drop=True)
+    # Filter for entries where month == end_month
+    dat_tmp = dat_rm.sel(time=dat_rm["time"].dt.month == end_month)
 
-    return anom_ann
+    # Extract year from the end_month timestamps
+    years = dat_tmp["time"].dt.year
 
-
-def linear_detrend(da, trend_start="1949-01-01", trend_end="2020-12-31"):
-    """
-    Remove the full fitted linear trend from an annual anomaly field.
-
-    This function works for both a 1-D regional time series and a
-    3-D gridded field with dimensions (time, lat, lon).
-    """
-
-    # Select the period used for trend estimation
-    da_fit = da.sel(time=slice(trend_start, trend_end))
-
-    # Convert time to numeric year values
-    year_fit = xr.DataArray(
-        da_fit.time.dt.year.astype(float),
-        dims="time",
-        coords={"time": da_fit.time}
-    )
-    year_all = xr.DataArray(
-        da.time.dt.year.astype(float),
-        dims="time",
-        coords={"time": da.time}
+    # Create clean DataArray with dimensions ['year', 'lat', 'lon']
+    datS = xr.DataArray(
+        data=dat_tmp.values,
+        dims=["year", "lat", "lon"],
+        coords={
+            "year": years.values,
+            "lat": dat_tmp["lat"].values,
+            "lon": dat_tmp["lon"].values,
+        },
+        name=dat.name if hasattr(dat, "name") else "SeasonalMean",
+        attrs=dat.attrs.copy(),
     )
 
-    # Center the year coordinate using the trend-analysis period
-    year_mean = float(year_fit.mean())
-    x_fit = year_fit - year_mean
-    x_all = year_all - year_mean
+    return datS
 
-    # Fit linear trend at each grid point:
-    # anomaly = slope * centered_year + intercept
-    #
-    # Compute the linear trend at all grid points simultaneously.
-    # np.polyfit() is suitable for a 1-D time series, but a 3-D field
-    # (time, lat, lon) would require looping over every grid point.
-    # This vectorized calculation is much faster and more efficient.
+def linear_detrend(
+    dat,
+    min_coverage=0.9,
+    dtrend=True,
+    trend_period=None,
+    return_trend=False
+):
+    """
+    Remove the long-term linear trend from annual data.
 
-    slope = (da_fit * x_fit).sum("time", skipna=True) / (
-        x_fit ** 2).sum("time", skipna=True)
-    intercept = da_fit.mean("time", skipna=True)
+    Parameters
+    ----------
+    dat : xr.DataArray
+        Annual data with a "year" dimension.
+    min_coverage : float
+        Minimum fraction of valid years required.
+    dtrend : bool
+        If True, remove the fitted linear trend.
+    trend_period : list, optional
+        Start and end dates used to estimate the trend.
+    return_trend : bool
+        If True, also return the trend line and slope per decade.
 
-    # Fitted linear trend line for all years
-    trend_line = slope * x_all + intercept
-    trend_line.name = "linear_trend"
+    Returns
+    -------
+    dat_out : xr.DataArray
+        Masked annual data with the linear trend removed.
+    trend_line : xr.DataArray, optional
+        Fitted linear trend evaluated over the full record.
+    slope_decade : xr.DataArray, optional
+        Linear slope in units per decade.
+    """
 
-    # Remove the full fitted trend line
-    da_detrended = da - trend_line
-    da_detrended.name = "detrended_anomaly"
+    if trend_period is None:
+        dat_fit = dat
+    else:
+        start, end = trend_period
+        start_year = int(str(start)[:4])
+        end_year = int(str(end)[:4])
+        dat_fit = dat.sel(year=slice(start_year, end_year))
 
-    # Convert trend unit to degC per decade
-    slope_decade = slope * 10.0
-    slope_decade.name = "linear_trend_per_decade"
+    # Apply coverage mask
+    valid_counts = dat_fit.count(dim="year")
+    total_years = dat_fit["year"].size
+    min_valid_years = int(total_years * min_coverage)
 
-    return da_detrended, trend_line, slope_decade
+    sufficient_coverage = valid_counts >= min_valid_years
+    dat_masked = dat.where(sufficient_coverage)
+    dat_fit_masked = dat_fit.where(sufficient_coverage)
+
+    # Fit the trend using only the selected trend period
+    coeffs = dat_fit_masked.polyfit(dim="year", deg=1)
+
+    # Evaluate the fitted line over the full data period
+    trend_line = xr.polyval(
+        dat_masked["year"],
+        coeffs.polyfit_coefficients
+    )
+
+    # Extract slope and convert from units/year to units/decade
+    slope_year = coeffs.polyfit_coefficients.sel(degree=1)
+    slope_decade = slope_year * 10
+
+    if dtrend:
+        dat_out = dat_masked - trend_line
+    else:
+        dat_out = dat_masked
+
+    if return_trend:
+        return dat_out, trend_line, slope_decade
+    else:
+        return dat_out
+
 
 # ---------------------------------------------------------
 # Read data
@@ -191,21 +253,15 @@ trend_start = "1949-01-01"
 trend_end = "2020-12-31"
 target_year = 2016
 
-
 # ---------------------------------------------------------
 # Calculate annual anomalies and detrended anomalies
 # ---------------------------------------------------------
 # Annual mean anomalies relative to monthly climatology
-anom_ann = annual_anomaly(air, clim_start, clim_end)
-anom_ann.attrs["units"] = "degC"
+anom = calc_seasonal_anom(air, window=12, end_month=12, clim_period=[clim_start, clim_end])
 
 # Detrended annual mean anomalies
-anom_ann_detrended, trend_line, slope_decade = linear_detrend(
-    anom_ann,
-    trend_start,
-    trend_end
-)
-anom_ann_detrended.attrs["units"] = "degC"
+anom_detrended, trend_line, slope_decade = linear_detrend(
+    anom, trend_period=[trend_start,trend_end], return_trend=True)
 
 # Global mean time series for the bottom row
 # These time series show how the linear trend is removed from
@@ -214,8 +270,8 @@ anom_ann_detrended.attrs["units"] = "degC"
 lat1, lat2 = 90, -90
 lon1, lon2 = 0, 360
 
-global_anom = regional_weighted_mean(anom_ann, lat1, lat2, lon1, lon2)
-global_detrended = regional_weighted_mean(anom_ann_detrended, lat1, lat2, lon1, lon2)
+global_anom = regional_weighted_mean(anom, lat1, lat2, lon1, lon2)
+global_detrended = regional_weighted_mean(anom_detrended, lat1, lat2, lon1, lon2)
 global_trend = regional_weighted_mean(trend_line, lat1, lat2, lon1, lon2)
 
 # Global trend value for the legend
@@ -224,22 +280,18 @@ global_trend = regional_weighted_mean(trend_line, lat1, lat2, lon1, lon2)
 # Use "_" for returned values that are not needed here.
 
 _, _, global_slope_decade = linear_detrend(
-    global_anom,
-    trend_start,
-    trend_end
-)
-
+    global_anom, trend_period=[trend_start,trend_end], return_trend=True)
 
 # ---------------------------------------------------------
 # Select target year for map and time-series marker
 # ---------------------------------------------------------
 target_time = f"{target_year}-01-01"
 
-anom_target = anom_ann.sel(time=target_time)
-detrended_target = anom_ann_detrended.sel(time=target_time)
+anom_target = anom.sel(year=target_year)
+detrended_target = anom_detrended.sel(year=target_year)
 
-global_anom_target = global_anom.sel(time=target_time)
-global_detrended_target = global_detrended.sel(time=target_time)
+global_anom_target = global_anom.sel(year=target_year)
+global_detrended_target = global_detrended.sel(year=target_year)
 
 print("Annual anomaly range:", float(anom_target.min()), float(anom_target.max()))
 print(
@@ -262,6 +314,7 @@ detrended_cyclic, lon_cyclic = add_cyclic_point(
     coord=detrended_target.lon
 )
 
+year = global_anom.year
 
 # ---------------------------------------------------------
 # Plot maps and global mean time series
@@ -337,7 +390,6 @@ for ax in [axes[0, 0], axes[0, 1]]:
 # ---------------------------------------------------------
 # Panel 3: global annual anomaly and linear trend
 # ---------------------------------------------------------
-year = global_anom.time.dt.year
 trend_start_year = int(trend_start[:4])
 trend_end_year = int(trend_end[:4])
 

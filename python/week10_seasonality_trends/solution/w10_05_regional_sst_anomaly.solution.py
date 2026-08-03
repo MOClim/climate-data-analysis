@@ -9,13 +9,14 @@
 #   Step 1: Read ../../data_raw/HadISST_sst.nc and extract
 #           the SST variable ("sst").
 #
-#   Step 2: Calculate monthly SST anomalies relative to the
-#           1991–2020 monthly climatology by calling the
-#           monthly_climatology_anomaly() function.
-#
-#   Step 3: Calculate annual mean anomalies by averaging the
+#   Step 2: Calculate annual mean anomalies by averaging the
 #           monthly anomalies for each year by using 
-#           resample(time="YE").mean().
+#           calc_seasonal_anom function
+#
+#   Step 3: Calculate annual mean SST anomalies relative to the
+#           1991–2020 monthly climatology by calling the
+#           monthly_clm_anom() function.
+#
 # ---------------------------------------------------------
 
 import xarray as xr
@@ -23,7 +24,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 from matplotlib.ticker import MultipleLocator
-
+import sys
 
 # ---------------------------------------------------------
 # Functions
@@ -80,22 +81,89 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 
     return dat_region_mean
 
+def calc_seasonal_anom(dat, window=5, end_month=1, clim_period=None):
+    """
+    Calculate seasonal mean anomaly using a trailing running mean, extract the final month (e.g., Mar for NDJFM),
+    convert to year-lat-lon DataArray, apply minimum coverage mask, and optionally remove trend.
 
-def monthly_climatology_anomaly(monthly_mean, clim_start="1991-01-01", clim_end="2020-12-31"):
+    Parameters:
+    -----------
+    dat : xr.DataArray
+        Input data with dimensions (time, lat, lon) and datetime64 'time'.
+    window : int
+        Running mean window size (default is 5).
+    end_month : int
+        Target month used to extract seasonal means (final month of the trailing average).
+    min_coverage : float
+        Minimum fraction of year coverage required for masking (default 0.9).
+    dtrend : bool
+        If True, remove linear trend after applying coverage mask.
+
+    Returns:
+    --------
+    dat_out : xr.DataArray
+        Seasonal mean anomaly with dimensions (year, lat, lon).
+    """
+
+    # Monthly climatology
+    if clim_period is None:
+        clm = dat.groupby("time.month").mean("time")
+    else:
+        start, end = clim_period
+        clm = (
+            dat.sel(time=slice(start, end))
+            .groupby("time.month")
+            .mean("time")
+        )
+    # Monthly anomalies
+    anm = dat.groupby("time.month") - clm
+
+    # Apply trailing running mean
+    dat_rm = anm.rolling(time=window, center=False, min_periods=window).mean()
+
+    # Filter for entries where month == end_month
+    dat_tmp = dat_rm.sel(time=dat_rm["time"].dt.month == end_month)
+
+    # Extract year from the end_month timestamps
+    years = dat_tmp["time"].dt.year
+
+    # Create clean DataArray with dimensions ['year', 'lat', 'lon']
+    datS = xr.DataArray(
+        data=dat_tmp.values,
+        dims=["year", "lat", "lon"],
+        coords={
+            "year": years.values,
+            "lat": dat_tmp["lat"].values,
+            "lon": dat_tmp["lon"].values,
+        },
+        name=dat.name if hasattr(dat, "name") else "SeasonalMean",
+        attrs=dat.attrs.copy(),
+    )
+
+    return datS
+
+def monthly_clm_anom(dat, clim_period=None):
     """
     Calculate monthly anomalies relative to monthly climatology.
 
     This removes the climatological seasonal cycle.
     """
 
-    clim = monthly_mean.sel(time=slice(clim_start, clim_end)).groupby(
-        "time.month"
-    ).mean("time")
+    # Monthly climatology
+    if clim_period is None:
+        clm = dat.groupby("time.month").mean("time")
+    else:
+        start, end = clim_period
+        clm = (
+            dat.sel(time=slice(start, end))
+            .groupby("time.month")
+            .mean("time")
+        )
 
-#    clim = monthly_climatology(monthly_mean, clim_start, clim_end)
-    anom = monthly_mean.groupby("time.month") - clim
+    anom = dat.groupby("time.month") - clm
 
     return anom
+
 
 # ---------------------------------------------------------
 # Step 1: Read the HadISST dataset and extract the SST variable.
@@ -124,15 +192,13 @@ sst_file = repo_dir / "data_raw" / "HadISST_sst.nc"
 ds_sst = xr.open_dataset(sst_file)
 
 sst = ds_sst["sst"]
+print(sst.dims)
 
-# ---------------------------------------------------------
-# Calculate regional area-weighted means
-# ---------------------------------------------------------
-# Approximate North America box
-lat_str, lat_end = 60, 0
-lon_str, lon_end = -80, 0   # -180-180 longitude
+if "latitude" in sst.coords:
+      sst = sst.rename({"latitude": "lat"})
 
-sst_NA = regional_weighted_mean(sst, lat_str, lat_end, lon_str, lon_end)
+if "longitude" in sst.coords:
+      sst = sst.rename({"longitude": "lon"})
 
 
 # ---------------------------------------------------------
@@ -143,19 +209,28 @@ clim_end = "2020-12-31"
 
 # Step 2: Calculate monthly SST anomalies relative to the
 # 1991–2020 monthly climatology by calling
-# monthly_climatology_anomaly().
+# monthly_clm_anom().
 
-sst_NA_anom_monthly = monthly_climatology_anomaly(sst_NA, clim_start, clim_end)
+sst_mon_anom = monthly_clm_anom(sst,clim_period=[clim_start,clim_end])
 
 # Step 3: Calculate annual mean anomalies from the monthly
-# anomalies.
+# anomalies using calc_seasonal_anom function.
 #
-# Hint:
-#   • Average monthly anomalies within each year using
-#     resample(time="YE").mean().
-#   • Keep only complete years containing 12 monthly values.
 
-sst_NA_anom_annual = sst_NA_anom_monthly.resample(time='YE').mean()
+sst_anom = calc_seasonal_anom(sst,window=12,end_month=12,clim_period=[clim_start,clim_end])
+
+# ---------------------------------------------------------
+# Calculate regional area-weighted means
+# ---------------------------------------------------------
+# Approximate North America box
+lat_str, lat_end = 60, 0
+lon_str, lon_end = -80, 0   # -180-180 longitude
+
+sst_anom_NA = regional_weighted_mean(sst_anom, lat_str, lat_end, lon_str, lon_end)
+sst_mon_anom_NA = regional_weighted_mean(sst_mon_anom, lat_str, lat_end, lon_str, lon_end)
+
+# Convert year coordinates to datetime for plotting
+sst_time = np.array([np.datetime64(f"{y}-01-01") for y in sst_anom_NA.year.values])
 
 # ---------------------------------------------------------
 # Plot one panel
@@ -170,16 +245,16 @@ fig, axes = plt.subplots(
 # Temperature monthly and annual mean anomaly
 # ---------------------------------------------------------
 axes.plot(
-    sst_NA_anom_monthly.time,
-    sst_NA_anom_monthly,
+    sst_mon_anom_NA.time,
+    sst_mon_anom_NA,
     linewidth=0.7,
     color="gray",
     alpha=0.7,
     label="Monthly anomaly"
 )
 axes.plot(
-    sst_NA_anom_annual.time,
-    sst_NA_anom_annual,
+    sst_time,
+    sst_anom_NA,
     linewidth=2.0,
     color="black",
     label="Annual mean anomaly"
