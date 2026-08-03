@@ -68,21 +68,57 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 
     return dat_region_mean
 
-def calculate_annual_anomaly(regional_mean):
+def calc_seasonal_anom(dat, window=5, end_month=1):
     """
-    Calculate monthly anomalies and annual mean anomalies.
+    Calculate seasonal mean anomaly using a trailing running mean, extract the final month (e.g., Mar for NDJFM),
+    convert to year-lat-lon DataArray, apply minimum coverage mask, and optionally remove trend.
+
+    Parameters:
+    -----------
+    dat : xr.DataArray
+        Input data with dimensions (time, lat, lon) and datetime64 'time'.
+    window : int
+        Running mean window size (default is 5).
+    end_month : int
+        Target month used to extract seasonal means (final month of the trailing average).
+    min_coverage : float
+        Minimum fraction of year coverage required for masking (default 0.9).
+    dtrend : bool
+        If True, remove linear trend after applying coverage mask.
+
+    Returns:
+    --------
+    dat_out : xr.DataArray
+        Seasonal mean anomaly with dimensions (year, lat, lon).
     """
 
-    # Monthly climatology
-    clim = regional_mean.groupby("time.month").mean("time")
+    # Compute monthly anomalies
+    clm = dat.groupby("time.month").mean(dim="time")
+    anm = dat.groupby("time.month") - clm
 
-    # Monthly anomaly
-    anom = regional_mean.groupby("time.month") - clim
+    # Apply trailing running mean
+    dat_rm = anm.rolling(time=window, center=False, min_periods=window).mean()
 
-    # Annual mean anomaly
-    anom_ann = anom.resample(time="YS").mean()
+    # Filter for entries where month == end_month
+    dat_tmp = dat_rm.sel(time=dat_rm["time"].dt.month == end_month)
 
-    return anom_ann
+    # Extract year from the end_month timestamps
+    years = dat_tmp["time"].dt.year
+
+    # Create clean DataArray with dimensions ['year', 'lat', 'lon']
+    datS = xr.DataArray(
+        data=dat_tmp.values,
+        dims=["year", "lat", "lon"],
+        coords={
+            "year": years.values,
+            "lat": dat_tmp["lat"].values,
+            "lon": dat_tmp["lon"].values,
+        },
+        name=dat.name if hasattr(dat, "name") else "SeasonalMean",
+        attrs=dat.attrs.copy(),
+    )
+
+    return datS
 
 # -----------------------------
 # User settings
@@ -113,6 +149,13 @@ air = air - 273.15
 air.attrs["units"] = "degC"
 
 # ---------------------------------------------------------
+# Calculate annual-mean anomalies using running mean
+# ---------------------------------------------------------
+
+air_an_anm = calc_seasonal_anom(air, window=12, end_month=12)
+
+
+# ---------------------------------------------------------
 # Area-weighted mean
 # ---------------------------------------------------------
 # Grid cells become smaller toward the poles.
@@ -123,16 +166,14 @@ air.attrs["units"] = "degC"
 lat_str, lat_end = 75, 15
 lon_str, lon_end = 190, 300   # 0–360 longitude: 190E=170W, 300E=60W
 
-air_na_mean = regional_weighted_mean(air, lat_str, lat_end, lon_str, lon_end)
-
-# Annual mean anomaly
-air_na_ann = calculate_annual_anomaly(air_na_mean)
+reg_an_anm = regional_weighted_mean(air_an_anm, lat_str, lat_end, lon_str, lon_end)
+print(reg_an_anm.sizes)
 
 # -----------------------------
 # Plot
 # -----------------------------
 plt.figure(figsize=(10, 4))
-plt.plot(air_na_ann.time.dt.year, air_na_ann, color="black", linewidth=1.5)
+plt.plot(reg_an_anm.year, reg_an_anm, color="black", linewidth=1.5)
 plt.axhline(0, color='gray', linestyle="-")
 
 

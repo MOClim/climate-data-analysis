@@ -1,9 +1,9 @@
 # ---------------------------------------------------------
-# Area-Averaged Temperature Anomaly
+# Area-Averaged Temperature 
 # ---------------------------------------------------------
 # This program reads NOAA NCEP/NCAR Reanalysis monthly
 # 2-m air temperature data and calculates an area-weighted
-# temperature anomaly for a selected region.
+# temperature for a selected region.
 #
 # Data source:
 # NOAA Physical Sciences Laboratory (PSL)
@@ -79,6 +79,57 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 
     return dat_region_mean
 
+def calc_seasonal_mean(dat, window=5, end_month=1):
+    """
+    Calculate seasonal mean using a trailing running mean, extract the final month (e.g., Mar for NDJFM),
+    convert to year-lat-lon DataArray.
+
+    Parameters:
+    -----------
+    dat : xr.DataArray
+        Input data with dimensions (time, lat, lon) and datetime64 'time'.
+    window : int
+        Running mean window size (default is 5).
+    end_month : int
+        Target month used to extract seasonal means (final month of the trailing average).
+
+    Returns:
+    --------
+    dat_out : xr.DataArray
+        Seasonal mean with dimensions (year, lat, lon).
+    """
+
+    # Rename coordinates if necessary
+    if "latitude" in dat.coords:
+      dat = dat.rename({"latitude": "lat"})
+
+    if "longitude" in dat.coords:
+      dat = dat.rename({"longitude": "lon"})
+
+    # Apply trailing running mean
+    dat_rm = dat.rolling(time=window, center=False, min_periods=window).mean()
+
+    # Filter for entries where month == end_month
+    dat_tmp = dat_rm.sel(time=dat_rm["time"].dt.month == end_month)
+
+    # Extract year from the end_month timestamps
+    years = dat_tmp["time"].dt.year
+
+    # Create clean DataArray with dimensions ['year', 'lat', 'lon']
+    dat_out = xr.DataArray(
+        data=dat_tmp.values,
+        dims=["year", "lat", "lon"],
+        coords={
+            "year": years.values,
+            "lat": dat_tmp["lat"].values,
+            "lon": dat_tmp["lon"].values,
+        },
+        name=dat.name if hasattr(dat, "name") else "SeasonalMean",
+        attrs=dat.attrs.copy(),
+    )
+
+    return dat_out
+
 # -----------------------------
 # User settings
 # -----------------------------
@@ -101,6 +152,9 @@ air = ds["air"]
 air = air - 273.15
 air.attrs["units"] = "degC"
 
+# Annual mean using running mean function 
+air_ann = calc_seasonal_mean(air, window=12, end_month=12)
+
 # ---------------------------------------------------------
 # Area-weighted mean
 # ---------------------------------------------------------
@@ -117,21 +171,19 @@ lon_str, lon_end = ,
 # Step 2: Add Region name
 region_name = ''
 
-air_mean = regional_weighted_mean(air, lat_str, lat_end, lon_str, lon_end)
+air_region_mean = regional_weighted_mean(air_ann, lat_str, lat_end, lon_str, lon_end)
 
 
-# Annual mean anomaly
-air_mean_ann = air_mean.resample(time="YS").mean()
 
 # -----------------------------
 # Plot
 # -----------------------------
 plt.figure(figsize=(10, 4))
-plt.plot(air_mean_ann.time.dt.year, air_mean_ann, color="black", linewidth=1.5)
+plt.plot(air_region_mean.year, air_region_mean, color="black", linewidth=1.5)
 
 plt.xlabel("Year")
-plt.ylabel("2-m air temperature anomaly (°C)")
-plt.title(f"{region_name} area-averaged 2-m air temperature anomaly")
+plt.ylabel("2-m air temperature (°C)")
+plt.title(f"{region_name} area-averaged 2-m air temperature")
 plt.grid(alpha=0.3)
 plt.tight_layout()
 
