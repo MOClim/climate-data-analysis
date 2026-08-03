@@ -54,6 +54,7 @@ ds = xr.open_dataset(filename, use_cftime=True)
 dat = ds['air'].isel(time=month_idx)
 ds.close()
 
+print("Coordinates of DataArray:", dat.coords)
 print("Shape of DataArray:",dat.shape)
 print("Shape of DataArray.squeeze():",dat.squeeze().shape)
 
@@ -114,9 +115,8 @@ gl.ylocator = mticker.FixedLocator(np.arange(-90, 91, 30))
 cbar = fig.colorbar(img, ax=ax, orientation='vertical', shrink=0.7)
 cbar.set_label('Temperature (°C)')
 
-# Add title with long_name attribute
-long_name = dat.long_name if 'long_name' in dat.attrs else 'Temperature'
-plt.title(f'{long_name} (GISST) for {month_name[month_idx]}')
+# Add title 
+plt.title(f'Air Temperature Climatology (GISST) for {month_name[month_idx]}')
 
 # Save the plot as a JPEG file
 output_path = Path(__file__).with_suffix('.jpg')

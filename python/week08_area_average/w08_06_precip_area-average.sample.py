@@ -54,16 +54,57 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
         skipna=True
     )
 
+def calc_seasonal_anom(dat, window=5, end_month=1):
+    """
+    Calculate seasonal mean anomaly using a trailing running mean, extract the final month (e.g., Mar for NDJFM),
+    convert to year-lat-lon DataArray, apply minimum coverage mask, and optionally remove trend.
 
-def calculate_annual_anomaly(regional_mean):
-    """Calculate monthly anomalies and annual mean anomalies."""
+    Parameters:
+    -----------
+    dat : xr.DataArray
+        Input data with dimensions (time, lat, lon) and datetime64 'time'.
+    window : int
+        Running mean window size (default is 5).
+    end_month : int
+        Target month used to extract seasonal means (final month of the trailing average).
+    min_coverage : float
+        Minimum fraction of year coverage required for masking (default 0.9).
+    dtrend : bool
+        If True, remove linear trend after applying coverage mask.
 
-    clim = regional_mean.groupby("time.month").mean("time")
-    anom = regional_mean.groupby("time.month") - clim
-    anom_ann = anom.resample(time="YS").mean()
+    Returns:
+    --------
+    dat_out : xr.DataArray
+        Seasonal mean anomaly with dimensions (year, lat, lon).
+    """
 
-    return anom_ann
+    # Compute monthly anomalies
+    clm = dat.groupby("time.month").mean(dim="time")
+    anm = dat.groupby("time.month") - clm
 
+    # Apply trailing running mean
+    dat_rm = anm.rolling(time=window, center=False, min_periods=window).mean()
+
+    # Filter for entries where month == end_month
+    dat_tmp = dat_rm.sel(time=dat_rm["time"].dt.month == end_month)
+
+    # Extract year from the end_month timestamps
+    years = dat_tmp["time"].dt.year
+
+    # Create clean DataArray with dimensions ['year', 'lat', 'lon']
+    datS = xr.DataArray(
+        data=dat_tmp.values,
+        dims=["year", "lat", "lon"],
+        coords={
+            "year": years.values,
+            "lat": dat_tmp["lat"].values,
+            "lon": dat_tmp["lon"].values,
+        },
+        name=dat.name if hasattr(dat, "name") else "SeasonalMean",
+        attrs=dat.attrs.copy(),
+    )
+
+    return datS
 
 # ---------------------------------------------------------
 # Step 1: Download monthly precipitartion rate data 
@@ -74,6 +115,10 @@ indir = Path("")
 filein = indir / ""
 
 
+
+ds = xr.open_dataset(filein)
+print(ds)
+
 # ---------------------------------------------------------
 # # Step 3: Variable name inside the NetCDF file
 # ---------------------------------------------------------
@@ -82,6 +127,15 @@ filein = indir / ""
 # prate
 var_name = ""
 
+# Precipitation rate
+prate = ds[var_name]
+
+# Convert kg m-2 s-1 to mm/day
+prate = prate * 86400
+prate.attrs["units"] = "mm/day"
+
+# Annual mean using running mean function
+prate_an_anm = calc_seasonal_anom(prate,window=12, end_month=12)
 
 # ---------------------------------------------------------
 # Step 4: Define analysis region and regional name
@@ -92,33 +146,14 @@ region_name = ""
 lat_str, lat_end = , 
 lon_str, lon_end = , 
 
-
-# -----------------------------
-# Load data
-# -----------------------------
-ds = xr.open_dataset(filein)
-print(ds)
-
-# Precipitation rate
-prate = ds[var_name]
-
-# Convert kg m-2 s-1 to mm/day
-prate = prate * 86400
-prate.attrs["units"] = "mm/day"
-
-
-# -----------------------------
 # Area average
-# -----------------------------
-prate_mean = regional_weighted_mean(
-    prate,
+reg_an_anm = regional_weighted_mean(
+    prate_an_anm,
     lat_str,
     lat_end,
     lon_str,
     lon_end
 )
-
-prate_ann_anom = calculate_annual_anomaly(prate_mean)
 
 
 # -----------------------------
@@ -126,11 +161,13 @@ prate_ann_anom = calculate_annual_anomaly(prate_mean)
 # -----------------------------
 plt.figure(figsize=(10, 4))
 
-plt.plot(
-    prate_ann_anom.time.dt.year,
-    prate_ann_anom,
-    color="black",
-    linewidth=1.5
+colors = np.where(reg_an_anm >= 0, "blue", "red")
+
+plt.bar(
+    reg_an_anm.year,
+    reg_an_anm,
+    color=colors,
+    width=0.8,
 )
 
 plt.axhline(0, color="gray", linestyle="-")

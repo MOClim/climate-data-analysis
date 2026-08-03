@@ -8,8 +8,11 @@
 # 1. Read monthly 2-m air temperature data from
 #    NOAA NCEP/NCAR Reanalysis.
 #
-# 2. Calculate area-weighted regional mean temperature
-#    for three regions:
+# 2. Calculate annual temperature anomalies by removing
+#    the monthly climatology.
+#
+# 3. Calculate area-weighted regional mean temperature
+#    anomaly for three regions:
 #
 #    - North America
 #      Latitude : 75N to 15N
@@ -22,9 +25,6 @@
 #    - Arctic
 #      Latitude : 90N to 60N
 #      Longitude: 0E to 360E
-#
-# 3. Calculate annual temperature anomalies by removing
-#    the monthly climatology.
 #
 # 4. Plot the three regional time series on one panel
 #    to compare long-term warming and variability.
@@ -89,34 +89,59 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 
     return regional_mean
 
-def annual_anomaly(regional_mean):
+def calc_seasonal_anom(dat, window=5, end_month=1):
     """
-    Calculate annual mean anomaly from monthly data.
+    Calculate seasonal mean anomaly using a trailing running mean, extract the final month (e.g., Mar for NDJFM),
+    convert to year-lat-lon DataArray, apply minimum coverage mask, and optionally remove trend.
 
-    Steps
-    -----
-    1. Calculate monthly climatology.
-    2. Subtract monthly climatology from monthly data.
-    3. Average monthly anomalies into annual anomalies.
-    4. Keep only complete years.
+    Parameters:
+    -----------
+    dat : xr.DataArray
+        Input data with dimensions (time, lat, lon) and datetime64 'time'.
+    window : int
+        Running mean window size (default is 5).
+    end_month : int
+        Target month used to extract seasonal means (final month of the trailing average).
+    min_coverage : float
+        Minimum fraction of year coverage required for masking (default 0.9).
+    dtrend : bool
+        If True, remove linear trend after applying coverage mask.
+
+    Returns:
+    --------
+    dat_out : xr.DataArray
+        Seasonal mean anomaly with dimensions (year, lat, lon).
     """
 
-    # Monthly climatology
-    clim = regional_mean.groupby("time.month").mean("time")
+    # Compute monthly anomalies
+    clm = dat.groupby("time.month").mean(dim="time")
+    anm = dat.groupby("time.month") - clm
 
-    # Monthly anomaly
-    anom = regional_mean.groupby("time.month") - clim
+    # Apply trailing running mean
+    dat_rm = anm.rolling(time=window, center=False, min_periods=window).mean()
 
-    # Annual mean anomaly
-    anom_ann = anom.resample(time="YS").mean()
+    # Filter for entries where month == end_month
+    dat_tmp = dat_rm.sel(time=dat_rm["time"].dt.month == end_month)
 
-    # Count number of months in each year
-    count_ann = anom.resample(time="YS").count()
+    # Extract year from the end_month timestamps
+    years = dat_tmp["time"].dt.year
 
-    # Keep only complete years
-    anom_ann = anom_ann.where(count_ann == 12, drop=True)
+    # Create clean DataArray with dimensions ['year', 'lat', 'lon']
+    datS = xr.DataArray(
+        data=dat_tmp.values,
+        dims=["year", "lat", "lon"],
+        coords={
+            "year": years.values,
+            "lat": dat_tmp["lat"].values,
+            "lon": dat_tmp["lon"].values,
+        },
+        name=dat.name if hasattr(dat, "name") else "SeasonalMean",
+        attrs=dat.attrs.copy(),
+    )
 
-    return anom_ann
+    return datS
+
+
 # ---------------------------------------------------------
 # Step 1: Read the temperature dataset
 # ---------------------------------------------------------
@@ -128,8 +153,17 @@ def annual_anomaly(regional_mean):
 # --------------------------------------------------------
 
 
+
+
 # ---------------------------------------------------------
-# Step 2: Define three analysis regions
+# Step 2: Calculate annual-mean temperature
+# output: air_an_mean
+# ---------------------------------------------------------
+
+
+
+# ---------------------------------------------------------
+# Step 3: Define three analysis regions
 # ---------------------------------------------------------
 # Each tuple contains:
 # (Region name, latitude start, latitude end,
@@ -146,14 +180,11 @@ plt.figure(figsize=(10, 4))
 for name, lat1, lat2, lon1, lon2 in regions:
 
     # Calculate regional mean temperature
-    reg_mean = regional_weighted_mean(air, lat1, lat2, lon1, lon2)
-
-    # Calculate annual temperature anomaly`
-    reg_anom = annual_anomaly(reg_mean)
+    reg_mean = regional_weighted_mean(air_an_anm, lat1, lat2, lon1, lon2)
 
     plt.plot(
-        reg_anom.time.dt.year,
-        reg_anom,
+        reg_mean.year,
+        reg_mean,
         linewidth=1.5,
         label=name
     )
