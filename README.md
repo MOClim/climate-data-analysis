@@ -80,6 +80,19 @@ export PATH="/opt/miniconda3/bin:$PATH"
 ```
 Press 'q' to exit.
 
+If you want to edit this file, and open it in nano (text editor):
+```bash
+nano ~/.zshrc
+```
+Three operations to save and exit the file:
+```bash
+Edit text
+
+Ctrl + O     Save
+Enter        Confirm filename
+Ctrl + X     Exit
+```
+
 Run:
 ```bash
 conda init
