@@ -44,7 +44,7 @@ https://docs.anaconda.com/free/miniconda/
 
 Choose the correct version:
 
-- Mac (Apple Silicon: M1/M2/M3) → Apple Silicon
+- Mac (Apple Silicon: M1/M2/M3/M4/M5) → Apple Silicon
 - Mac (Intel) → Intel x86
 - Windows → 64-bit
   
