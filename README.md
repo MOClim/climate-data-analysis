@@ -19,9 +19,9 @@ cd /mnt/c/Users/<username>/Documents
 ```bash
 cd /Users/<username>/Documents
 ```
-'cd' is the unix command to move the directory.
+'cd' is the unix command to change the current directory.
 
-For both Windows and Mac Users, create a directory name "course"
+For both Windows and Mac Users, create a directory name `course`.
 ```bash
 mkdir course
 cd course
@@ -35,6 +35,30 @@ cd climate-data-analysis
 conda env create -f environment.yml
 conda activate climate-analysis
 ```
+If the installation is completed successfully, run the following commands:
+
+```bash
+ls
+pwd
+```
+'ls' is a command used to list files and directories in the current directory.
+'pwd' is a command used to display the path of the current directory.
+
+---
+### Directory Structure
+
+After completing the setup, your course directory should have the following structure:
+
+```text
+Documents
+└── course
+    └── climate-data-analysis
+        ├── environment.yml
+        ├── python
+        └── ...
+```
+
+The `climate-data-analysis` directory is your local copy of the course repository.
 
 ---
 ## Course Structure
