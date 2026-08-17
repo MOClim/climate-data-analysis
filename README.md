@@ -56,6 +56,29 @@ Open terminal:
 - Mac → Terminal or iTerm
 - Windows → PowerShell
 
+Check the default shell
+```bash
+echo $SHELL
+On a typical modern Mac, you should see:
+```bash
+/bin/zsh
+```
+
+Create a Path:
+```bash
+touch ~/.zshrc
+```
+
+Check this file
+```bash
+less ~/.zshrc
+```
+You should see:
+```bash
+export PATH="/opt/miniconda3/bin:$PATH"
+```
+Press 'q' to exit.
+
 Run:
 ```bash
 conda init
