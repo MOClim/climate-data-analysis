@@ -24,19 +24,27 @@ cd /Users/<username>/Documents
 For both Windows and Mac Users, create a directory name `course`.
 ```bash
 mkdir course
-cd course
 ```
 'mkdir' is the command to create a new directory.
+```bash
+cd course
+```
 
 Clone this repository and set up the Python environment:
 ```bash
 git clone https://github.com/MOClim/climate-data-analysis.git
+```
+```bash
 cd climate-data-analysis
+```
+```bash
 conda env create -f environment.yml
+```
+```bash
 conda activate climate-analysis
 ```
-If the installation is completed successfully, run the following commands:
 
+If the installation is completed successfully, run the following commands:
 ```bash
 ls
 pwd
