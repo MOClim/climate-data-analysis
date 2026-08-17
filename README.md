@@ -59,6 +59,7 @@ Open terminal:
 Check the default shell
 ```bash
 echo $SHELL
+```
 On a typical modern Mac, you should see:
 ```bash
 /bin/zsh
