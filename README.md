@@ -169,9 +169,3 @@ Restart your terminal.
 ```bash
 conda --version
 ```
-
-
-
-## Setup
-
-Instructions for installing required software (Python, conda, NCL) will be provided here.
