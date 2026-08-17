@@ -4,11 +4,31 @@ Course materials for climate data analysis using Python and NCL.
 
 ## Getting Started
 
-If conda is not installed, see "Environment Setup" below
+If `conda` is not installed, see "Environment Setup" below first.
 
+Open terminal:
+- Mac → Terminal or iTerm
+- Windows → Windows Subsystem for Linux (WSL) 
+
+### For Windows Users
+```bash
+cd /mnt/c/Users/<username>/Documents
+```
+
+### For Mac Users
+```bash
+cd /Users/<username>/Documents
+```
+'cd' is the unix command to move the directory.
+
+For both Windows and Mac Users, create a directory name "course"
+```bash
+mkdir course
+cd course
+```
+'mkdir' is the command to create a new directory.
 
 Clone this repository and set up the Python environment:
-
 ```bash
 git clone https://github.com/MOClim/climate-data-analysis.git
 cd climate-data-analysis
