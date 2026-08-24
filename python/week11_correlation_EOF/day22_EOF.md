@@ -29,8 +29,9 @@ By the end of this class, you should be able to:
 8. Apply the EOF workflow to a different climate variable and geographic domain.
 
 ---
-Previous scripts (like `w11_05_correlation_map_airT.sample.py`) calculate the correlation of spatial SST pattern with the area averaged SST. 
-Next step is to use climate index (like **Niño 3.4 Index**) to capture the correlation with ENSO index.
+Previous scripts (such as `w11_05_correlation_map_airT.sample.py`) calculate the correlation between spatial SST patterns and area-averaged SST. 
+
+The next step is to use a climate index (such as the **Niño 3.4 Index**) to examine the spatial correlation pattern associated with ENSO.
 
 # Exercise 1. Niño 3.4 Index and Global SST Correlation
 
