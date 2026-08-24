@@ -449,6 +449,7 @@ cor_map = correlation_with_pcs(
 ```
 
 Use an appropriate diverging colormap for precipitation correlations.
+**Check your result**: Your final figure should show the PC1, PC2, and PC3 time series together with the corresponding global precipitation correlation maps.
 
 ---
 
