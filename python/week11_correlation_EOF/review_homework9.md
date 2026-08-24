@@ -9,10 +9,6 @@ This review summarizes one possible solution for Homework 9. The objective was t
 
 The figure below compares the annual mean SST anomaly and detrended annual mean SST anomaly for a selected year, together with the corresponding Tropical Pacific mean time series.
 
-```markdown
-![Homework 9 example output](w10_10_detrended_sst_anom_map.HW.example.jpg)
-```
-
 The original SST anomaly contains both interannual variability and the long-term SST trend. After removing the fitted linear trend, the detrended anomaly emphasizes variability relative to that long-term change.
 
 ---
