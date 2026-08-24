@@ -7,6 +7,8 @@ __pycache__/
 */*/fig_all/
 mailmap.txt
 */memo
+*/*/memo
+*/*/log
 
 # Ignore all raw datasets
 data_raw/*
