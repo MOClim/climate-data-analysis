@@ -452,19 +452,6 @@ Use an appropriate diverging colormap for precipitation correlations.
 
 ---
 
-## Homework Questions
-
-Include brief answers to the following questions with your submission:
-
-1. What percentage of Tropical Pacific SST variance is explained by EOF1?
-2. How does the PC1 time series relate to ENSO variability?
-3. Where are the strongest positive precipitation correlations with PC1?
-4. Where are the strongest negative precipitation correlations with PC1?
-5. How do the global precipitation patterns associated with PC2 and PC3 differ from PC1?
-6. Why is it useful to calculate EOFs from SST but correlate the resulting PCs with a different climate variable such as precipitation?
-
----
-
 # Summary
 
 The workflow developed in this class is:
