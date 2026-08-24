@@ -176,27 +176,31 @@ On a typical modern Mac, you should see:
 ```bash
 /bin/zsh
 ```
-and then creates .bashrc for Mac.
+and then add Path for .zshrc for Mac.
 ```bash
 bash
-touch ~/.bashrc
-nano ~/.bashrc
+nano ~/.zshrc
 ```
 
 Check this file:
 ```bash
-less ~/.bashrc
+less ~/.zshrc
 ```
 You should see:
+Windows
 ```bash
-export PATH="/root/miniconda3/bin:$PATH" (Windows)
-export PATH="/opt/miniconda3/bin:$PATH" (Mac)
+export PATH="/root/miniconda3/bin:$PATH"
+```
+
+Mac
+```bash
+export PATH="/opt/miniconda3/bin:/bin:/usr/bin:/usr/local/bin:$PATH"
 ```
 Press the **Space** key to scroll down and q to exit.
 
 If you want to edit this file, and open it in nano (text editor):
 ```bash
-nano ~/.bashrc
+nano ~/.zshrc
 ```
 Three operations to save and exit the file:
 ```bash
