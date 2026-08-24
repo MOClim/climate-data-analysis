@@ -376,7 +376,7 @@ After completing the script, confirm that three PC time series and three corresp
 
 ---
 
-# Homework: ENSO and Global Precipitation
+# Homework 10: ENSO and Global Precipitation
 
 ## Objective
 
