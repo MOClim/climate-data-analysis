@@ -168,25 +168,17 @@ Select one year from both the original and detrended SST anomaly fields.
 ```python
 target_year = 1969
 
-anom_target = anom.sel(
-    year=target_year
-)
+anom_target = anom.sel(year=target_year)
 
-detrended_target = anom_detrended.sel(
-    year=target_year
-)
+detrended_target = anom_detrended.sel(year=target_year)
 ```
 
 The corresponding Tropical Pacific mean values are also selected.
 
 ```python
-reg_anom_target = reg_anom.sel(
-    year=target_year
-)
+reg_anom_target = reg_anom.sel(year=target_year)
 
-reg_detrended_target = reg_detrended.sel(
-    year=target_year
-)
+reg_detrended_target = reg_detrended.sel(year=target_year)
 ```
 
 Using the same year allows the effect of detrending on the SST anomaly pattern to be compared directly.
