@@ -145,7 +145,7 @@ Choose the correct version:
   
 ---
 
-### 2. Install Git
+## 2. Install Git
 
 **Git** is used to download and update the course materials from GitHub.
 
@@ -194,7 +194,7 @@ git --version
 
 ---
 
-### 3. PATH setting
+## 3. PATH setting
 
 **PATH** is a list of directories where the operating system looks for executable programs when you type a command in the terminal.
 
@@ -260,8 +260,9 @@ Ctrl + O     Save
 Enter        Confirm filename
 Ctrl + X     Exit
 ```
+---
 
-### 3. Initialize Conda
+## 4. Initialize Conda
 Run:
 ```bash
 conda init
@@ -270,7 +271,7 @@ Restart your terminal.
 
 ---
 
-### 4. Verify Installation
+## 5. Verify Installation
 
 ```bash
 conda --version
