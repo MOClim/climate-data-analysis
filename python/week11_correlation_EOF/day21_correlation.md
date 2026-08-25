@@ -37,18 +37,24 @@ Concepts
 #### Linear Regression
 Linear regression finds the straight line that best represents the relationship between two variables.
 ```
-y=ax+b
+y = ax + b
 ```
 where:
+
 x is the input variable
+
 y is the predicted variable
+
 a is the slope
+
 b is the intercept
 
 The slope describes how much y changes when x increases by one unit.
 
 In this exercise:
+
 x = global mean SST anomaly
+
 y = global mean air temperature anomaly
 ```python
 # -------------------------------------------------------
@@ -56,6 +62,18 @@ y = global mean air temperature anomaly
 # -------------------------------------------------------
 slope, intercept, xfit, yfit = linear_fit_xy(sst_anom, air_anom)
 ```
+The outputs are:
+
+slope: slope of the regression line
+intercept: y-intercept of the regression line
+xfit: x-values used to draw the fitted line
+yfit: predicted y-values along the fitted line
+
+The fitted line is calculated as:
+```
+y_fit = slope×x_fit + intercept
+```
+The slope shows how much y changes when x increases by one unit.
 
 ---
 ### Exercise 2: Correlation Using Detrended Anomalies
