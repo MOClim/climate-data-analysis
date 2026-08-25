@@ -4,18 +4,6 @@ This review summarizes one possible solution for Homework 10. The objective was 
 
 ---
 
-## Example Output
-
-The figure below shows the first three principal components of Tropical Pacific DJF SST and the corresponding global precipitation correlation patterns.
-
-```markdown
-![Homework 10 example output](w11_11_ENSO_precip.HW.example.jpg)
-```
-
-PC1 explains the largest fraction of Tropical Pacific SST variance. The precipitation correlation maps show how global precipitation variability is related to each SST EOF mode.
-
----
-
 ## Key Steps
 
 ### 1. Read the SST and precipitation datasets
@@ -194,4 +182,9 @@ cf = ax_map.contourf(
 
 A diverging colormap is appropriate because correlation coefficients contain both positive and negative values.
 
+---
+## Example Output
+
 The resulting figure combines the PC time series with the corresponding global precipitation correlation patterns, allowing the SST modes and their associated precipitation variability to be examined together.
+
+PC1 explains the largest fraction of Tropical Pacific SST variance. The precipitation correlation maps show how global precipitation variability is related to each SST EOF mode.
