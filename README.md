@@ -1,10 +1,10 @@
 # Climate Data Analysis
 
-Course materials for climate data analysis using Python and NCL.
+Course materials for climate data analysis using Python.
 
 ## Getting Started
 
-If `conda` is not installed, see "Environment Setup" below first.
+If `conda` or `git` is not installed, **see "Environment Setup" below first**.
 
 Open terminal:
 - Mac → Terminal or iTerm
@@ -145,22 +145,72 @@ Choose the correct version:
   
 ---
 
-### 2. PATH setting
-PATH is a list of directories where the operating system looks for executable programs when you type a command in the terminal.
+### 2. Install Git
+
+**Git** is used to download and update the course materials from GitHub.
+
+First, check whether Git is already installed. 
+- For Windows users, open Windows Subsystem for Linux (WSL)
+- For Mac users, open iTerm
+```bash
+git --version
+```
+
+If a Git version is displayed, you can skip the installation steps below.
+
+### For Windows users (WSL)
+
+Open WSL and run:
+
+```bash
+sudo apt update
+sudo apt install git
+```
+
+Then verify the installation:
+
+```bash
+git --version
+```
+
+### For Mac users
+
+Open Terminal or iTerm and run:
+
+```bash
+# Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+```bash
+# Install Git
+brew install git
+```
+
+After installation, verify:
+```bash
+# Check Git
+git --version
+```
+
+---
+
+### 3. PATH setting
+
+**PATH** is a list of directories where the operating system looks for executable programs when you type a command in the terminal.
 
 For example, when you type:
-
+```bash
 conda
-
+```
 the shell searches the directories listed in PATH to find the conda program. If the Miniconda directory is not included in PATH, the terminal may return an error such as:
-
+```bash
 conda: command not found
-
-Adding the Miniconda bin directory to PATH allows you to run conda from any directory in the terminal.
+```
+Adding the Miniconda bin directory to PATH allows you to run `conda` from any directory in the terminal.
 
 Open terminal:
-- Mac → Terminal or iTerm
 - Windows → Windows Subsystem for Linux (WSL) 
+- Mac → Terminal or iTerm
 
 Check the default shell
 ```bash
