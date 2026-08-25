@@ -72,18 +72,20 @@ The `climate-data-analysis` directory is your local copy of the course repositor
 ## Course Structure
 The course consists of weekly hands-on sessions using Python and script-based workflows.
 
-At the beginning of every class, open the terminal and start a Bash shell:
+At the beginning of each class, open your terminal:
 
-`bash`
+- **Mac:** Open Terminal or iTerm and use the default **zsh** shell.
+- **Windows:** Open **WSL (Ubuntu)** and use the **Bash** shell.
 
 Then go to the course repository and update your local repository:
+
 ```bash
 cd climate-data-analysis
 git pull origin main
 ```
 This ensures that you are working with the latest course materials.
 
-The course consists of weekly hands-on sessions using Python, followed by script-based workflows and NCL.
+The course consists of weekly hands-on sessions using Python.
 
 ---
 ---
