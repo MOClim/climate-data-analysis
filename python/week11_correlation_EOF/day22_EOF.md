@@ -1,4 +1,3 @@
-[day22_EOF.md](https://github.com/user-attachments/files/31391653/day22_EOF.md)
 # Day 22: Empirical Orthogonal Function (EOF) Analysis
 
 ## Overview
