@@ -1,10 +1,10 @@
 # Climate Data Analysis
 
-Course materials for climate data analysis using Python and NCL.
+Course materials for climate data analysis using Python.
 
 ## Getting Started
 
-If `conda` is not installed, see "Environment Setup" below first.
+If `conda` or `git` is not installed, **see "Environment Setup" below first**.
 
 Open terminal:
 - Mac → Terminal or iTerm
@@ -72,18 +72,20 @@ The `climate-data-analysis` directory is your local copy of the course repositor
 ## Course Structure
 The course consists of weekly hands-on sessions using Python and script-based workflows.
 
-At the beginning of every class, open the terminal and start a Bash shell:
+At the beginning of each class, open your terminal:
 
-`bash`
+- **Mac:** Open Terminal or iTerm and use the default **zsh** shell.
+- **Windows:** Open **WSL (Ubuntu)** and use the **Bash** shell.
 
 Then go to the course repository and update your local repository:
+
 ```bash
 cd climate-data-analysis
 git pull origin main
 ```
 This ensures that you are working with the latest course materials.
 
-The course consists of weekly hands-on sessions using Python, followed by script-based workflows and NCL.
+The course consists of weekly hands-on sessions using Python.
 
 ---
 ---
@@ -145,22 +147,23 @@ Choose the correct version:
   
 ---
 
-### 2. PATH setting
-PATH is a list of directories where the operating system looks for executable programs when you type a command in the terminal.
+## 2. PATH setting
+
+**PATH** is a list of directories where the operating system looks for executable programs when you type a command in the terminal.
 
 For example, when you type:
-
+```bash
 conda
-
+```
 the shell searches the directories listed in PATH to find the conda program. If the Miniconda directory is not included in PATH, the terminal may return an error such as:
-
+```bash
 conda: command not found
-
-Adding the Miniconda bin directory to PATH allows you to run conda from any directory in the terminal.
+```
+Adding the Miniconda bin directory to PATH allows you to run `conda` from any directory in the terminal.
 
 Open terminal:
-- Mac → Terminal or iTerm
 - Windows → Windows Subsystem for Linux (WSL) 
+- Mac → Terminal or iTerm
 
 Check the default shell
 ```bash
@@ -210,8 +213,9 @@ Ctrl + O     Save
 Enter        Confirm filename
 Ctrl + X     Exit
 ```
+---
 
-### 3. Initialize Conda
+## 3. Initialize Conda
 Run:
 ```bash
 conda init
@@ -220,8 +224,55 @@ Restart your terminal.
 
 ---
 
-### 4. Verify Installation
+## 4. Verify Installation
 
 ```bash
 conda --version
 ```
+
+---
+
+## 5. Install Git
+
+**Git** is used to download and update the course materials from GitHub.
+
+First, check whether Git is already installed. 
+- For Windows users, open Windows Subsystem for Linux (WSL)
+- For Mac users, open iTerm
+```bash
+git --version
+```
+
+If a Git version is displayed, you can skip the installation steps below.
+
+### Windows (WSL)
+
+Open WSL and run:
+
+```bash
+sudo apt update
+sudo apt install git
+```
+
+### Mac
+First, install Homebrew. Open Terminal or iTerm and run:
+```bash
+# Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+After installation, follow the Next steps displayed in the Terminal to add Homebrew to your PATH.
+
+Then install Git:
+```bash
+# Install Git
+brew install git
+```
+
+### All students
+After installation, verify Git:
+```bash
+# Check Git
+git --version
+```
+
+
