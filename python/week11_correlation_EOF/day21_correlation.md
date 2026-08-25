@@ -132,7 +132,7 @@ Expected output:
 
 ---
 ## Key Takeaways
-- Pearson correlation measures the strength and direction of a linear relationship between two variables.
+- Correlation measures the strength and direction of a linear relationship between two variables.
 - Scatter plots provide a visual interpretation of climate relationships.
 - Removing long-term trends helps isolate interannual climate variability.
 - Grid-point correlation maps reveal spatial teleconnection patterns.
