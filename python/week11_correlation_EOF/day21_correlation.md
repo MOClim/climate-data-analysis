@@ -34,6 +34,29 @@ Concepts
 - Linear regression
 - Pearson correlation coefficient
 
+#### Linear Regression
+Linear regression finds the straight line that best represents the relationship between two variables.
+```
+y=ax+b
+```
+where:
+x is the input variable
+y is the predicted variable
+a is the slope
+b is the intercept
+
+The slope describes how much y changes when x increases by one unit.
+
+In this exercise:
+x = global mean SST anomaly
+y = global mean air temperature anomaly
+```python
+# -------------------------------------------------------
+# Linear regression
+# -------------------------------------------------------
+slope, intercept, xfit, yfit = linear_fit_xy(sst_anom, air_anom)
+```
+
 ---
 ### Exercise 2: Correlation Using Detrended Anomalies
 Remove the long-term warming trend before comparing global SST and air temperature anomalies.
