@@ -699,7 +699,7 @@ cbar = fig.colorbar(
 )
 
 cbar.ax.tick_params(labelsize=8)
-cbar.set_label("Correlation (%)")
+cbar.set_label("Correlation")
 
 fig.suptitle(
     f"Leading North Atlantic DJF SLP EOF Modes "
