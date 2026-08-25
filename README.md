@@ -145,56 +145,7 @@ Choose the correct version:
   
 ---
 
-## 2. Install Git
-
-**Git** is used to download and update the course materials from GitHub.
-
-First, check whether Git is already installed. 
-- For Windows users, open Windows Subsystem for Linux (WSL)
-- For Mac users, open iTerm
-```bash
-git --version
-```
-
-If a Git version is displayed, you can skip the installation steps below.
-
-### For Windows users (WSL)
-
-Open WSL and run:
-
-```bash
-sudo apt update
-sudo apt install git
-```
-
-Then verify the installation:
-
-```bash
-git --version
-```
-
-### For Mac users
-
-Open Terminal or iTerm and run:
-
-```bash
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-```bash
-# Install Git
-brew install git
-```
-
-After installation, verify:
-```bash
-# Check Git
-git --version
-```
-
----
-
-## 3. PATH setting
+## 2. PATH setting
 
 **PATH** is a list of directories where the operating system looks for executable programs when you type a command in the terminal.
 
@@ -262,7 +213,7 @@ Ctrl + X     Exit
 ```
 ---
 
-## 4. Initialize Conda
+## 3. Initialize Conda
 Run:
 ```bash
 conda init
@@ -271,8 +222,55 @@ Restart your terminal.
 
 ---
 
-## 5. Verify Installation
+## 4. Verify Installation
 
 ```bash
 conda --version
 ```
+
+---
+
+## 5. Install Git
+
+**Git** is used to download and update the course materials from GitHub.
+
+First, check whether Git is already installed. 
+- For Windows users, open Windows Subsystem for Linux (WSL)
+- For Mac users, open iTerm
+```bash
+git --version
+```
+
+If a Git version is displayed, you can skip the installation steps below.
+
+### Windows (WSL)
+
+Open WSL and run:
+
+```bash
+sudo apt update
+sudo apt install git
+```
+
+### Mac
+First, install Homebrew. Open Terminal or iTerm and run:
+```bash
+# Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+After installation, follow the Next steps displayed in the Terminal to add Homebrew to your PATH.
+
+Then install Git:
+```bash
+# Install Git
+brew install git
+```
+
+### All students
+After installation, verify Git:
+```bash
+# Check Git
+git --version
+```
+
+
