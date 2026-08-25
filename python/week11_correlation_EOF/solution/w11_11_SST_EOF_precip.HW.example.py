@@ -596,8 +596,8 @@ for mode in range(n_modes):
     )
 
     ax_map.set_title(
-        f"Correlation of SST with PC{mode + 1}"
-        f"({variance_percent.isel(mode=mode).item():.1f}% Variance)",
+        f"Correlation of Precipitation with PC{mode + 1}"
+        f"({variance_percent.isel(mode=mode).item():.1f}%)",
         fontsize=9,
     )
 

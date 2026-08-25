@@ -65,44 +65,34 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 
     return dat_region_mean
 
-def calc_seasonal_anom(dat, window=12, end_month=12, clim_period=None):
+def calc_seasonal_mean(dat, window=5, end_month=1):
     """
-    Calculate seasonal mean anomaly using a trailing running mean, extract the final month (e.g., Mar for NDJFM),
-    convert to year-lat-lon DataArray, apply minimum coverage mask, and optionally remove trend.
+    Calculate seasonal mean using a trailing running mean, extract the final month (e.g., Mar for NDJFM),
+    convert to year-lat-lon DataArray.
 
     Parameters:
     -----------
     dat : xr.DataArray
         Input data with dimensions (time, lat, lon) and datetime64 'time'.
     window : int
-        Running mean window size (default is 12).
+        Running mean window size (default is 5).
     end_month : int
         Target month used to extract seasonal means (final month of the trailing average).
-    dtrend : bool
-        If True, remove linear trend after applying coverage mask.
 
     Returns:
     --------
     dat_out : xr.DataArray
-        Seasonal mean anomaly with dimensions (year, lat, lon).
+        Seasonal mean with dimensions (year, lat, lon).
     """
+    # Rename coordinates if necessary
+    if "latitude" in dat.coords:
+      dat = dat.rename({"latitude": "lat"})
 
-    # Monthly climatology
-    if clim_period is None:
-        clm = dat.groupby("time.month").mean("time")
-    else:
-        start, end = clim_period
-        clm = (
-            dat.sel(time=slice(start, end))
-            .groupby("time.month")
-            .mean("time")
-        )
-
-    # Monthly anomalies
-    anm = dat.groupby("time.month") - clm
+    if "longitude" in dat.coords:
+      dat = dat.rename({"longitude": "lon"})
 
     # Apply trailing running mean
-    dat_rm = anm.rolling(time=window, center=False, min_periods=window).mean()
+    dat_rm = dat.rolling(time=window, center=False, min_periods=window).mean()
 
     # Filter for entries where month == end_month
     dat_tmp = dat_rm.sel(time=dat_rm["time"].dt.month == end_month)
@@ -111,7 +101,7 @@ def calc_seasonal_anom(dat, window=12, end_month=12, clim_period=None):
     years = dat_tmp["time"].dt.year
 
     # Create clean DataArray with dimensions ['year', 'lat', 'lon']
-    datS = xr.DataArray(
+    dat_out = xr.DataArray(
         data=dat_tmp.values,
         dims=["year", "lat", "lon"],
         coords={
@@ -123,7 +113,7 @@ def calc_seasonal_anom(dat, window=12, end_month=12, clim_period=None):
         attrs=dat.attrs.copy(),
     )
 
-    return datS
+    return dat_out
 
 def linear_fit_xy(x, y):
     """
