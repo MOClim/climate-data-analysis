@@ -203,19 +203,25 @@ slp_djf_cyclic, lon_cyclic = add_cyclic_point(
 # Create Northern and Southern Hemisphere polar projections
 # ------------------------------------------------------------
 
-fig = plt.figure(figsize=(14, 7))
+fig, axs = plt.subplots( 1, 2, figsize=(10, 6))
 
-ax_nh = fig.add_subplot(
+# Replace the default axes with Cartopy projection axes
+for ax in axs:
+    ax.remove()
+
+axs[0] = fig.add_subplot(
     1, 2, 1,
-    projection=ccrs.NorthPolarStereo()
-)
+    projection=ccrs.NorthPolarStereo())
 
-ax_sh = fig.add_subplot(
+axs[1] = fig.add_subplot(
     1, 2, 2,
-    projection=ccrs.SouthPolarStereo()
-)
+    projection=ccrs.SouthPolarStereo())
 
+
+# ------------------------------------------------------------
 # Circular map boundary
+# ------------------------------------------------------------
+
 theta = np.linspace(0, 2 * np.pi, 100)
 center = [0.5, 0.5]
 radius = 0.5
@@ -224,8 +230,7 @@ circle = mpath.Path(
     np.vstack([
         np.sin(theta) * radius + center[0],
         np.cos(theta) * radius + center[1]
-    ]).T
-)
+    ]).T)
 
 # ------------------------------------------------------------
 # Plot settings
@@ -233,182 +238,142 @@ circle = mpath.Path(
 
 levels = np.arange(960, 1041, 4)
 
-# ------------------------------------------------------------
-# Northern Hemisphere
-# ------------------------------------------------------------
-
-ax_nh.set_extent(
+extents = [
     [-180, 180, 20, 90],
-    crs=ccrs.PlateCarree()
-)
+    [-180, 180, -90, -20]]
 
-ax_nh.set_boundary(circle, transform=ax_nh.transAxes)
-
-cf_nh = ax_nh.contourf(
-    lon_cyclic,
-    slp_djf["lat"],
-    slp_djf_cyclic,
-    levels=levels,
-    cmap="coolwarm",
-    extend="both",
-    transform=ccrs.PlateCarree()
-)
-
-cs_nh = ax_nh.contour(
-    lon_cyclic,
-    slp_djf["lat"],
-    slp_djf_cyclic,
-    levels=levels,
-    colors="black",
-    linewidths=0.5,
-    transform=ccrs.PlateCarree()
-)
-
-labels_nh = ax_nh.clabel(
-    cs_nh,
-    levels=np.arange(984, 1037, 8),
-    inline=True,
-    fontsize=7,
-    fmt="%d"
-)
-
-# Keep contour labels inside the circular map boundary.
-for txt in labels_nh:
-    txt.set_clip_on(True)
-    txt.set_clip_path(circle, ax_nh.transAxes)
-
-    # Hide labels whose centers are too close to/outside the edge.
-    xy_display = txt.get_transform().transform(txt.get_position())
-    xy_axes = ax_nh.transAxes.inverted().transform(xy_display)
-
-    distance = np.sqrt(
-        (xy_axes[0] - 0.5) ** 2 +
-        (xy_axes[1] - 0.5) ** 2
-    )
-
-    if distance > 0.45:
-        txt.set_visible(False)
-
-ax_nh.coastlines(resolution="110m", linewidth=0.8)
-ax_nh.add_feature(cfeature.BORDERS, linewidth=0.4)
-
-gl_nh = ax_nh.gridlines(
-    crs=ccrs.PlateCarree(),
-    linewidth=0.5,
-    linestyle="--",
-    alpha=0.6
-)
-
-gl_nh.ylocator = plt.FixedLocator(
-    [20, 30, 40, 50, 60, 70, 80]
-)
-
-ax_nh.set_title(
+titles = [
     "Northern Hemisphere",
-    fontsize=13,
-    pad=10
-)
+    "Southern Hemisphere"]
+
+lat_gridlines = [
+    [20, 30, 40, 50, 60, 70, 80],
+    [-80, -70, -60, -50, -40, -30, -20]]
+
 
 # ------------------------------------------------------------
-# Southern Hemisphere
+# Plot Northern and Southern Hemispheres
 # ------------------------------------------------------------
 
-ax_sh.set_extent(
-    [-180, 180, -90, -20],
-    crs=ccrs.PlateCarree()
-)
+for i, ax in enumerate(axs):
 
-ax_sh.set_boundary(circle, transform=ax_sh.transAxes)
+    # Set map extent
+    ax.set_extent(
+        extents[i],
+        crs=ccrs.PlateCarree())
 
-cf_sh = ax_sh.contourf(
-    lon_cyclic,
-    slp_djf["lat"],
-    slp_djf_cyclic,
-    levels=levels,
-    cmap="coolwarm",
-    extend="both",
-    transform=ccrs.PlateCarree()
-)
+    # Circular map boundary
+    ax.set_boundary(
+        circle,
+        transform=ax.transAxes)
 
-cs_sh = ax_sh.contour(
-    lon_cyclic,
-    slp_djf["lat"],
-    slp_djf_cyclic,
-    levels=levels,
-    colors="black",
-    linewidths=0.5,
-    transform=ccrs.PlateCarree()
-)
+    # Filled contours
+    cf = ax.contourf(
+        lon_cyclic,
+        slp_djf["lat"],
+        slp_djf_cyclic,
+        levels=levels,
+        cmap="coolwarm",
+        extend="both",
+        transform=ccrs.PlateCarree())
 
-labels_sh = ax_sh.clabel(
-    cs_sh,
-    levels=np.arange(984, 1037, 8),
-    inline=True,
-    fontsize=7,
-    fmt="%d"
-)
+    # Contour lines
+    cs = ax.contour(
+        lon_cyclic,
+        slp_djf["lat"],
+        slp_djf_cyclic,
+        levels=levels,
+        colors="black",
+        linewidths=0.5,
+        transform=ccrs.PlateCarree())
 
-# Keep contour labels inside the circular map boundary.
-for txt in labels_sh:
-    txt.set_clip_on(True)
-    txt.set_clip_path(circle, ax_sh.transAxes)
+    # Contour labels
+    labels = ax.clabel(
+        cs,
+        levels=np.arange(984, 1037, 8),
+        inline=True,
+        fontsize=7,
+        fmt="%d")
 
-    # Hide labels whose centers are too close to/outside the edge.
-    xy_display = txt.get_transform().transform(txt.get_position())
-    xy_axes = ax_sh.transAxes.inverted().transform(xy_display)
+    # Keep contour labels inside circular boundary
+    for txt in labels:
 
-    distance = np.sqrt(
-        (xy_axes[0] - 0.5) ** 2 +
-        (xy_axes[1] - 0.5) ** 2
-    )
+       txt.set_clip_on(True)
 
-    if distance > 0.45:
-        txt.set_visible(False)
+       txt.set_clip_path(
+            circle,
+            ax.transAxes)
 
-ax_sh.coastlines(resolution="110m", linewidth=0.8)
-ax_sh.add_feature(cfeature.BORDERS, linewidth=0.4)
+       xy_display = txt.get_transform().transform(
+            txt.get_position())
 
-gl_sh = ax_sh.gridlines(
-    crs=ccrs.PlateCarree(),
-    linewidth=0.5,
-    linestyle="--",
-    alpha=0.6
-)
+       xy_axes = ax.transAxes.inverted().transform(
+            xy_display)
 
-gl_sh.ylocator = plt.FixedLocator(
-    [-80, -70, -60, -50, -40, -30, -20]
-)
+       distance = np.sqrt(
+            (xy_axes[0] - 0.5) ** 2
+            + (xy_axes[1] - 0.5) ** 2)
 
-ax_sh.set_title(
-    "Southern Hemisphere",
-    fontsize=13,
-    pad=10
-)
+       if distance > 0.45:
+            txt.set_visible(False)
+
+    # Coastlines and borders
+    ax.coastlines(
+        resolution="110m",
+        linewidth=0.8)
+
+    ax.add_feature(
+        cfeature.BORDERS,
+        linewidth=0.4)
+
+    # Gridlines
+    gl = ax.gridlines(
+        crs=ccrs.PlateCarree(),
+        linewidth=0.5,
+        linestyle="--",
+        alpha=0.6)
+
+    gl.ylocator = plt.FixedLocator(
+        lat_gridlines[i])
+
+    # Panel title
+    ax.set_title(
+        titles[i],
+        fontsize=13,
+        pad=10)
+
 
 # ------------------------------------------------------------
-# Shared colorbar and figure title
+# Shared colorbar
 # ------------------------------------------------------------
 
 cbar = fig.colorbar(
-    cf_nh,
-    ax=[ax_nh, ax_sh],
+    cf,
+    ax=axs,
     orientation="horizontal",
     pad=0.08,
-    shrink=0.8
-)
+    shrink=0.8)
 
-cbar.set_label("Sea Level Pressure (hPa)")
+cbar.set_label(
+    "Sea Level Pressure (hPa)")
+
+
+# ------------------------------------------------------------
+# Figure title
+# ------------------------------------------------------------
 
 if start_year is not None and end_year is not None:
-    title = f"DJF Mean Sea Level Pressure ({start_year}-{end_year})"
+
+    title = (
+        f"DJF Mean Sea Level Pressure "
+        f"({start_year}-{end_year})")
+
 else:
+
     title = "DJF Mean Sea Level Pressure"
 
-fig.suptitle(
-    title,
-    fontsize=16,
-    y=0.98
-)
+
+fig.suptitle(title, fontsize=16, y=0.98)
 
 # ------------------------------------------------------------
 # Save and display
@@ -416,10 +381,7 @@ fig.suptitle(
 
 output_path = Path(__file__).with_suffix(".jpg")
 
-plt.savefig(
-    output_path,
-    dpi=300,
-    bbox_inches="tight",
-)
+plt.savefig(output_path, dpi=300, bbox_inches="tight")
 
 plt.show()
+

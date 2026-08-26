@@ -10,15 +10,21 @@
 # climate change because they reduce distortion near the poles
 # and emphasize spatial differences in ocean warming.
 #
-# In this example, we:
+# In this exercise, you will examine SST trends in the polar
+# regions and compare their spatial patterns between hemispheres.
 #
-# 1. Read monthly sea surface temperature data.
-# 2. Calculate annual mean SST.
-# 3. Calculate the linear SST trend at each grid point.
-# 4. Convert the trend from °C/year to °C/decade.
+# Tasks:
+#
+# 1. Read the SST variable from the HadISST dataset.
+# 2. Mask SST values colder than -2.1°C.
+# 3. Select SST data for the 1982-2025 analysis period.
+# 4. Calculate annual SST anomalies relative to the
+#    1991-2020 monthly climatology.
 # 5. Add a cyclic longitude point to remove the map seam.
-# 6. Plot SST trends in the Northern and Southern Hemispheres.
-# 7. Compare the spatial pattern of long-term ocean warming.
+# 6. Calculate the linear SST trend in °C per decade.
+# 7. Display the trends using North and South Polar
+#    Stereographic projections.
+# 8. Plot the SST trend using filled contours.
 #
 # ---------------------------------------------------------
 
@@ -185,7 +191,8 @@ sst_file = repo_dir / "data_raw" / "HadISST_sst.nc"
 
 ds_sst = xr.open_dataset(sst_file)
 
-# Read SST variable
+# Task 1:
+# Read the SST variable from the dataset.
 if "sst" in ds_sst.data_vars:
     sst = ds_sst["sst"]
 elif "SST" in ds_sst.data_vars:
@@ -193,8 +200,7 @@ elif "SST" in ds_sst.data_vars:
 else:
     raise KeyError(
         "SST variable not found. "
-        "Check the variable name in the NetCDF file."
-    )
+        "Check the variable name in the NetCDF file.")
 
 # Rename coordinates if necessary
 if "latitude" in sst.coords:
@@ -203,6 +209,12 @@ if "latitude" in sst.coords:
 if "longitude" in sst.coords:
     sst = sst.rename({"longitude": "lon"})
 
+# ---------------------------------------------------------
+# Mask extreme SST values
+# ---------------------------------------------------------
+
+# Task 2:
+# Keep SST values warmer than -2.1°C.
 sst = sst.where(sst > -2.1)
 
 # ---------------------------------------------------------
@@ -218,16 +230,18 @@ clim_end = "2020-12-31"
 trend_start = "1982-01-01"
 trend_end = "2025-12-31"
 
-
-sst = sst.sel(
-    time=slice(f"{start_year}-01-01", f"{end_year}-12-31")
-)
+# Task 3:
+# Select SST data from start_year through end_year.
+sst = sst.sel(time=slice(f"{start_year}-01-01", f"{end_year}-12-31"))
 
 
 # ---------------------------------------------------------
 # Calculate annual mean SST
 # ---------------------------------------------------------
-# Annual mean anomalies relative to monthly climatology
+
+# Task 4:
+# Use calc_seasonal_anom() to calculate 12-month mean anomalies.
+# Use December as the ending month and the 1991-2020 climatology.
 sst_anom = calc_seasonal_anom(sst, window=12, end_month=12, clim_period=[clim_start, clim_end])
 
 
@@ -252,27 +266,32 @@ sst_trend.name = "SST trend"
 # Add cyclic longitude point
 # ---------------------------------------------------------
 
+# Task 5:
+# Add a cyclic longitude point to remove the 0°/360° seam.
 sst_trend_cyclic, lon_cyclic = add_cyclic_point(
     sst_trend.values,
-    coord=sst_trend["lon"].values
-)
+    coord=sst_trend["lon"].values)
 
 
 # ---------------------------------------------------------
 # Create Northern and Southern Hemisphere projections
 # ---------------------------------------------------------
 
-fig = plt.figure(figsize=(14, 7))
+fig, axs = plt.subplots( 1, 2, figsize=(10, 6))
 
-ax_nh = fig.add_subplot(
+# Replace the default axes with Cartopy projection axes
+for ax in axs:
+    ax.remove()
+
+# Task 7:
+# Create North and South Polar Stereographic projections.
+axs[0] = fig.add_subplot(
     1, 2, 1,
-    projection=ccrs.NorthPolarStereo()
-)
+    projection=ccrs.NorthPolarStereo())
 
-ax_sh = fig.add_subplot(
+axs[1] = fig.add_subplot(
     1, 2, 2,
-    projection=ccrs.SouthPolarStereo()
-)
+    projection=ccrs.SouthPolarStereo())
 
 
 # ---------------------------------------------------------
@@ -287,8 +306,7 @@ circle = mpath.Path(
     np.vstack([
         np.sin(theta) * radius + center[0],
         np.cos(theta) * radius + center[1]
-    ]).T
-)
+    ]).T)
 
 
 # ---------------------------------------------------------
@@ -296,252 +314,157 @@ circle = mpath.Path(
 # ---------------------------------------------------------
 
 # Common trend range for direct hemispheric comparison.
-#levels = np.arange(-2., 2.01, 0.2)
 # Filled contour levels
 levels = [
     -1.,-0.5,-0.2,-0.1,-0.05,-0.02,  
      0.0,
-      0.02,  0.05, 0.1, 0.2, 0.5, 1.
-]
+     0.02,  0.05, 0.1, 0.2, 0.5, 1.]
 
 # Contour lines are less dense than the filled shading.
-#contour_levels = np.arange(-2., 2.01, 0.2)
-contour_levels = [
-    -0.1, -0.05, 
-     0.0,
-     0.05, 0.1
-]
+contour_levels = [-0.1, -0.05, 0.0, 0.05, 0.1]
 
+extents = [
+    [-180, 180, 20, 90],
+    [-180, 180, -90, -20]]
 
-
-# ---------------------------------------------------------
-# Northern Hemisphere
-# ---------------------------------------------------------
-
-ax_nh.set_extent(
-    [-180, 180, 50, 90],
-    crs=ccrs.PlateCarree()
-)
-
-ax_nh.set_boundary(
-    circle,
-    transform=ax_nh.transAxes
-)
-
-cf_nh = ax_nh.contourf(
-    lon_cyclic,
-    sst_trend["lat"],
-    sst_trend_cyclic,
-    levels=levels,
-    cmap="seismic",
-    extend="both",
-    transform=ccrs.PlateCarree()
-)
-
-cs_nh = ax_nh.contour(
-    lon_cyclic,
-    sst_trend["lat"],
-    sst_trend_cyclic,
-    levels=contour_levels,
-    colors="black",
-    linewidths=0.4,
-    transform=ccrs.PlateCarree()
-)
-
-# Mask the outer part of the map only for contour labels
-lat_nh = sst_trend["lat"].values
-
-sst_label_nh = np.where(
-    lat_nh[:, np.newaxis] >= 68,
-    sst_trend_cyclic,
-    np.nan
-)
-
-# Invisible contours used only for label placement
-cs_nh_label = ax_nh.contour(
-    lon_cyclic,
-    sst_trend["lat"],
-    sst_label_nh,
-    levels=contour_levels,
-    colors="black",
-    linewidths=0,
-    transform=ccrs.PlateCarree()
-)
-
-ax_nh.clabel(
-    cs_nh_label,
-    inline=True,
-    fontsize=7,
-    colors="black",
-    fmt="%.1f"
-)
-
-
-# Add land
-ax_nh.add_feature(
-    cfeature.LAND,
-    facecolor="lightgray",
-    zorder=2
-)
-
-# Add coastlines
-ax_nh.coastlines(
-    resolution="110m",
-    linewidth=0.8,
-    zorder=3
-)
-
-# Add country borders
-ax_nh.add_feature(
-    cfeature.BORDERS,
-    linewidth=0.3,
-    zorder=3
-)
-
-gl_nh = ax_nh.gridlines(
-    crs=ccrs.PlateCarree(),
-    linewidth=0.5,
-    linestyle="--",
-    alpha=0.6
-)
-
-gl_nh.ylocator = plt.FixedLocator(
-    [50, 60, 70, 80]
-)
-
-ax_nh.set_title(
+titles = [
     "Northern Hemisphere",
-    fontsize=13,
-    pad=10
-)
+    "Southern Hemisphere"]
 
+lat_gridlines = [
+    [50, 60, 70, 80],
+    [-80, -70, -60, -50]]
 
-# ---------------------------------------------------------
-# Southern Hemisphere
-# ---------------------------------------------------------
+# ------------------------------------------------------------
+# Plot Northern and Southern Hemispheres
+# ------------------------------------------------------------
 
-ax_sh.set_extent(
-    [-180, 180, -90, -50],
-    crs=ccrs.PlateCarree()
-)
+for i, ax in enumerate(axs):
 
-ax_sh.set_boundary(
-    circle,
-    transform=ax_sh.transAxes
-)
+    # Set map extent
+    ax.set_extent(
+        extents[i],
+        crs=ccrs.PlateCarree())
 
-cf_sh = ax_sh.contourf(
-    lon_cyclic,
-    sst_trend["lat"],
-    sst_trend_cyclic,
-    levels=levels,
-    cmap="seismic",
-    extend="both",
-    transform=ccrs.PlateCarree()
-)
+    # Circular map boundary
+    ax.set_boundary(
+        circle,
+        transform=ax.transAxes)
 
-cs_sh = ax_sh.contour(
-    lon_cyclic,
-    sst_trend["lat"],
-    sst_trend_cyclic,
-    levels=contour_levels,
-    colors="black",
-    linewidths=0.4,
-    transform=ccrs.PlateCarree()
-)
+    # Task 8:
+    # Plot filled SST trend contours.
+    cf = ax.contourf(
+        lon_cyclic,
+        sst_trend["lat"],
+        sst_trend_cyclic,
+        levels=levels,
+        cmap="seismic",
+        extend="both",
+        transform=ccrs.PlateCarree())
 
-# Mask the outer part of the map only for contour labels
-lat_sh = sst_trend["lat"].values
+    # Contour lines
+    cs = ax.contour(
+        lon_cyclic,
+        sst_trend["lat"],
+        sst_trend_cyclic,
+        levels=levels,
+        colors="black",
+        linewidths=0.5,
+        transform=ccrs.PlateCarree())
 
-sst_label_sh = np.where(
-    lat_sh[:, np.newaxis] <= -68,
-    sst_trend_cyclic,
-    np.nan
-)
+    # -----------------------------------------------------
+    # Mask outer region only for contour-label placement
+    # -----------------------------------------------------
 
-# Invisible contours used only for label placement
-cs_sh_label = ax_sh.contour(
-    lon_cyclic,
-    sst_trend["lat"],
-    sst_label_sh,
-    levels=contour_levels,
-    colors="black",
-    linewidths=0,
-    transform=ccrs.PlateCarree()
-)
+    lat = sst_trend["lat"].values
 
-# Add labels
-ax_sh.clabel(
-    cs_sh_label,
-    inline=True,
-    fontsize=7,
-    fmt="%.1f",
-    colors="black"
-)
+    if i == 0:
 
+        # Northern Hemisphere:
+        # place labels poleward of 68°N
+        sst_label = np.where(
+            lat[:, np.newaxis] >= 68,
+            sst_trend_cyclic,
+            np.nan)
 
-# Add land
-ax_sh.add_feature(
-    cfeature.LAND,
-    facecolor="lightgray",
-    zorder=2
-)
+    else:
 
-# Add coastlines
-ax_sh.coastlines(
-    resolution="110m",
-    linewidth=0.8,
-    zorder=3
-)
+        # Southern Hemisphere:
+        # place labels poleward of 68°S
+        sst_label = np.where(
+            lat[:, np.newaxis] <= -68,
+            sst_trend_cyclic,
+            np.nan)
 
-# Add country borders
-ax_sh.add_feature(
-    cfeature.BORDERS,
-    linewidth=0.3,
-    zorder=3
-)
+    # Invisible contours used only for label placement
+    cs_label = ax.contour(
+        lon_cyclic,
+        sst_trend["lat"],
+        sst_label,
+        levels=contour_levels,
+        colors="black",
+        linewidths=0,
+        transform=ccrs.PlateCarree())
 
-gl_sh = ax_sh.gridlines(
-    crs=ccrs.PlateCarree(),
-    linewidth=0.5,
-    linestyle="--",
-    alpha=0.6
-)
+    # Add contour labels
+    ax.clabel(
+        cs_label,
+        inline=True,
+        fontsize=7,
+        fmt="%.1f",
+        colors="black")
 
-gl_sh.ylocator = plt.FixedLocator(
-    [-80, -70, -60, -50]
-)
+    # Add land
+    ax.add_feature(
+        cfeature.LAND,
+        facecolor="lightgray",
+        zorder=2)
 
-ax_sh.set_title(
-    "Southern Hemisphere",
-    fontsize=13,
-    pad=10
-)
+    # Add coastlines
+    ax.coastlines(
+        resolution="110m",
+        linewidth=0.8,
+        zorder=3)
 
+    # Add country borders
+    ax.add_feature(
+        cfeature.BORDERS,
+        linewidth=0.3,
+        zorder=3)
 
-# ---------------------------------------------------------
-# Shared colorbar and figure title
-# ---------------------------------------------------------
+    # Gridlines
+    gl = ax.gridlines(
+        crs=ccrs.PlateCarree(),
+        linewidth=0.5,
+        linestyle="--",
+        alpha=0.6)
+
+    gl.ylocator = plt.FixedLocator(
+        lat_gridlines[i])
+
+    # Panel title
+    ax.set_title(
+        titles[i],
+        fontsize=13,
+        pad=10)
+
+# ------------------------------------------------------------
+# Shared colorbar
+# ------------------------------------------------------------
 
 cbar = fig.colorbar(
-    cf_nh,
-    ax=[ax_nh, ax_sh],
+    cf,
+    ax=axs,
     orientation="horizontal",
     pad=0.08,
-    shrink=0.8,
-    ticks=levels
-)
+    shrink=0.8)
 
 cbar.set_label(
-    "SST Trend (°C decade$^{-1}$)"
-)
+    "SST Trend (°C decade$^{-1}$)")
 
 fig.suptitle(
-    "SST Trend (°C decade$^{-1}$) (2016-2025)",
-    fontsize=16,
-    y=0.98
-)
-
+    f"SST Trend ({trend_start[:4]}-{trend_end[:4]})",
+    fontsize=16, y=0.98)
 
 # ---------------------------------------------------------
 # Save figure
@@ -549,10 +472,6 @@ fig.suptitle(
 
 output_path = Path(__file__).with_suffix(".jpg")
 
-plt.savefig(
-    output_path,
-    dpi=300,
-    bbox_inches="tight",
-)
+plt.savefig( output_path, dpi=300, bbox_inches="tight")
 
 plt.show()
