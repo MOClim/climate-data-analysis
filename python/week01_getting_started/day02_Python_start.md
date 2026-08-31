@@ -129,7 +129,54 @@ You should see:
 
 ---
 
-### 2. Move to the Directory and Check Files
+### 2. ## Set Up the Course Environment
+
+Before starting Python, we will create a **Conda environment** for this course.
+
+A Conda environment keeps Python and the required packages together. The required packages are listed in the `environment.yml` file in the course repository.
+
+#### Create the Environment — First Time Only
+
+Make sure you are in the `climate-data-analysis` directory:
+```bash
+cd climate-data-analysis
+ls
+```
+
+You should see `environment.yml`.
+
+Create the course environment:
+```bash
+conda env create -f environment.yml
+```
+This process may take several minutes.
+
+> **You only need to create the environment once.**
+
+#### Activate the Environment
+
+After the installation is complete, activate the environment:
+```bash
+conda activate climate-analysis
+```
+**You should see `(climate-analysis)` at the beginning of your Terminal prompt**:
+```text
+(climate-analysis) ...
+```
+This indicates that the course environment is active.
+
+#### From the Next Class
+You do **not** need to create the environment again. Each time you start working on this course, simply activate it:
+```bash
+conda activate climate-analysis
+```
+
+Now you are ready to start Python!
+
+---
+
+### Exercise ### 
+### 1. Move to the Directory and Check Files
    
 ```bash id="r6k1vb"
 cd ~/Documents/climate-data-analysis/python/week01_getting_started
@@ -138,7 +185,7 @@ ls
 
 ---
 
-### 3. Check Repository
+### 2. Check Repository
 
 Update Repository
 ```bash id="r6k1vb"
@@ -152,7 +199,7 @@ git status
 
 ---
   
-### 4. Create Your Script
+### 3. Create Your Script
 
 Copy the original file to a new file using the `cp` command:
 
@@ -162,7 +209,7 @@ cp w01_01_hello.sample.py w01_01_hello.py
 
 ---
 
-### 5. Edit the Script (vi)
+### 4. Edit the Script (vi)
 
 Open the file using vi:
 
@@ -184,7 +231,7 @@ Example:
 
 ---
 
-### 6. Run code
+### 5. Run code
 
 ```python id="u3p8dm"
 python w01_01_hello.py
@@ -193,7 +240,7 @@ print("Hello, climate data analysis!")
 
 ---
 
-### 7. Add Code
+### 6. Add Code
 
 Inside the file, write:
 
@@ -201,7 +248,8 @@ print("Hello, my name is xxx.")
 temperature = 20
 print(temperature)
 
-### 8. Run the Script
+---
+### 7. Run the Script
 
 ```python id="u3p8dm"
 python w01_01_hello.py
