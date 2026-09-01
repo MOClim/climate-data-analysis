@@ -111,7 +111,7 @@ Open terminal:
 - Windows → Windows Subsystem for Linux (WSL) 
 - Mac → Terminal or iTerm
 
-```markdown
+---
 **Windows**
 
 Check the default shell
@@ -148,7 +148,7 @@ Reload the shell settings.
 source ~/.bashrc
 ```
 
-```markdown
+---
 **Mac**
 
 Check the default shell
