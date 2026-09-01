@@ -31,12 +31,15 @@ Install WSL:
 1. Type WSL from the Search (on the bottom menu)
 2. Open WSL
 3. Check your CPU architecture
+   
 ```bash
 uname -m
 ```
 - x86_64 → Intel/AMD architecture
 - aarch64 → ARM architecture
+
 4. Download the Minoconda package
+
 For x86_64 users:
 ```bash
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -45,7 +48,9 @@ For aarch64 users:
 ```bash
 wget wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
 ```
+
 5. Install Miniconda
+
 For x86_64 users:
 ```bash
 sh Miniconda3-latest-Linux-x86_64.sh
