@@ -112,7 +112,7 @@ Open terminal:
 - Mac → Terminal or iTerm
 
 ---
-**Windows**
+### Windows
 
 Check the default shell
 ```bash
@@ -149,7 +149,7 @@ source ~/.bashrc
 ```
 
 ---
-**Mac**
+### Mac
 
 Check the default shell
 ```bash
