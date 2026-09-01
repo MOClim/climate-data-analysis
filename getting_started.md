@@ -1,11 +1,11 @@
 # One-time setup
 
-## 1. Environment Setup (Miniconda)
-## 2. PATH setting
-## 3. Initialize Conda
-## 4. Verify Installation
-## 5. Install Git
-## 6. Create the Course Virtual Environment
+1. Environment Setup (Miniconda)
+2. PATH setting
+3. Initialize Conda
+4. Verify Installation
+5. Install Git
+6. Create the Course Virtual Environment
 
 ---
 
@@ -100,7 +100,6 @@ On a typical modern Mac, you should see:
 ```
 and then add Path for .zshrc for Mac.
 ```bash
-bash
 nano ~/.zshrc
 ```
 
@@ -200,6 +199,11 @@ This course uses a Conda virtual environment to keep the Python version and requ
 
 First, go to the course directory:
 
+**Windows**
+```bash
+cd /mnt/c/Users/<username>/Documents/course
+```
+**Mac**
 ```bash
 cd ~/Documents/course
 ```
