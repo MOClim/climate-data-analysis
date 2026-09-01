@@ -112,6 +112,7 @@ Open terminal:
 - Mac → Terminal or iTerm
 
 **Windows**
+
 Check the default shell
 ```bash
 echo $SHELL
@@ -147,6 +148,7 @@ source ~/.bashrc
 ```
 
 **Mac**
+
 Check the default shell
 ```bash
 echo $SHELL
