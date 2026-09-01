@@ -97,7 +97,7 @@ when you type a command in the terminal.
 
 For example, when you type:
 ```bash
-conda
+conda --version
 ```
 the shell searches the directories listed in PATH to find the conda program. 
 
@@ -125,31 +125,36 @@ On a typical modern Mac, you should see:
 ```bash
 /bin/zsh
 ```
-and then add Path for .zshrc for Mac.
-```bash
-nano ~/.zshrc
-```
-
 Check this file:
+Windows:
+```bash
+less ~/.bashrc
+```
+Mac:
 ```bash
 less ~/.zshrc
 ```
-You should see:
-Windows
-```bash
-export PATH="/root/miniconda3/bin:$PATH"
-```
-
-Mac
-```bash
-export PATH="/opt/miniconda3/bin:/bin:/usr/bin:/usr/local/bin:$PATH"
-```
 Press the **Space** key to scroll down and q to exit.
 
-If you want to edit this file, and open it in nano (text editor):
+Add Path for `.bashrc` or `.zshrc`. Open the shell script in nano (text editor)
+Windows:
+```bash
+nano ~/.bashrc
+```
+Add this command to the file.
+```bash
+export PATH="$HOME/miniconda3/bin:$PATH"
+```
+
+Mac:
 ```bash
 nano ~/.zshrc
 ```
+Add this command to the file.
+```bash
+export PATH="/opt/miniconda3/bin:$PATH"
+```
+
 Three operations to save and exit the file:
 ```bash
 Edit text
@@ -158,6 +163,16 @@ Ctrl + O     Save
 Enter        Confirm filename
 Ctrl + X     Exit
 ```
+
+Windows:
+```bash
+source ~/.bashrc
+```
+Mac:
+```bash
+source ~/.zshrc
+```
+
 ---
 
 ## 3. Initialize Conda
