@@ -4,42 +4,35 @@ Course materials for climate data analysis using Python.
 
 ## Getting Started
 
-If `conda` or `git` is not installed, **see "Environment Setup" below first**.
+If this is your first time setting up the course, complete the
+👉 **[Getting Started: Installation and Environment Setup](getting_started.md)**
 
-Open terminal:
+This guide includes:
+- Miniconda installation
+- PATH and Conda initialization
+- Git installation
+- Course repository setup
+- Conda virtual environment setup
+  
+---
+
+After completing the one-time setup, open your terminal:
+
 - Mac → Terminal or iTerm
-- Windows → Windows Subsystem for Linux (WSL) 
+- Windows → Windows Subsystem for Linux (WSL)
 
 ### For Windows Users
 ```bash
-cd /mnt/c/Users/<username>/Documents
+cd /mnt/c/Users/<username>/Documents/course/climate-data-analysis
 ```
 
 ### For Mac Users
 ```bash
-cd /Users/<username>/Documents
+cd /Users/<username>/Documents/course/climate-data-analysis
 ```
 'cd' is the unix command to change the current directory.
 
-For both Windows and Mac Users, create a directory name `course`.
-```bash
-mkdir course
-```
-'mkdir' is the command to create a new directory.
-```bash
-cd course
-```
-
-Clone this repository and set up the Python environment:
-```bash
-git clone https://github.com/MOClim/climate-data-analysis.git
-```
-```bash
-cd climate-data-analysis
-```
-```bash
-conda env create -f environment.yml
-```
+Activate the course environment:
 ```bash
 conda activate climate-analysis
 ```
