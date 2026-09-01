@@ -26,12 +26,33 @@ Install WSL:
 
 ---
 
-#### Install Miniconda (Windows)
+#### Install Miniconda on WSL (Windows)
 
 1. Type WSL from the Search (on the bottom menu)
 2. Open WSL
+3. Check your CPU architecture
+```bash
+uname -m
+```
+- x86_64 → Intel/AMD architecture
+- aarch64 → ARM architecture
+4. Download the Minoconda package
+For x86_64 users:
 ```bash
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+```
+For aarch64 users:
+```bash
+wget wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
+```
+5. Install Miniconda
+For x86_64 users:
+```bash
+sh Miniconda3-latest-Linux-x86_64.sh
+```
+For aarch64 users:
+```bash
+sh Miniconda3-latest-Linux-x86_64.sh
 ```
 
 ---
@@ -43,22 +64,20 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 The default macOS Terminal is sufficient, but iTerm2 provides a better interface.
 
 Install iTerm2:
-
 1. Download from: https://iterm2.com
 2. Open the downloaded file
 4. Drag iTerm into the Applications folder
 5. Launch iTerm
-
----
 
 #### Install Miniconda (Mac)
 
 Download Miniconda from:
 
 https://docs.anaconda.com/free/miniconda/
+Maybe direct link of the download page:
+https://www.anaconda.com/download/success
 
-Choose the correct version:
-
+Choose the correct version of *Miniconda*:
 - Mac (Apple Silicon: M1/M2/M3/M4/M5) → Apple Silicon
 - Mac (Intel) → Intel x86
 - Windows → 64-bit
