@@ -99,7 +99,9 @@ For example, when you type:
 ```bash
 conda --version
 ```
-the shell searches the directories listed in PATH to find the conda program. If the Miniconda directory is not included in PATH, the terminal may return an error such as:
+the shell searches the directories listed in PATH to find the conda program. 
+
+If the Miniconda directory is not included in PATH, the terminal may return an error such as:
 ```bash
 conda: command not found
 ```
