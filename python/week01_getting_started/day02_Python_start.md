@@ -129,7 +129,7 @@ You should see:
 
 ---
 
-### 2. ## Set Up the Course Environment
+### 2. Set Up the Course Environment
 
 Before starting Python, we will create a **Conda environment** for this course.
 
