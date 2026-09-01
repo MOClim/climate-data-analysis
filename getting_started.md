@@ -57,7 +57,7 @@ sh Miniconda3-latest-Linux-x86_64.sh
 ```
 For aarch64 users:
 ```bash
-sh Miniconda3-latest-Linux-x86_64.sh
+sh Miniconda3-latest-Linux-aarch64.sh
 ```
 
 ---
