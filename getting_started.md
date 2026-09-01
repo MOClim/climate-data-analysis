@@ -111,6 +111,7 @@ Open terminal:
 - Windows → Windows Subsystem for Linux (WSL) 
 - Mac → Terminal or iTerm
 
+
 **Windows**
 
 Check the default shell
@@ -146,6 +147,7 @@ Reload the shell settings.
 ```bash
 source ~/.bashrc
 ```
+
 
 **Mac**
 
