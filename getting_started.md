@@ -111,33 +111,21 @@ Open terminal:
 - Windows → Windows Subsystem for Linux (WSL) 
 - Mac → Terminal or iTerm
 
+**Windows**
 Check the default shell
 ```bash
 echo $SHELL
 ```
-
-Windows:
+You can see like this:
 ```bash
 /bin/bash
 ```
-
-On a typical modern Mac, you should see:
-```bash
-/bin/zsh
-```
 Check this file:
-Windows:
 ```bash
 less ~/.bashrc
 ```
-Mac:
-```bash
-less ~/.zshrc
-```
 Press the **Space** key to scroll down and q to exit.
-
-Add Path for `.bashrc` or `.zshrc`. Open the shell script in nano (text editor)
-Windows:
+Add Path for `.bashrc`. Open it in nano (text editor)
 ```bash
 nano ~/.bashrc
 ```
@@ -145,16 +133,6 @@ Add this command to the file.
 ```bash
 export PATH="$HOME/miniconda3/bin:$PATH"
 ```
-
-Mac:
-```bash
-nano ~/.zshrc
-```
-Add this command to the file.
-```bash
-export PATH="/opt/miniconda3/bin:$PATH"
-```
-
 Three operations to save and exit the file:
 ```bash
 Edit text
@@ -163,12 +141,43 @@ Ctrl + O     Save
 Enter        Confirm filename
 Ctrl + X     Exit
 ```
-
-Windows:
+Reload the shell settings.
 ```bash
 source ~/.bashrc
 ```
-Mac:
+
+**Mac**
+Check the default shell
+```bash
+echo $SHELL
+```
+On a typical modern Mac, you should see:
+```bash
+/bin/zsh
+```
+Check this file:
+```bash
+less ~/.zshrc
+```
+Press the **Space** key to scroll down and q to exit.
+
+Add Path for `.zshrc`. Open it in nano (text editor)
+```bash
+nano ~/.zshrc
+```
+Add this command to the file.
+```bash
+export PATH="/opt/miniconda3/bin:$PATH"
+```
+Three operations to save and exit the file:
+```bash
+Edit text
+
+Ctrl + O     Save
+Enter        Confirm filename
+Ctrl + X     Exit
+```
+Reload the shell settings.
 ```bash
 source ~/.zshrc
 ```
