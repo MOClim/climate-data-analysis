@@ -4,19 +4,14 @@ Course materials for climate data analysis using Python.
 
 ## Getting Started
 
-If this is your first time setting up the course, complete the
-👉 **[Getting Started: Installation and Environment Setup](getting_started.md)**
+If this is your first time setting up the course, follow the:
 
-This guide includes:
-- Miniconda installation
-- PATH and Conda initialization
-- Git installation
-- Course repository setup
-- Conda virtual environment setup
-  
----
+👉 **[Getting Started Guide](getting_started.md)**
 
-After completing the one-time setup, open your terminal:
+This guide provides instructions for installing Miniconda and Git and
+setting up the Python environment required for this course.
+
+After completing the initial setup, open your terminal:
 
 - Mac → Terminal or iTerm
 - Windows → Windows Subsystem for Linux (WSL)
@@ -25,12 +20,12 @@ After completing the one-time setup, open your terminal:
 ```bash
 cd /mnt/c/Users/<username>/Documents/course/climate-data-analysis
 ```
+'cd' is the unix command to change the current directory.
 
 ### For Mac Users
 ```bash
 cd /Users/<username>/Documents/course/climate-data-analysis
 ```
-'cd' is the unix command to change the current directory.
 
 Activate the course environment:
 ```bash
