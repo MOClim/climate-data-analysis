@@ -79,6 +79,7 @@ Install iTerm2:
 Download Miniconda from:
 
 https://docs.anaconda.com/free/miniconda/
+
 Maybe direct link of the download page:
 https://www.anaconda.com/download/success
 
