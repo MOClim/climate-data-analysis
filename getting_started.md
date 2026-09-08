@@ -293,6 +293,62 @@ Verify Python:
 ```bash
 python --version
 ```
+---
+
+### Troubleshooting: If creating the environment is very slow or fails
+
+If the standard command
+
+```bash
+conda env create -f environment.yml
+```
+
+takes a very long time or fails, try one of the following options.
+
+#### Option 1: Use the `libmamba` solver
+
+The `libmamba` solver can resolve package dependencies more efficiently:
+
+```bash
+conda env create -f environment.yml --solver=libmamba
+```
+
+After installation is complete, activate the environment:
+
+```bash
+conda activate climate-analysis
+```
+
+#### Option 2: Create a minimal environment manually
+
+If Option 1 does not work, create the environment manually:
+
+```bash
+conda create -n climate-analysis python=3.11
+```
+
+Activate the environment:
+
+```bash
+conda activate climate-analysis
+```
+
+Then install the packages needed at the beginning of the course:
+
+```bash
+conda install pandas matplotlib
+```
+
+You can test the installation in Python:
+
+```python
+from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
+```
+
+> **Note:** `pathlib` is included with Python, so you do not need to install it separately. Additional packages will be installed later as needed.
+
 
 Note: You only need to create the environment once.
 For future classes, activate it with:
