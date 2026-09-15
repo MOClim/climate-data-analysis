@@ -186,6 +186,9 @@ Reload the shell settings.
 source ~/.zshrc
 ```
 
+#### Installation of XQuartz
+Download the installer from the [XQuartz website](https://www.xquartz.org/) and open the downloaded file to begin the installation.
+
 ---
 
 ## 3. Initialize Conda
