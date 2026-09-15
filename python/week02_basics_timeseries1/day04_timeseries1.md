@@ -130,17 +130,12 @@ On macOS:
 open w02_08_xy-plot.ocn.jpg
 ```
 
-On Windows:
+On Windows (WSL):
 
 ```cmd
-start w02_08_xy-plot.ocn.jpg
+explorer.exe w02_08_xy-plot.ocn.jpg
 ```
 
-On Windows PowerShell:
-
-```powershell
-start .\w02_08_xy-plot.ocn.jpg
-```
 ---
 
 ### Exercise 3: Modify the plotting script
