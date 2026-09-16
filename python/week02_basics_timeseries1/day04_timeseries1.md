@@ -200,6 +200,10 @@ Copy the ocean plotting script:
 ```bash
 cp w02_08_xy-plot.ocn.sample.py w02_09_xy-plot.lnd.py
 ```
+or 
+```bash
+cp w02_08_xy-plot.ocn.py w02_09_xy-plot.lnd.py
+```
 
 #### Step 2: Modify the script
 
@@ -207,7 +211,8 @@ Update the following:
 
 - Change the input file to the land dataset
 - Update the plot title (e.g., "Global Land Temperature Anomalies")
-- ensure the column names match (`Year`, `Anomaly`)
+- ensure the column names match (`Year`, `Departure from Average`)
+ - Updated: column name because NOAA official changed it from 'Anomaly' to 'Departure from Average' (Sep 16, 2026).
 
 #### Step 3: Run the script
 
