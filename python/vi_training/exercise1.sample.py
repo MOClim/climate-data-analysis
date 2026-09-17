@@ -18,7 +18,7 @@
 
 # STEP 4: Another way to copy and paste multiple lines
 # Move your cursor to the first print("test") line in STEP 3.
-# Type 10Y to copy 10 lines.
+# Press Shift + 10Y to copy 10 lines.
 # Move the cursor to the line below,
 # and then press p.
 
