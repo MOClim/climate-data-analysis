@@ -42,14 +42,18 @@ Replace the placeholder text with the correct CSV file paths.
 Original:
 
 ```python
-land_file_path = Path('ENTER_FULL_PATH_TO_LAND_FILE.csv')
-ocean_file_path = Path('ENTER_FULL_PATH_TO_OCEAN_FILE.csv')
+data_dir = Path('ENTER_PATH')
+data_dir2 = Path('ENTER_PATH')
 ```
 Example:
 
 ```python
-land_file_path = Path('../../data_raw/NOAA.1850-2025.LND.csv')
-ocean_file_path = Path('../../data_raw/NOAA.1850-2025.OCN.csv')
+data_dir = Path('../../data')
+data_dir2 = Path('../../data_raw')
+```
+```python
+ocean_file_path = data_dir / 'OCEAN_FILE_NAME'
+land_file_path = data_dir2 / 'LAND_FILE_NAME'
 ```
 ---
 
@@ -77,23 +81,24 @@ Matplotlib Named Colors</a>
 
 ---
 
-### Step 3: Plot the Land Data
+### Step 3: Plot the Land and Ocean Data
 
 The land dataset is already plotted in the sample file.
 
 ```python
-plt.plot(
-    land_data['Year'],
-    land_data['Anomaly'],
-    marker='o',
-    linestyle='-',
-    color=land_color,
-    label='Land',
-    zorder=1
-)
+plt.plot(land_data['Year'],land_data['Anomaly'],marker='o',
+    linestyle='-',color=land_color,label='Land',zorder=1)
 ```
+Caution: You need to edit variable name from 'Anomaly' to Departure from Average'.
 
 Marker types: https://matplotlib.org/stable/api/markers_api.html
+
+Copy `plt.plot` line to the space below STEP 3
+
+```python
+plt.plot(ocean_data['Year'], ocean_data['Anomaly'], marker='o', linestyle='-', color=ocean_color, label='Ocean',zorder=1)
+```
+Keep the variable name, 'Anomaly', for the ocean datasets. 
 
 ---
 
@@ -115,7 +120,7 @@ fig_title = 'Global Land and Ocean Temperature Anomalies'
 
 ---
 
-## Exercise: Create an Area Plot
+## Exercise 2: Create an Area Plot
 
 This exercise demonstrates how to create an area plot using NOAA ocean temperature anomaly data.
 
@@ -146,6 +151,16 @@ The script automatically generates and saves:
 ```text
 w03_02_area-plot.jpg
 ```
+Open the jpg file on terminal
+Windows:
+```bash
+explorer.exe w03_02_area-plot.jpg
+```
+
+Mac:
+```bash
+open w03_02_area-plot.jpg
+```
 
 The figure should display:
 
@@ -154,7 +169,7 @@ The figure should display:
 
 ---
 
-## Exercise: Mauna Loa CO₂ Time Series
+## Exercise 3: Mauna Loa CO₂ Time Series
 
 This exercise demonstrates how to download, read, and process Mauna Loa atmospheric CO₂ observations from NOAA.
 
@@ -184,7 +199,12 @@ https://gml.noaa.gov/ccgg/trends/
 Save the downloaded file into the course data directory.
 
 Example:
+Windows:
+```bash
+mv /mnt/c/Users/<username>/Download/co2_daily_mlo.csv ../../data_raw/
+```
 
+Mac:
 ```bash
 mv ~/Download/co2_daily_mlo.csv ../../data_raw/
 ```
@@ -277,7 +297,7 @@ print(data.head())
 ```
 
 ---
-## Exercise: Weather Station Time Series
+## Exercise 5: Weather Station Time Series
 
 This exercise demonstrates how to download and visualize weather station precipitation data from the Utah Climate Center.
 
@@ -364,7 +384,7 @@ The figure displays:
 
 ---
 
-## Exercise: Station Data Bar Plot
+## Exercise 6: Station Data Bar Plot
 
 This exercise compares a standard time-series plot with a bar plot using the same precipitation dataset.
 
