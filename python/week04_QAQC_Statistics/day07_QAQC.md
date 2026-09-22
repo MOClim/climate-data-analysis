@@ -1,4 +1,4 @@
-# Week 04 (Day 7): Reading and Plotting Climate Time Series part 2
+# Week 04 (Day 7): Quality Assurance (QA) and Quality Control (QC) Methods
 
 ## Overview
 This lecture introduces Quality Assurance (QA) and Quality Control (QC) methods for atmospheric observations. Students learn how to detect unrealistic measurements using basic QC algorithms and scientific visualization with Python.
