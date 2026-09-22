@@ -201,12 +201,12 @@ Save the downloaded file into the course data directory.
 Example:
 Windows:
 ```bash
-mv /mnt/c/Users/<username>/Download/co2_daily_mlo.csv ../../data_raw/
+mv /mnt/c/Users/<username>/Downloads/co2_daily_mlo.csv ../../data_raw/
 ```
 
 Mac:
 ```bash
-mv ~/Download/co2_daily_mlo.csv ../../data_raw/
+mv ~/Downloads/co2_daily_mlo.csv ../../data_raw/
 ```
 
 ---
@@ -278,12 +278,12 @@ data = pd.read_csv(
 Copy:
 
 ```bash
-cp p05_03.add_column.sample.py p05_03.add_column.py
+cp w03_03_add_column.sample.py w03_03_add_column.py
 ```
 
 Run:
 ```bash
-python p05_03.add_column.py
+python w03_03_add_column.py
 ```
 
 ---
@@ -335,10 +335,10 @@ UCRN
 Example selections:
 
 1. metric
-2. Precipitation
-3. Daily
-4. Change month → March 2026
-5. Download CSV
+2. Change month → March 2026
+3. Precipitation
+4. Daily
+5. Click three lines (right side) to choose 'Download CSV'
 
 Save the downloaded CSV file.
 
@@ -351,7 +351,11 @@ beaver-big-flat-nfs-ucrn.csv
 Move the downloaded file into the course `data_raw` directory.
 
 Example:
-
+Windows:
+```bash
+mv /mnt/c/Users/<username>/Downloads/beaver-big-flat-nfs-ucrn.csv ../../data_raw/
+```
+Mac:
 ```bash
 mv ~/Downloads/beaver-big-flat-nfs-ucrn.csv ../../data_raw/
 ```
