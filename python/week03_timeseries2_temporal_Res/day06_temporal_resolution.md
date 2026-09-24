@@ -117,8 +117,8 @@ Hourly and minute observations are resampled to daily frequency using the mean v
 # Resample hourly and minute data to daily averages
 # Aggregate sub-daily observations into daily mean values
 
-data_h_daily_avg = data_hly.resample('D').mean()
-data_m_daily_avg = data_min.resample('D').mean()
+data_h_daily_avg = data_hly.resample('D').mean(numeric_only=True)
+data_m_daily_avg = data_min.resample('D').mean(numeric_only=True)
 ```
 
 Compare the daily datasets with the daily-averaged datasets from hourly and minute data.
