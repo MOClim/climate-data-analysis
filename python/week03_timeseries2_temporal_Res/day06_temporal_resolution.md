@@ -38,7 +38,7 @@ plt.subplot(2, 2, 4)
 
 ---
 
-## Exercise: Plot Two Panels
+## Exercise 1: Plot Two Panels
 In this exercise, students update `w03_06_2_panels.sample.py` to compare line and bar plot representations of precipitation data.
 
 ### Step 1: Copy the sample program and run it
@@ -54,7 +54,7 @@ plt.subplot(2, 1, 1)  # 1 row, 2 columns, first subplot
 
 ---
 
-## Exercise: Compare Temporal Resolution
+## Exercise 2: Compare Temporal Resolution
 
 ### Step 1. Copy the sample program
 ```bash
@@ -81,7 +81,7 @@ python w03_06_2_panels.py
 ```
 
 ---
-## Exercise: Narrow Time Resolution
+## Exercise 3: Narrow Time Resolution
 
 In this exercise, copy and run:
 
@@ -107,7 +107,7 @@ This comparison demonstrates how temporal resolution influences the interpretati
 
 ---
 
-## Exercise: Daily Average
+## Exercise 4: Daily Average
 
 Check the code in `w03_09_daily_avg.sample.py` and investigate how daily averages are calculated from higher temporal resolution datasets.
 
@@ -141,7 +141,7 @@ How might quality control or sensor timing affect the results?
 
 ---
 
-## Homework: Daily to Monthly Average
+## Homework 3: Daily to Monthly Average
 
 In this homework, use `w03_10_monthly_ave.sample.py` to calculate monthly averages from daily climate observations.
 
