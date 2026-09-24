@@ -31,12 +31,10 @@ file_min_path = data_dir / 'ENTERL_MINITUES_FILE.csv'
 
 
 # Read the CSV files
-# The comment="#" option ignores metadata lines
-# beginning with # in the climate files.
 
-data_dly = pd.read_csv(file_dly_path, header=0, command="#")
-data_hly = pd.read_csv(file_hly_path, header=0, command="#")
-data_min = pd.read_csv(file_min_path, header=0, command="#")
+data_dly = pd.read_csv(file_dly_path, header=0)
+data_hly = pd.read_csv(file_hly_path, header=0)
+data_min = pd.read_csv(file_min_path, header=0)
 
 
 # Convert date_time column to datetime format
@@ -61,7 +59,7 @@ data_dly.index = data_dly.index.normalize()
 
 plt.figure(figsize=(8, 5))
 
-fig_title = 'Climate Data for April 2026 at Cedar City'
+fig_title = 'Climate Data for March 2026 at Cedar City'
 
 # Plot data
 var='Air Temp Avg'
@@ -83,8 +81,8 @@ plt.grid(True)
 
 # Set x-axis range
 
-xmin = data.index.min()
-xmax = data.index.max()+ pd.Timedelta(days=0.5)
+xmin = data_hly.index.min()
+xmax = data_hly.index.max()+ pd.Timedelta(days=0.5)
 plt.xlim([xmin, xmax])
 
 # Adjust layout to prevent overlap

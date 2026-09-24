@@ -29,9 +29,9 @@ file_min_path = Path('../../data_raw/cedar-city-zion-np-kolob.min.csv')
 
 # Read the CSV files
 
-data_dly = pd.read_csv(file_dly_path, header=0, comment="#")
-data_hly = pd.read_csv(file_hly_path, header=0, comment="#")
-data_min = pd.read_csv(file_min_path, header=0, comment="#")
+data_dly = pd.read_csv(file_dly_path, header=0)
+data_hly = pd.read_csv(file_hly_path, header=0)
+data_min = pd.read_csv(file_min_path, header=0)
 
 
 # Convert date_time column to datetime format
@@ -47,6 +47,10 @@ data_dly.set_index('date_time', inplace=True)
 data_hly.set_index('date_time', inplace=True)
 data_min.set_index('date_time', inplace=True)
 
+# Remove the original date column
+data_dly.drop(columns=['Category'], inplace=True)
+data_hly.drop(columns=['Category'], inplace=True)
+data_min.drop(columns=['Category'], inplace=True)
 
 # Normalize daily timestamps
 # Removes the time component from daily data.

@@ -15,7 +15,7 @@ from pathlib import Path
 # --- Read Data ---
 
 # File paths for the dataset.
-data_dir Path('../../data_raw')
+data_dir = Path('../../data_raw')
 
 # Add data name for the path. 
 file_path = data_dir / 'beaver-big-flat-nfs-ucrn.csv'

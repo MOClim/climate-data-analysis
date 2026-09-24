@@ -33,7 +33,7 @@ file_dly_path = data_dir / 'cedar-city-zion-np-kolob.daily_2025.csv'
 
 
 # Read the CSV files
-data_dly = pd.read_csv(file_dly_path, header=0, comment="#")
+data_dly = pd.read_csv(file_dly_path, header=0)
 
 
 # Convert to datetime

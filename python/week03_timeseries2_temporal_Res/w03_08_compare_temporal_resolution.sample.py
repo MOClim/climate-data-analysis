@@ -28,10 +28,10 @@ file_hly_path = data_dir / 'cedar-city-zion-np-kolob.hourly.csv'
 file_min_path = data_dir / 'cedar-city-zion-np-kolob.min.csv'
 
 
-# Read the CSV file, assuming data starts from the 5th row
-data_dly = pd.read_csv(file_dly_path, header=0, comment="#")
-data_hly = pd.read_csv(file_hly_path, header=0, comment="#")
-data_min = pd.read_csv(file_min_path, header=0, comment="#")
+# Read the CSV file
+data_dly = pd.read_csv(file_dly_path, header=0)
+data_hly = pd.read_csv(file_hly_path, header=0)
+data_min = pd.read_csv(file_min_path, header=0)
 
 # Convert to Panda's friendly datetime
 data_dly['date_time'] = pd.to_datetime(data_dly['Category'])
