@@ -44,9 +44,9 @@ This plotting subroutine is reused throughout later exercises for visualization 
 
 ---
 
-## Exercise: Minutes Time Series Plot
+## Exercise 1: Minutes Time Series Plot
 
-In this exercise, students copy `w04_01_UCRN.sample.py` to `w04_01_UCRN.py` and run the script. :contentReference[oaicite:0]{index=0}
+In this exercise, students copy `w04_01_UCRN.sample.py` to `w04_01_UCRN.py` and run the script.
 
 The script reads minute climate observations, converts timestamps into datetime format, and creates a temperature time-series plot.
 
