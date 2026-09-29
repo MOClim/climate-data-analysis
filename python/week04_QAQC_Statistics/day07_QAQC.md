@@ -59,7 +59,7 @@ The figure is automatically saved as a JPG image.
 
 ---
 
-## Exercise: Minutes Time Series Plot using fig, ax
+## Exercise 2: Minutes Time Series Plot using fig, ax
 
 In this exercise, students copy `w04_02_UCRN.ax.sample.py` to `w04_02_UCRN.ax.py`, and create a minute climate time-series plot using the matplotlib object-oriented workflow:
 
@@ -81,7 +81,7 @@ The figure is automatically saved as a JPG image.
 
 ---
 
-## Exercise: QC1 Data Range Test
+## Exercise 3: QC1 Data Range Test
 
 In this exercise, students copy `w04_03_QC1_range.sample.py` to `w04_03_QC1_range.py`, and apply a first-level quality control (QC1) procedure to minute temperature observations using `w04_03_QC1_range.sample.py`. :contentReference[oaicite:0]{index=0}
 
@@ -108,7 +108,7 @@ Step 4. Evaluate whether unrealistic values were removed without excluding valid
 
 ---
 
-## Exercise: QC2 Time Derivative Test
+## Exercise 4: QC2 Time Derivative Test
 
 In this exercise, students apply a second-level quality control (QC2) procedure to minute temperature observations using `w04_04_QC2_time_derivative.sample.py`. :contentReference[oaicite:0]{index=0}
 
