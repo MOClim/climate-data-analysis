@@ -166,12 +166,18 @@ This is useful for:
 
 Example Command:
 ```bash
-magick -delay 50 -loop 2 fig_all/*.png airt_movie.gif
+magick -delay 50 -loop 2 fig_all/*highres*.png airt_highres_movie.gif
 ```
 - `-delay 50` → animation speed
 - `loop 2` → repeat animation twice
 - `fig_all/*.png` → read all PNG files
+- * → A wildcard that matches any number of characters (including zero characters)
 - `airt_movie.gif` → output GIF filename
+
+If you don't have magick, install imagemagick
+```bash
+conda install -c conda-forge imagemagick
+```
 
 #### Open the GIF
 MacOS:
@@ -180,7 +186,7 @@ open airt_movie.gif
 ```
 Windows:
 ```bash
-start airt_movie.gif
+explorer.exe airt_movie.gif
 ```
 
 ---
