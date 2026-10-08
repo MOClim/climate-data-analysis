@@ -31,7 +31,7 @@ cp w05_05_various_projection_cartopy.sample.py w05_05_various_projection_cartopy
 This exercise visualizes global sea surface temperature (SST) using several Cartopy map projections.
 
 #### Download SST Datasets
-Dataset source: HadISST sea surface temperature
+Dataset source: HadISST sea surface temperature NetCDF data (NetCDF format; *near the bottom of the list*).
 https://www.metoffice.gov.uk/hadobs/hadisst/data/download.html
 
 1. Download the NetCDF file:
@@ -120,44 +120,55 @@ https://climate.usu.edu/swco/
 
 2. Use the interactive station map and zoom into Logan, Utah.
 
-3. Select:
-   - Temperature
-   - Precipitation
+3. Choose GHCN network on the left bar and click G mark at USU.
 
-4. Select the USU weather station:
-   - COOP 425186
+4. Select Mean Temperature or precipitation and press Added.
 
-5. Select:
-   - Metric units
+5. Select the Get Report on the right bar.
+
+6. Select:
+   - Metric units (precipitation in mm, temperature in °C, consistent with the histogram axis labels.)
    - Missing Data Value:
      `M → nan`
 
-6. Click:
-   - COOP
-   - Mean Temperature
-   - Precipitation
-
 7. Click:
+   - GHCN
+   - Precipitation
+   - Max Temperature
+   - Min Temperature
+
+8. Click:
    - Get Preview
 
-8. Download all files.
+9. Click Download All and Add your USU email address.
+    
+10. You will get the link by email and open the download link for the ZIP archive.
 
-9. Open the download link for the ZIP archive.
-
-10. Move and unzip the downloaded file:
+11. Move and unzip the downloaded file:
    ```bash
+   cd ../../data_raw/
    mv ~Download/xxx.zip .
    unzip xxx.zip
    ```
 
-11. Move the extracted directory:
+    If unzip is not installed, you can install it using:
     ```bash
-    mv map-server-report-xxxxxxxxx ../../data_raw/
+    sudo apt install unzip
     ```
+    You will be prompted to enter your PC password. This installs unzip system-wide, so you can use it without activating a Conda environment.
+    If you cannot remember your password, you can install unzip in your Conda environment instead:
+    ```bash
+    conda install unzip
+    ```
+    or 
+    ```bash
+    conda install -c conda-forge unzip
+    ```
+    In this case, you need to activate your Conda environment whenever you use unzip, which is less convenient.
     
 12. Confirm the CSV file exists:
     ```bash
-    less ../../data_raw/map-server-report-xxxxxxxxx/COOP/425186/dly-report.csv
+    less map-server-report-xxxxx/GHCN/USC00425186/dly-report.csv
     ```
     
 ---
@@ -168,15 +179,13 @@ Example:
 ```python
 from pathlib import Path
 
-data_dir = Path(
-    '../../data_raw/map-server-report-1779136575/COOP/425186'
-)
+data_dir = Path('../../data_raw/map-server-report-xxxx/GHCN/USC00425186')
 ```
-Caution:
+
+*Caution*: The solution scripts (which will be uploaded after class) use absolute paths instead of the relative paths described above. For example:
 ```bash
 solution/w05_07_histogram.solution.py
 ```
-uses an absolute path instead of the relative path above.
 
 #### Step 2: Define the CSV filename
 Example:
@@ -203,6 +212,11 @@ Meaning:
 - `na_values='nan'`
   → treat "nan" as missing values
 
+The latest versions of the datasets use different variable names (column names) (e.g., 'Max Temperature' or 'Min Temperature') from those used in the original code (e.g., 'tmid'). Update the variable name from 'tmid' to 'Max Temperature'.
+```python
+df_mon = df['Max Temperature'].resample('ME').mean()
+```
+
 ---
 ### Exercise 4: Monthly Precipitation Histogram
 
@@ -210,17 +224,22 @@ Meaning:
 cp w05_08_historgram_precip.sample.py w05_08_historgram_precip.py
 ```
 
+Again, the latest versions of the datasets use different variable names (column names) (e.g., 'Precipitation') from those used in the original code (e.g., 'pcpn'). Replace 'pcpn' with 'Precipitation' throughout your code. For example:
+```python
+df['Precipitation'] = df['Precipitation].replace('T',0.0)
+```
+
 #### Trace Precipitation
 
 In precipitation datasets, T means trace precipitation.
 A trace value indicates that precipitation was observed, but the amount was too small to measure accurately.
 
-Because T is text, pandas may read the precipitation column as a string instead of numeric data.
+Because `T` is text, pandas may read the precipitation column as a string instead of numeric data.
 
 Convert it before analysis:
 ```python
-df['pcpn'] = df['pcpn'].replace('T', 0.0)
-df['pcpn'] = pd.to_numeric(df['pcpn'], errors='coerce')
+df['Precipitation'] = df['Precipitation'].replace('T', 0.0)
+df['Precipitation'] = pd.to_numeric(df['Precipitation'], errors='coerce')
 ```
 - `replace('T', 0.0)` treats trace precipitation as 0.0 mm
 - `pd.to_numeric()` converts the column to numbers
@@ -228,7 +247,7 @@ df['pcpn'] = pd.to_numeric(df['pcpn'], errors='coerce')
 
 Then monthly precipitation can be calculated:
 ```python
-df_mon = df['pcpn'].resample('ME').mean()
+df_mon = df['Precipitation'].resample('ME').mean()
 ```
 
 ---
@@ -260,6 +279,8 @@ cp w05_09_hist_mon_anu.HW_sample.py w05_09_hist_mon_anu.HW.py
   - temperature vs precipitation variability
 
 5. Modify histogram bin numbers for each panel.
+
+*Note*: The homework sample code contains outdated file paths, file names, and column names. As part of this assignment, you are expected to update these to match the latest datasets. This is a good opportunity to practice modifying existing Python code and adapting it to updated datasets.
 
 #### Submission
 
