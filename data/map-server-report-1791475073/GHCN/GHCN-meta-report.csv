@@ -1,0 +1,19 @@
+
+"Variable Descriptions and Map"
+
+"This is a Variable Map that will map our variable names to their more common name"
+"This will also add a short description(if available)"
+
+Network,GHCN
+
+"For a description of quality flags, please see link below"
+https://climate.usu.edu/qualityFlags/ghcn/
+
+"Variable Name","Long Name",Frequency,Description,Units
+evtr,Evapotranspiration,dly,"Evapotranspiration Calculated through Hargreaves",millimeters
+prcp,Precipitation,dly,Precipitation,millimeters
+mdpr,"Multi-Day Precipitation",dly,"Multi-day precipitation",millimeters
+snow,"Snow Fall",dly,"Snow fall",millimeters
+snwd,"Snow Depth",dly,"Snow depth",millimeters
+tmax,"Max Temperature",dly,"Maximum temperature",celsius
+tmin,"Min Temperature",dly,"Minimum temperature",celsius
