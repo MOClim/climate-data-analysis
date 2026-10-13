@@ -107,7 +107,7 @@ plt.figure(figsize=(8, 5))
 var='Air Temp Avg'
 
 plt.plot(data_mnt.index, data_mnt[var], marker='.', linestyle='-', color="black", label='Monthly',zorder=3)
-plt.plot(data_dly.index, data_dly[var], marker='.', linestyle='-', color="blue", label='Daily',zorder=1)
+plt.plot(data_dly.index, data_dly[var], marker='.', linestyle='-', color="lightblue", label='Daily',zorder=1)
 
 # Adding title and labels
 fig_title = 'Monthly Climate Data for 2025 at Ceder City'
