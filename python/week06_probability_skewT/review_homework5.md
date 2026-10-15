@@ -14,12 +14,18 @@ Use Pandas `resample()` to calculate monthly and annual climate statistics.
 - Precipitation uses `sum()` because precipitation accumulates over time
 
 ```python
-df_temp_mon = df['tmid'].resample('ME').mean()
-df_temp_anu = df['tmid'].resample('YE').mean()
+df_temp_mon = df['Max Temperature'].resample('ME').mean()
+df_temp_anu = df['Max Temperature'].resample('YE').mean()
 
-df_prc_mon = df['pcpn'].resample('ME').sum()
-df_prc_anu = df['pcpn'].resample('YE').sum()
+df_prc_mon = df['Precipitation'].resample('ME').sum()
+df_prc_anu = df['Precipitation'].resample('YE').sum()
 ```
+
+# Convert resampled data into NumPy arrays and remove NaN values
+temp_mon = df_temp_mon.values.flatten()[~np.isnan(df_temp_mon.values.flatten())]
+temp_anu = df_temp_anu.values.flatten()[~np.isnan(df_temp_anu.values.flatten())]
+prc_mon = df_prc_mon.values.flatten()[~np.isnan(df_prc_mon.values.flatten())]
+prc_anu = df_prc_anu.values.flatten()[~np.isnan(df_prc_anu.values.flatten())]
 
 ---
 ## Step 2: Create Temperature Histogram
@@ -28,7 +34,7 @@ Edit the number of histogram bins for monthly and annual temperature data.
 A larger bin number produces a more detailed distribution.
 
 ```python
-plt.hist(temp_mon, bins=100, color='orange', edgecolor='black')
+plt.hist(temp_mon, bins=20, color='orange', edgecolor='black')
 plt.hist(temp_anu, bins=20, color='orange', edgecolor='black')
 ```
 
@@ -39,7 +45,7 @@ Monthly precipitation often shows a right-skewed distribution because large prec
 Annual precipitation totals are generally smoother because precipitation is accumulated over longer periods.
 
 ```python
-plt.hist(prc_mon, bins=100, color='blue', edgecolor='black')
+plt.hist(prc_mon, bins=20, color='blue', edgecolor='black')
 plt.hist(prc_anu, bins=20, color='blue', edgecolor='black')
 ```
 
