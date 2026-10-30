@@ -86,7 +86,7 @@ def calc_seasonal_anom(dat, window=5, end_month=1):
 # ---------------------------------------------------------
 
 indir1 = Path("../../data/")
-indir2 = Path("../../data_raw/")
+indir2 = Path("../../data/")
 
 air_file = indir1 / "air.2m.mon.mean.nc"
 pr_file  = indir2 / "prate.mon.mean.nc"
@@ -121,6 +121,11 @@ prate_an_anm = calc_seasonal_anom(prate,window=12,end_month=12)
 air_glb_mean = global_weighted_mean(air_an_anm)
 prate_glb_mean = global_weighted_mean(prate_an_anm)
 
+# HOMEWORK:
+# Copy the regional_weighted_mean() function from
+# w08_06_precip_area-average.py and modify this code
+# to calculate regional area-weighted means.
+
 
 # ---------------------------------------------------------
 # Plot two panels
@@ -131,6 +136,10 @@ fig, axes = plt.subplots(
     figsize=(10, 6),
     sharex=True
 )
+
+# HOMEWORK:
+# Replace the global-mean variable with the regional-mean variable.
+# Change the title appropriately.
 
 # Panel 1: Temperature
 axes[0].plot(
@@ -147,6 +156,9 @@ axes[0].yaxis.set_minor_locator(MultipleLocator(0.1))
 axes[0].grid(which="major", linestyle="-", alpha=0.6)
 axes[0].grid(which="minor", linestyle="--", alpha=0.3)
 
+# HOMEWORK:
+# Replace the global-mean variable with the regional-mean variable.
+# Change the title appropriately.
 
 # Panel 2: Precipitation
 axes[1].plot(
@@ -168,6 +180,9 @@ axes[1].grid(which="minor", linestyle="--", alpha=0.3)
 # X-axis setting
 axes[1].set_xlim(1948, 2025)
 axes[1].set_xticks(np.arange(1950, 2030, 10))
+
+# HOMEWORK:
+# Change the title appropriately.
 
 plt.suptitle("Global Mean Temperature and Precipitation Anomalies")
 plt.tight_layout()
