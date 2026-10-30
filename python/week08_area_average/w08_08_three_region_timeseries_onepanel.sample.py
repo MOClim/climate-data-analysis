@@ -51,7 +51,7 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 
     Returns
     -------
-    regional_mean : xarray.DataArray
+    dat_region_mean : xarray.DataArray
         Area-averaged regional time series.
     """
 

@@ -126,7 +126,6 @@ def calc_seasonal_anom(dat, window=5, end_month=1):
 indir = filename = Path('../../data/')
 filein = indir / "air.2m.mon.mean.nc"
 
-
 # -----------------------------
 # Load data
 # -----------------------------

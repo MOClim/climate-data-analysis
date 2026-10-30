@@ -22,12 +22,10 @@ def global_weighted_mean(data):
 
     weights = np.cos(np.deg2rad(data.lat))
 
-    global_mean = data.weighted(weights).mean(
-        dim=("lat", "lon"),
-        skipna=True
-    )
+    dat_global_mean = data.weighted(weights).mean(
+        dim=("lat", "lon"),skipna=True)
 
-    return global_mean
+    return dat_global_mean
 
 def calc_seasonal_anom(dat, window=5, end_month=1):
     """

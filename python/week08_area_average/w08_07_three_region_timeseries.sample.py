@@ -36,10 +36,12 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 
     weights = np.cos(np.deg2rad(dat_region.lat))
 
-    return dat_region.weighted(weights).mean(
+    dat_region_mean = dat_region.weighted(weights).mean(
         dim=("lat", "lon"),
         skipna=True
     )
+
+    return dat_region_mean
 
 def calc_seasonal_anom(dat, window=5, end_month=1):
     """
