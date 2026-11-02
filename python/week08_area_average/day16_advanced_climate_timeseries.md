@@ -315,7 +315,7 @@ Your figure must include:
 Answer in 2–4 sentences on word/google docs:
 1. Does your selected region show a clear warming trend?
 2. Does precipitation show a similar long-term trend?
-3. Which variable has stronger year-to-year variability?
+3. Which variable shows more noticeable year-to-year fluctuations relative to its long-term trend?　(This question was revised on Nov 2).
 4. Why might temperature and precipitation behave differently?
 
 ## Submission
