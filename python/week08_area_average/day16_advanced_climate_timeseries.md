@@ -256,6 +256,13 @@ Use the sample program as a reference:
 ```text
 cp w08_09_global_temp_precip_twopanel.py w08_10_regional_temp_precip_twopanel.HW.py
 ```
+### Required: Reuse the Regional Averaging Function
+
+Copy and paste the entire `regional_weighted_mean()` function from `w08_06_precip_area-average.py` into your homework script (`w08_10_regional_temp_precip_twopanel.HW.py`).
+
+Use this function instead of `global_weighted_mean()` to calculate the regional area-weighted means of temperature and precipitation.
+
+Make sure to specify the latitude and longitude boundaries of your selected region and update the corresponding variable names in the plotting section.
 
 ## Required Information
 Choose the North America region  or define your own region.
@@ -293,6 +300,7 @@ Unit: mm/day
 
 Data source: NOAA Physical Sciences Laboratory
 https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html
+(Currently data server may be down)
 
 ## Requirements
 Your figure must include:
