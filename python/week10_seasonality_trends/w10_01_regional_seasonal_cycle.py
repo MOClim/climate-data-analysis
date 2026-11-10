@@ -65,7 +65,7 @@ def regional_weighted_mean(data, lat1, lat2, lon1, lon2):
 # Read data
 # ---------------------------------------------------------
 indir = Path('../../data')
-indir2 = Path('../../data_raw')
+indir2 = Path('../../data')
 
 air_file = indir  / "air.2m.mon.mean.nc"
 pr_file = indir2  / "prate.mon.mean.nc"

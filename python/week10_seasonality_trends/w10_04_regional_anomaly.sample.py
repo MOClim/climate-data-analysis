@@ -153,7 +153,7 @@ def calc_seasonal_anom(dat, window=5, end_month=1, clim_period=None):
 # Read data
 # ---------------------------------------------------------
 indir = Path("../../data")
-indir2 = Path("../../data_raw")
+indir2 = Path("../../data")
 
 air_file = indir / "air.2m.mon.mean.nc"
 pr_file = indir2 / "prate.mon.mean.nc"

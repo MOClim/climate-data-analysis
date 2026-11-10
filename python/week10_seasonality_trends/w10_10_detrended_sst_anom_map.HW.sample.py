@@ -221,15 +221,13 @@ def linear_detrend(
     # Fit the trend using only the selected trend period
     coeffs = dat_fit_masked.polyfit(dim="year", deg=1)
 
-    # Evaluate the fitted line over the full data period
-    trend_line = xr.polyval(
-        dat_masked["year"],
-        coeffs.polyfit_coefficients
-    )
-
     # Extract slope and convert from units/year to units/decade
     slope_year = coeffs.polyfit_coefficients.sel(degree=1)
     slope_decade = slope_year * 10
+
+    # Evaluate the fitted line over the full data period
+    trend_line = xr.polyval(
+        dat_masked["year"],coeffs.polyfit_coefficients)
 
     if dtrend:
         dat_out = dat_masked - trend_line
@@ -279,7 +277,8 @@ target_year = 1969
 # Calculate annual anomalies and detrended anomalies
 # ---------------------------------------------------------
 # Annual mean anomalies relative to monthly climatology
-anom = calc_seasonal_anom(sst, clim_period=[clim_start, clim_end])
+# July to June average: window=12, end_month=6
+anom = calc_seasonal_anom(sst, window=12, end_month=6, clim_period=[clim_start, clim_end])
 
 #
 # Step 1: Calculate detrended annual anomalies
@@ -327,20 +326,16 @@ _, _, reg_slope_decade = linear_detrend(
 # ---------------------------------------------------------
 # Select target year for map and time-series marker
 # ---------------------------------------------------------
-target_time = f"{target_year}-01-01"
 
-anom_target = anom.sel(time=target_time)
-detrended_target = anom_detrended.sel(time=target_time)
+anom_target = anom.sel(year=target_year)
+detrended_target = anom_detrended.sel(year=target_year)
 
-reg_anom_target = reg_anom.sel(time=target_time)
-reg_detrended_target = reg_detrended.sel(time=target_time)
+reg_anom_target = reg_anom.sel(year=target_year)
+reg_detrended_target = reg_detrended.sel(year=target_year)
 
 print("Annual anomaly range:", float(anom_target.min()), float(anom_target.max()))
-print(
-    "Detrended annual anomaly range:",
-    float(detrended_target.min()),
-    float(detrended_target.max())
-)
+print("Detrended annual anomaly range:",
+    float(detrended_target.min()),float(detrended_target.max()))
 
 
 # ---------------------------------------------------------
@@ -355,6 +350,17 @@ detrended_cyclic, lon_cyclic = add_cyclic_point(
     detrended_target.values,
     coord=detrended_target.lon
 )
+
+# Reconstruct xarray DataArray
+anom_cyclic_xr = xr.DataArray(anom_cyclic,
+    coords={"lat": anom.lat,"lon": lon_cyclic},
+    dims=("lat", "lon"), name="sst_anomaly",
+    attrs=anom_target.attrs)
+
+detrended_cyclic_xr = xr.DataArray(detrended_cyclic,
+    coords={"lat": anom.lat,"lon": lon_cyclic},
+    dims=("lat", "lon"), name="detrended_sst_anomaly",
+    attrs=detrended_target.attrs)
 
 
 # ---------------------------------------------------------
@@ -377,37 +383,29 @@ axes[0, 0] = fig.add_subplot(2, 2, 1, projection=proj)
 axes[0, 1] = fig.add_subplot(2, 2, 2, projection=proj)
 
 
+# ---------------------------------------------------------
+# Panel 1: original annual anomaly map
+# ---------------------------------------------------------
+
 # Use the same contour levels for both maps because both fields
 # have the same unit. This makes the comparison direct.
 levels = np.arange(-1, 1.1, 0.1)
 cmap = "RdBu_r"
 
-# ---------------------------------------------------------
-# Panel 1: original annual anomaly map
-# ---------------------------------------------------------
-
 # Step 3: Plot the annual anomaly map
 #
-# Complete the contourf() function.
+# Complete the xarrat plot() function.
 # Hint:
-#   Use the cyclic longitude, latitude, annual anomaly,
-#   contour levels, colormap, and PlateCarree transform.
+#   Use the cyclic SST anomaly DataArray.
+#   Specify the map axes, PlateCarree transform,
+#   contour levels, and colormap.
 
-cf1 = axes[0, 0].contourf(
-    ,                   # longitude
-    ,                   # latitude
-    ,                   # annual anomaly
-    levels=,            # contour levels
+___.plot(
+    ax=,                # Map axes (Panel 1)
+    transform=,         # PlateCarree projection
     cmap=,              # colormap
-    extend="both",
-    transform=          # PlateCarree projection
-)
-
-axes[0, 0].set_title(
-    f"(a) Annual Mean SST Anomaly\n"
-    f"{target_year} relative to {clim_start[:4]}-{clim_end[:4]} climatology",
-    loc="left"
-)
+    levels=,            # Contour levels
+    cbar_kwargs={"label": "Annual Mean (July to June) SST Anomaly (C)"})
 
 # ---------------------------------------------------------
 # Panel 2: detrended annual anomaly map
@@ -415,26 +413,19 @@ axes[0, 0].set_title(
 
 # Step 3: Plot the detrended annual anomaly map
 #
-# Complete the contourf() function.
+# Complete the xarrat plot() function.
 # Hint:
-#   Use the cyclic longitude, latitude, annual anomaly,
-#   contour levels, colormap, and PlateCarree transform.
+#   Use the cyclic DETRENDED SST anomaly DataArray.
+#   Specify the map axes (axes[0, 1]; top-right panel), 
+#   PlateCarree transform,
+#   contour levels, and colormap.
 
-cf2 = axes[0, 1].contourf(
-    ,                   # longitude
-    ,                   # latitude
-    ,                   # annual anomaly
-    levels=,            # contour levels
+___.plot(
+    ax=,                # Map axes (Panel 2)
+    transform=,         # PlateCarree projection
     cmap=,              # colormap
-    extend="both",
-    transform=          # PlateCarree projection
-)
-
-axes[0, 1].set_title(
-    f"(b) Detrended Annual Mean SST Anomaly\n"
-    f"{target_year} with {trend_start[:4]}-{trend_end[:4]} trend removed",
-    loc="left"
-)
+    levels=,            # Contour levels
+    cbar_kwargs={"label": "Detrended Annual Mean SST Anomaly (C)"})
 
 # Common map features
 for ax in [axes[0, 0], axes[0, 1]]:
@@ -551,23 +542,6 @@ for ax in [axes[1, 0], axes[1, 1]]:
     ax.grid(which="major", linestyle="-", alpha=0.6)
     ax.grid(which="minor", linestyle="--", alpha=0.3)
     ax.set_ylim(-row_lim, row_lim)
-
-# One shared colorbar for the two map panels
-cbar1 = fig.colorbar(
-    cf1,
-    ax=axes[0, 0],
-    orientation="horizontal"
-)
-cbar1.set_label("SST anomaly (degC)")
-
-cbar2 = fig.colorbar(
-    cf2,
-    ax=axes[0, 1],
-    orientation="horizontal"
-)
-cbar2.set_label("SST anomaly (degC)")
-
-
 
 fig.suptitle(
     "Tropical Pacific Annual Mean SST: Anomaly vs. Detrended Anomaly",

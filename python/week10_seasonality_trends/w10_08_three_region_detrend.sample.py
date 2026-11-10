@@ -5,7 +5,7 @@
 #   Compare annual mean temperature anomalies with detrended
 #   anomalies for three climate regions.
 #
-# Direction:
+# Student Direction:
 #   After running the program, change the trend analysis
 #   period (trend_start and trend_end) and compare how the
 #   detrended time series and estimated linear trends change.
@@ -171,6 +171,9 @@ def linear_detrend(
     slope_year = coeffs.polyfit_coefficients.sel(degree=1)
     slope_decade = slope_year * 10
 
+    # Calculate fitted linear trend over the entire record
+    trend_line = xr.polyval(dat["year"], coeffs.polyfit_coefficients)
+
     if dtrend:
         dat_out = dat_masked - trend_line
     else:
@@ -201,7 +204,7 @@ trend_start = "1949-01-01"
 trend_end = "2020-12-31"
 
 # Annual anomaly
-air_anom = annual_anomaly(air, clim_peirod=[clim_start, clim_end])
+air_anom = calc_seasonal_anom(air, window=12, end_month=12, clim_period=[clim_start, clim_end])
 year = air_anom.year
 
 # ---------------------------------------------------------
@@ -280,8 +283,8 @@ for i, (name, lat1, lat2, lon1, lon2) in enumerate(regions):
         )
 
     # Same y-axis range within each row
-    row_min = min(float(reg_anom.min()), float(reg_detrended.min()))
-    row_max = max(float(reg_anom.max()), float(reg_detrended.max()))
+    row_min = min(float(reg_anom.min()), float(reg_anom_detrended.min()))
+    row_max = max(float(reg_anom.max()), float(reg_anom_detrended.max()))
     row_abs = max(abs(row_min), abs(row_max))
     row_lim = np.ceil(row_abs * 2) / 2
     axes[i, 0].set_ylim(-row_lim, row_lim)

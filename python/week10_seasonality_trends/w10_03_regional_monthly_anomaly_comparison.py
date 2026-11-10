@@ -203,8 +203,8 @@ air_long_anom = long_term_mean_anom(air, clim_period=[clim_start, clim_end])
 pr_long_anom  = long_term_mean_anom(prate, clim_period=[clim_start, clim_end])
 
 # Anomaly relative to monthly climatology
-air_anom = calc_seasonal_anom(air, clim_period=[clim_start, clim_end])
-pr_anom  = calc_seasonal_anom(prate, clim_period=[clim_start, clim_end])
+air_anom = calc_seasonal_anom(air, window=12, end_month=12, clim_period=[clim_start, clim_end])
+pr_anom  = calc_seasonal_anom(prate, window=12, end_month=12, clim_period=[clim_start, clim_end])
 
 # ---------------------------------------------------------
 # Calculate regional area-weighted means

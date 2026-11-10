@@ -256,8 +256,11 @@ target_year = 2016
 # ---------------------------------------------------------
 # Calculate annual anomalies and detrended anomalies
 # ---------------------------------------------------------
-# Annual mean anomalies relative to monthly climatology
-anom = calc_seasonal_anom(air, window=12, end_month=12, clim_period=[clim_start, clim_end])
+# Annual mean anomalies relative to monthly climatology: 
+# window=12,end_month=12: Annual mean from January to December
+# window=12,end_month=6: Annual mean from July to June
+#anom = calc_seasonal_anom(air, window=12, end_month=12, clim_period=[clim_start, clim_end])
+anom = calc_seasonal_anom(air, window=12, end_month=6, clim_period=[clim_start, clim_end])
 
 # Detrended annual mean anomalies
 anom_detrended, trend_line, slope_decade = linear_detrend(
@@ -285,8 +288,8 @@ _, _, global_slope_decade = linear_detrend(
 # ---------------------------------------------------------
 # Select target year for map and time-series marker
 # ---------------------------------------------------------
-target_time = f"{target_year}-01-01"
 
+target_time = f"{target_year}-01-01"
 anom_target = anom.sel(year=target_year)
 detrended_target = anom_detrended.sel(year=target_year)
 
@@ -314,13 +317,23 @@ detrended_cyclic, lon_cyclic = add_cyclic_point(
     coord=detrended_target.lon
 )
 
+# Reconstruct xarray DataArray
+anom_cyclic_xr = xr.DataArray(anom_cyclic,
+    coords={"lat": anom.lat,"lon": lon_cyclic},
+    dims=("lat", "lon"), name="prate_anomaly",
+    attrs=anom_target.attrs)
+
+detrended_cyclic_xr = xr.DataArray(detrended_cyclic,
+    coords={"lat": anom.lat,"lon": lon_cyclic},
+    dims=("lat", "lon"), name="prate_anomaly",
+    attrs=detrended_target.attrs)
+
 year = global_anom.year
 
 # ---------------------------------------------------------
 # Plot maps and global mean time series
 # ---------------------------------------------------------
 proj = ccrs.Robinson(central_longitude=180)
-data_crs = ccrs.PlateCarree()
 
 fig, axes = plt.subplots(
     2, 2,
@@ -345,39 +358,24 @@ cmap = "RdBu_r"
 # ---------------------------------------------------------
 # Panel 1: original annual anomaly map
 # ---------------------------------------------------------
-cf1 = axes[0, 0].contourf(
-    lon_cyclic,
-    anom_target.lat,
-    anom_cyclic,
-    levels=levels,
+anom_cyclic_xr.plot(
+    ax=axes[0, 0],
+    transform=ccrs.PlateCarree(),
     cmap=cmap,
-    extend="both",
-    transform=data_crs
-)
-
-axes[0, 0].set_title(
-    f"(a) Annual Mean Air Temperature Anomaly\n"
-    f"{target_year} relative to {clim_start[:4]}-{clim_end[:4]} climatology",
-    loc="left"
+    levels=levels,
+    cbar_kwargs={"label": "Temperature Anomaly (°C)"}
 )
 
 # ---------------------------------------------------------
 # Panel 2: detrended annual anomaly map
 # ---------------------------------------------------------
-cf2 = axes[0, 1].contourf(
-    lon_cyclic,
-    detrended_target.lat,
-    detrended_cyclic,
-    levels=levels,
-    cmap=cmap,
-    extend="both",
-    transform=data_crs
-)
 
-axes[0, 1].set_title(
-    f"(b) Detrended Annual Mean Air Temperature Anomaly\n"
-    f"{target_year} with {trend_start[:4]}-{trend_end[:4]} trend removed",
-    loc="left"
+detrended_cyclic_xr.plot(
+    ax=axes[0, 1],
+    transform=ccrs.PlateCarree(),
+    cmap=cmap,
+    levels=levels,
+    cbar_kwargs={"label": "Detrended Annual Mean Temperature Anomaly (°C)"}
 )
 
 # Common map features
@@ -480,25 +478,8 @@ for ax in [axes[1, 0], axes[1, 1]]:
     ax.grid(which="minor", linestyle="--", alpha=0.3)
     ax.set_ylim(-row_lim, row_lim)
 
-# One shared colorbar for the two map panels
-cbar1 = fig.colorbar(
-    cf1,
-    ax=axes[0, 0],
-    orientation="horizontal"
-)
-cbar1.set_label("2-m air temperature anomaly (degC)")
-
-cbar2 = fig.colorbar(
-    cf2,
-    ax=axes[0, 1],
-    orientation="horizontal"
-)
-cbar2.set_label("2-m air temperature anomaly (degC)")
-
-
-
 fig.suptitle(
-    "Global Annual Mean 2-m Air Temperature: Anomaly vs. Detrended Anomaly",
+    "Global Annual (July to June) Mean 2-m Air Temperature: Anomaly vs. Detrended Anomaly",
     fontsize=14
 )
 
