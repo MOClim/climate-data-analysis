@@ -180,7 +180,7 @@ fig.suptitle(
     y=0.98
 )
 
-plt.tight_layout()
+#plt.tight_layout()
 
 # ---------------------------------------------------------
 # Save figure
