@@ -348,7 +348,7 @@ levels = np.arange(-5, 5.5, 0.5)
 cmap = "RdBu_r"
 
 # ---------------------------------------------------------
-# Panel 1: original annual anomaly map
+# Panel 1: original annual anomaly map using Cartopy
 # ---------------------------------------------------------
 anom_cyclic_xr.plot(
     ax=axes[0, 0],
@@ -359,7 +359,7 @@ anom_cyclic_xr.plot(
 )
 
 # ---------------------------------------------------------
-# Panel 2: detrended annual anomaly map
+# Panel 2: detrended annual anomaly map using Cartopy
 # ---------------------------------------------------------
 
 detrended_cyclic_xr.plot(
@@ -378,7 +378,7 @@ for ax in [axes[0, 0], axes[0, 1]]:
     ax.gridlines(linewidth=0.3, color="gray", alpha=0.5, linestyle="--")
 
 # ---------------------------------------------------------
-# Panel 3: global annual anomaly and linear trend
+# Panel 3: global annual anomaly and linear trend using Matplotlib
 # ---------------------------------------------------------
 trend_start_year = int(trend_start[:4])
 trend_end_year = int(trend_end[:4])

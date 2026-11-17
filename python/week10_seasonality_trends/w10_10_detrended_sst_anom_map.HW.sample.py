@@ -168,13 +168,8 @@ def calc_seasonal_anom(dat, window=5, end_month=1, clim_period=None):
 
     return datS
 
-def linear_detrend(
-    dat,
-    min_coverage=0.9,
-    dtrend=True,
-    trend_period=None,
-    return_trend=False
-):
+def linear_detrend(dat, min_coverage=0.9, dtrend=True,
+    trend_period=None, return_trend=False):
     """
     Remove the long-term linear trend from annual data.
 
@@ -243,7 +238,9 @@ def linear_detrend(
 # ---------------------------------------------------------
 # Read data
 # ---------------------------------------------------------
-indir = Path("../../data_raw")
+
+indir = Path('../../data_raw')
+
 ds_file = indir / "HadISST_sst.nc"
 
 ds = xr.open_dataset(ds_file)
@@ -255,8 +252,9 @@ print("Last available time:", ds.time[-1].values)
 sst = ds["sst"]
 
 # Mask land and missing values
-sst = sst.where(sst > -100)
+sst = sst.where((sst != -1000) & (sst != -1.0e30))
 sst.attrs["units"] = "degC"
+
 
 print(sst.min().values)
 print(sst.max().values)
@@ -401,7 +399,7 @@ cmap = "RdBu_r"
 #   contour levels, and colormap.
 
 ___.plot(
-    ax=,                # Map axes (Panel 1)
+    ax=,                # Map axes (row=0, column=0)
     transform=,         # PlateCarree projection
     cmap=,              # colormap
     levels=,            # Contour levels
@@ -421,7 +419,7 @@ ___.plot(
 #   contour levels, and colormap.
 
 ___.plot(
-    ax=,                # Map axes (Panel 2)
+    ax=,                # Map axes (row=0, column=1)
     transform=,         # PlateCarree projection
     cmap=,              # colormap
     levels=,            # Contour levels
