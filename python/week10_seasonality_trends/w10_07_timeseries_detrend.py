@@ -152,73 +152,72 @@ def monthly_clm_anom(dat, clim_period=None):
 
     return anom
 
-def linear_detrend(
-    dat,
-    min_coverage=0.9,
-    dtrend=True,
-    trend_period=None,
-    return_trend=False
-):
+def linear_detrend(dat, min_coverage=0.9, dtrend=True,
+                   trend_period=None, return_trend=False):
     """
-    Remove the long-term linear trend from annual data.
+    Calculate and optionally remove a linear trend from annual anomalies.
 
     Parameters
     ----------
     dat : xr.DataArray
-        Annual data with a "year" dimension.
+        Annual anomaly time series with a 'year' dimension.
     min_coverage : float
         Minimum fraction of valid years required.
     dtrend : bool
         If True, remove the fitted linear trend.
     trend_period : list, optional
-        Start and end dates used to estimate the trend.
+        Start and end years used to calculate the trend.
     return_trend : bool
-        If True, also return the trend line and slope per decade.
+        If True, return the trend line and slope per decade.
 
     Returns
     -------
     dat_out : xr.DataArray
-        Masked annual data with the linear trend removed.
+        Original or detrended annual anomalies.
     trend_line : xr.DataArray, optional
-        Fitted linear trend evaluated over the full record.
-    slope_decade : xr.DataArray, optional
-        Linear slope in units per decade.
+        Fitted linear trend over the full record.
+    slope_decade : float, optional
+        Linear trend per decade.
     """
 
+    # Select the period used to calculate the trend
     if trend_period is None:
         dat_fit = dat
     else:
         start, end = trend_period
-        start_year = int(str(start)[:4])
-        end_year = int(str(end)[:4])
-        dat_fit = dat.sel(year=slice(start_year, end_year))
+        dat_fit = dat.sel(year=slice(int(str(start)[:4]),
+                                     int(str(end)[:4])))
 
-    # Apply coverage mask
-    valid_counts = dat_fit.count(dim="year")
-    total_years = dat_fit["year"].size
-    min_valid_years = int(total_years * min_coverage)
+    # Extract year and anomaly values
+    x = dat_fit.year.values.astype(float)
+    y = dat_fit.values
 
-    sufficient_coverage = valid_counts >= min_valid_years
-    dat_masked = dat.where(sufficient_coverage)
-    dat_fit_masked = dat_fit.where(sufficient_coverage)
+    # Ignore missing values
+    valid = np.isfinite(y)
 
-    # Fit the trend using only the selected trend period
-    coeffs = dat_fit_masked.polyfit(dim="year", deg=1)
+    # Check minimum data coverage
+    if valid.sum() < np.ceil(len(y) * min_coverage):
+        raise ValueError("Insufficient valid data for trend calculation.")
 
-    # Evaluate the fitted line over the full data period
-    trend_line = xr.polyval(
-        dat_masked["year"],
-        coeffs.polyfit_coefficients
+    # Calculate linear regression coefficients
+    slope, intercept = np.polyfit(x[valid], y[valid], 1)
+
+    # Calculate fitted trend over the full period
+    trend_line = xr.DataArray(
+        slope * dat.year.values + intercept,
+        dims=["year"],
+        coords={"year": dat.year},
+        name="linear_trend"
     )
 
-    # Extract slope and convert from units/year to units/decade
-    slope_year = coeffs.polyfit_coefficients.sel(degree=1)
-    slope_decade = slope_year * 10
+    # Convert slope to units per decade
+    slope_decade = slope * 10
 
+    # Remove the linear trend if requested
     if dtrend:
-        dat_out = dat_masked - trend_line
+        dat_out = dat - trend_line
     else:
-        dat_out = dat_masked
+        dat_out = dat
 
     if return_trend:
         return dat_out, trend_line, slope_decade
@@ -237,19 +236,10 @@ def linear_detrend(
 #
 #   ncdump -h ../../data_raw/HadISST_sst.nc
 # ---------------------------------------------------------
-script_dir = Path(__file__).resolve().parent
+indir = Path('../../data_raw')
+filename = indir / 'HadISST_sst.nc'
 
-# Check whether the script is inside the "solution" directory
-if script_dir.name == "solution":
-    # Move up two directory levels to reach the repository root
-    repo_dir = script_dir.parents[2]
-else:
-    # Move up two directory levels to reach the repository root
-    repo_dir = script_dir.parents[1]
-
-sst_file = repo_dir / "data_raw" / "HadISST_sst.nc"
-
-ds_sst = xr.open_dataset(sst_file)
+ds_sst = xr.open_dataset(filename)
 
 sst = ds_sst["sst"]
 
@@ -283,32 +273,22 @@ sst_anom = calc_seasonal_anom(sst,window=12,end_month=12,clim_period=[clim_start
 # ---------------------------------------------------------
 # Calculate regional area-weighted means
 # ---------------------------------------------------------
-# Approximate North America box
+# Approximate North Atlantic box
 lat_str, lat_end = 60, 0
 lon_str, lon_end = -80, 0   # -180-180 longitude
 
 sst_anom_NA = regional_weighted_mean(sst_anom, lat_str, lat_end, lon_str, lon_end)
 sst_mon_anom_NA = regional_weighted_mean(sst_mon_anom, lat_str, lat_end, lon_str, lon_end)
 
-
-# Calculate linear regression coefficients
-coeffs = sst_anom_NA.polyfit(dim="year", deg=1)
-
-# Extract the slope in °C per year
-slope_year = coeffs.polyfit_coefficients.sel(degree=1)
-
-# Convert to °C per decade
-slope_decade = float(slope_year * 10)
-
-# Calculate the fitted trend line
-sst_anom_NA_trend = xr.polyval(
-    sst_anom_NA["year"],
-    coeffs.polyfit_coefficients
-)
-
 # Detrended annual anomaly
-sst_anom_NA_detrended = linear_detrend(
-        sst_anom_NA, trend_period=[trend_start,trend_end])
+# ---------------------------------------------------------
+# Calculate linear trend and detrended anomalies
+# ---------------------------------------------------------
+sst_anom_NA_detrended, sst_anom_NA_trend, slope_decade = linear_detrend(
+    sst_anom_NA,
+    trend_period=[trend_start, trend_end],
+    return_trend=True
+)
 
 # Convert year coordinates to datetime for plotting
 sst_time = np.array([np.datetime64(f"{y}-01-01") for y in sst_anom_NA.year.values])
@@ -335,6 +315,7 @@ axes[0].plot(
     color="black",
     label="Annual mean anomaly"
 )
+
 # Overlay a linear trend 
 axes[0].plot(
     sst_time,

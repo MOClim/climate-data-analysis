@@ -154,13 +154,8 @@ def calc_seasonal_anom(dat, window=5, end_month=1, clim_period=None):
 
     return datS
 
-def linear_detrend(
-    dat,
-    min_coverage=0.9,
-    dtrend=True,
-    trend_period=None,
-    return_trend=False
-):
+def linear_detrend(dat, min_coverage=0.9, dtrend=True,
+    trend_period=None, return_trend=False):
     """
     Remove the long-term linear trend from annual data.
 
@@ -208,10 +203,8 @@ def linear_detrend(
     coeffs = dat_fit_masked.polyfit(dim="year", deg=1)
 
     # Evaluate the fitted line over the full data period
-    trend_line = xr.polyval(
-        dat_masked["year"],
-        coeffs.polyfit_coefficients
-    )
+    trend_line = xr.polyval(dat_masked["year"],
+        coeffs.polyfit_coefficients)
 
     # Extract slope and convert from units/year to units/decade
     slope_year = coeffs.polyfit_coefficients.sel(degree=1)
@@ -226,7 +219,6 @@ def linear_detrend(
         return dat_out, trend_line, slope_decade
     else:
         return dat_out
-
 
 # ---------------------------------------------------------
 # Read data
@@ -484,7 +476,7 @@ fig.suptitle(
 )
 
 output_path = Path(__file__).with_suffix(".jpg")
-plt.savefig(output_path, dpi=300, bbox_inches="tight")
+plt.savefig(output_path, dpi=300)
 
 plt.show()
 ds.close()

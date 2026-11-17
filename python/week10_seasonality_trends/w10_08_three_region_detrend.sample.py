@@ -114,7 +114,81 @@ def calc_seasonal_anom(dat, window=12, end_month=12, clim_period=None):
 
     return datS
 
-def linear_detrend(
+
+def linear_detrend(dat, min_coverage=0.9, dtrend=True,
+                   trend_period=None, return_trend=False):
+    """
+    Calculate and optionally remove a linear trend from annual anomalies.
+
+    Parameters
+    ----------
+    dat : xr.DataArray
+        Annual anomaly time series with a 'year' dimension.
+    min_coverage : float
+        Minimum fraction of valid years required.
+    dtrend : bool
+        If True, remove the fitted linear trend.
+    trend_period : list, optional
+        Start and end years used to calculate the trend.
+    return_trend : bool
+        If True, return the trend line and slope per decade.
+
+    Returns
+    -------
+    dat_out : xr.DataArray
+        Original or detrended annual anomalies.
+    trend_line : xr.DataArray, optional
+        Fitted linear trend over the full record.
+    slope_decade : float, optional
+        Linear trend per decade.
+    """
+
+    # Select the period used to calculate the trend
+    if trend_period is None:
+        dat_fit = dat
+    else:
+        start, end = trend_period
+        dat_fit = dat.sel(year=slice(int(str(start)[:4]),
+                                     int(str(end)[:4])))
+
+    # Extract year and anomaly values
+    x = dat_fit.year.values.astype(float)
+    y = dat_fit.values
+
+    # Ignore missing values
+    valid = np.isfinite(y)
+
+    # Check minimum data coverage
+    if valid.sum() < max(2, np.ceil(len(y) * min_coverage)):
+        raise ValueError("Insufficient valid data for trend calculation.")
+
+    # Calculate linear regression coefficients
+    slope, intercept = np.polyfit(x[valid], y[valid], 1)
+
+    # Calculate fitted trend over the full period
+    trend_line = xr.DataArray(
+        slope * dat.year.values + intercept,
+        dims=["year"],
+        coords={"year": dat.year},
+        name="linear_trend"
+    )
+
+    # Convert slope to units per decade
+    slope_decade = slope * 10
+
+    # Remove the linear trend if requested
+    if dtrend:
+        dat_out = dat - trend_line
+    else:
+        dat_out = dat
+
+    if return_trend:
+        return dat_out, trend_line, slope_decade
+    else:
+        return dat_out
+
+
+def linear_detrend2(
     dat,
     min_coverage=0.9,
     dtrend=True,
