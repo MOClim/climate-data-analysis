@@ -163,12 +163,11 @@ n_modes = 3
 ```
 and:
 ```python
-pcs, eofs, variance_percent = compute_eof_analysis(
+pcs, eofs, variance_percent = calc_eof_analysis(
     sst_analysis,
     latlonEOF=latlonEOF,
     neval=3,
-    normalize=normalize_eof,
-    min_coverage=0.9)
+    normalize=normalize_eof)
 ```
 
 The program calculates:
@@ -251,12 +250,11 @@ clim_end = "2020-12-31"
 
 Complete:
 ```python
-pcs, eofs, variance_percent = compute_eof_analysis(
+pcs, eofs, variance_percent = calc_eof_analysis(
     ,
     latlonEOF=latlonEOF,
     neval=,
-    normalize=normalize_eof,
-    min_coverage=0.9)
+    normalize=normalize_eof)
 ```
 Use the detrended SLP anomalies as the EOF input and calculate three modes.
 
@@ -328,12 +326,11 @@ The EOFs and PCs still come from Tropical Pacific SST, but the correlation maps 
 
 For example, the workflow should conceptually be:
 ```python
-pcs, eofs, variance_percent = compute_eof_analysis(
+pcs, eofs, variance_percent = calc_eof_analysis(
     sst_analysis,
     latlonEOF=latlonEOF,
     neval=3,
-    normalize=normalize_eof,
-    min_coverage=0.9)
+    normalize=normalize_eof)
 
 cor_map = correlation_with_pcs(
     prc_global_analysis,
