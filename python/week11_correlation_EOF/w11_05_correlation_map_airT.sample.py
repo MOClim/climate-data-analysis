@@ -23,6 +23,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from pathlib import Path
 from cartopy.util import add_cyclic_point
+import sys
 
 import warnings
 warnings.filterwarnings(
@@ -218,15 +219,9 @@ sst = ds_sst["sst"]
 
 sst = sst.where((sst != -1000) & (sst != -1.0e30))
 
-if "latitude" in sst.coords:
-    sst = sst.rename({"latitude": "lat"})
-if "longitude" in sst.coords:
-    sst = sst.rename({"longitude": "lon"})
+# Rename coordinates to match the course examples
+sst = sst.rename({"latitude": "lat","longitude": "lon"})
 
-if bool((sst.lon > 180).any()):
-    sst = sst.assign_coords(
-        lon=((sst.lon + 180) % 360 - 180)
-    ).sortby("lon")
 
 # -------------------------------------------------------
 # Read Air Temperature data
@@ -275,13 +270,8 @@ airt_anom = airt_anom.sel(year=slice(start_year, end_year))
 tp_lat1, tp_lat2 = 10, -10
 tp_lon1, tp_lon2 = 140, 280
 
-tp_sst = regional_weighted_mean(
-    sst_anom,
-    tp_lat1,
-    tp_lat2,
-    tp_lon1,
-    tp_lon2
-)
+tp_sst = regional_weighted_mean(sst_anom,
+    tp_lat1, tp_lat2, tp_lon1, tp_lon2)
 
 
 # -------------------------------------------------------
@@ -306,14 +296,10 @@ else:
 # -------------------------------------------------------
 
 common_years = np.intersect1d(
-    sst_for_corr.year,
-    airt_for_corr.year
-)
+    sst_for_corr.year, airt_for_corr.year)
 
 common_years = np.intersect1d(
-    common_years,
-    tp_sst_for_corr.year
-)
+    common_years, tp_sst_for_corr.year)
 
 sst_for_corr = sst_for_corr.sel(year=common_years)
 tp_sst_for_corr = tp_sst_for_corr.sel(year=common_years)
@@ -323,112 +309,112 @@ airt_for_corr = airt_for_corr.sel(year=common_years)
 # -------------------------------------------------------
 # Grid-point correlation
 # -------------------------------------------------------
-# Step 3:
+# Step 3: Calculate the spatial correlation
+#
 # Calculate the Pearson correlation coefficient between
-# the Tropical Pacific SST anomaly time series and annual
-# air temperature anomalies at every grid point 
+# the Tropical Pacific SST anomaly time series and 
+# annual air temperature anomalies at each grid point 
 # using xr.corr() function.
 #
 # Hint:
 # - Use the annual air temperature anomalies (airt_for_corr)
 #   as the spatial field.
 # - Use the Tropical Pacific SST anomaly time series
-#   (tp_sst_for_corr) as the reference series.
+#   (tp_sst_for_corr) as the reference time series.
 # - Compute the correlation along the "year" dimension.
 #
 # Variable names:
 # airt_for_corr    : annual air temperature anomalies
-# tp_sst_for_corr : Tropical Pacific SST anomaly time series
-# corr_map        : Spatial Pearson correlation coefficients
+# tp_sst_for_corr  : Tropical Pacific SST anomaly time series
+# dim              : dimension along which to calculate correlation
+# corr_map         : (output) Spatial correlation coefficients
 
 corr_map = xr.corr()
 
 
 # Add a cyclic longitude point to remove the seam at 180°
 corr_cyclic, lon_cyclic = add_cyclic_point(
-    corr_map.values,
-    coord=corr_map.lon.values
-)
+    corr_map.values, coord=corr_map.lon.values)
+
+# Reconstruct xarray DataArray
+corr_cyclic_xr = xr.DataArray(corr_cyclic,
+    coords={"lat": corr_map.lat,"lon": lon_cyclic},
+    dims=("lat", "lon"), name="Correlation coefficient",
+    attrs=sst_for_corr.attrs)
 	
 # -------------------------------------------------------
 # Create figure
 # -------------------------------------------------------
 # Create a figure with different-sized panels:
-# a smaller time series (ax0) and a larger correlation map (ax1).
 
-fig = plt.figure(figsize=(12, 8), constrained_layout=True)
-grid = fig.add_gridspec(2, 1, height_ratios=[1, 2])
+fig, axes = plt.subplots(
+    2, 1, figsize=(12, 8),
+    gridspec_kw={"height_ratios": [1, 2]},
+    constrained_layout=True, squeeze=False)
+print(axes.shape)
+
+# Replace the upper Matplotlib Axes with Cartopy GeoAxes
+axes[1, 0].remove()
+
+proj = ccrs.Robinson(central_longitude=180)
+axes[1, 0] = fig.add_subplot(2, 1, 2, projection=proj)
+
 
 # Tropical Pacific SST time series
-ax0 = fig.add_subplot(grid[0, 0])
+axes[0, 0].plot(
+    tp_sst_for_corr.year, tp_sst_for_corr,
+    linewidth=1.8, label=f"Tropical Pacific SST {analysis_label}")
 
-ax0.plot(
-    tp_sst_for_corr.year,
-    tp_sst_for_corr,
-    linewidth=1.8,
-    label=f"Tropical Pacific SST {analysis_label}"
-)
-
-ax0.axhline(0, color="black", linewidth=0.8)
-ax0.set_xlabel("Year")
-ax0.set_ylabel("SST Anomaly (°C)")
-ax0.set_title(f"Tropical Pacific {analysis_label} SST Anomaly")
-ax0.grid(True)
-ax0.legend()
+axes[0, 0].axhline(0, color="black", linewidth=0.8)
+axes[0, 0].set_xlabel("Year")
+axes[0, 0].set_ylabel("SST Anomaly (°C)")
+axes[0, 0].set_title(f"Tropical Pacific {analysis_label} SST Anomaly")
+axes[0, 0].grid(True)
+axes[0, 0].legend()
 
 # Correlation map
-projection = ccrs.Robinson(central_longitude=180)
-ax1 = fig.add_subplot(grid[1, 0], projection=projection)
+
+# Step 4: Plot the global correlation map
+#
+# Complete the xarray plot.contourf() function.
+#
+# Hint:
+# Use the global correlation DataArray with cyclic longitude.
+# Specify the following plotting parameters:
+#   ax: Lower-left map panel (row=1, column=0)
+#   transform: PlateCarree projection for the input data.
+#   levels:  Contour levels for correlation coefficients
+#   cmap:    Colormap for positive and negative correlation.
 
 levels = np.arange(-1.0, 1.01, 0.1)
 
-# Step 4:
-# Plot the spatial correlation map using contourf().
-# Use longitude, latitude, and the correlation map
-# as the three main inputs.
-
-cf = ax1.contourf(
-    ,   # Longitude values
-    ,   # Latitude values
-    ,   # 2-D correlation coefficient field
-    levels=levels,
-    cmap="BrBG",
+___.plot.contourf(
+    ax=,        # Map axes: axes[1, 0]
+    transform=, # PlateCarree projection (the original data format)
+    level=,     # Contour levels
+    cmap=,      # Colormap
     extend="both",
-    transform=ccrs.PlateCarree()
-)
+    cbar_kwargs={"label": "Correlation Coefficient","orientation": "horizontal",
+        "pad": 0.06, "shrink": 0.85})
 
 # Do not cover the correlation field over land
-#ax1.add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
+#axes[1, 0].add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
 
-ax1.coastlines(linewidth=0.8, zorder=3)
-ax1.add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
-ax1.set_global()
+axes[1, 0].coastlines(linewidth=0.8, zorder=3)
+axes[1, 0].add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
+axes[1, 0].set_global()
 
 # Draw Tropical Pacific box
 box_lon = [tp_lon1, tp_lon2, tp_lon2, tp_lon1, tp_lon1]
 box_lat = [tp_lat1, tp_lat1, tp_lat2, tp_lat2, tp_lat1]
 
-ax1.plot(
-    box_lon,
-    box_lat,
-    color="black",
-    linewidth=1.5,
-    transform=ccrs.PlateCarree()
-)
+axes[1, 0].plot(
+    box_lon,box_lat,
+    color="black",linewidth=1.5, transform=ccrs.PlateCarree())
 
-ax1.set_title(
-    f"Correlation of Global Air Temperature with Tropical Pacific {analysis_label}"
-)
-
-cbar = fig.colorbar(
-    cf,
-    ax=ax1,
-    orientation="horizontal",
-    pad=0.06,
-    shrink=0.85
-)
-cbar.set_label("Pearson Correlation Coefficient (r)")
+axes[1, 0].set_title(
+    f"Correlation of Global Air Temperature with Tropical Pacific {analysis_label}")
 
 output_path = Path(__file__).with_suffix(".jpg")
-plt.savefig(output_path, dpi=300, bbox_inches="tight")
+plt.savefig(output_path, dpi=300)
 plt.show()

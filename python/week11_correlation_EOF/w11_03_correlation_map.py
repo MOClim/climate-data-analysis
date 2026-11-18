@@ -119,13 +119,8 @@ def calc_seasonal_anom(dat, window=12, end_month=12, clim_period=None):
 
     return datS
 
-def linear_detrend(
-    dat,
-    min_coverage=0.9,
-    dtrend=True,
-    trend_period=None,
-    return_trend=False
-):
+def linear_detrend(dat, min_coverage=0.9, dtrend=True,
+    trend_period=None, return_trend=False):
     """
     Remove the long-term linear trend from annual data.
 
@@ -173,10 +168,8 @@ def linear_detrend(
     coeffs = dat_fit_masked.polyfit(dim="year", deg=1)
 
     # Evaluate the fitted line over the full data period
-    trend_line = xr.polyval(
-        dat_masked["year"],
-        coeffs.polyfit_coefficients
-    )
+    trend_line = xr.polyval(dat_masked["year"],
+        coeffs.polyfit_coefficients)
 
     # Extract slope and convert from units/year to units/decade
     slope_year = coeffs.polyfit_coefficients.sel(degree=1)
@@ -215,17 +208,9 @@ ds_sst = xr.open_dataset(sst_file)
 sst = ds_sst["sst"]
 
 sst = sst.where((sst != -1000) & (sst != -1.0e30))
-#sst = sst.where(sst > -100)
-if "latitude" in sst.coords:
-    sst = sst.rename({"latitude": "lat"})
-if "longitude" in sst.coords:
-    sst = sst.rename({"longitude": "lon"})
 
-if bool((sst.lon > 180).any()):
-    sst = sst.assign_coords(
-        lon=((sst.lon + 180) % 360 - 180)
-    ).sortby("lon")
-
+# Rename coordinates to match the course examples
+sst = sst.rename({"latitude": "lat","longitude": "lon"})
 
 # -------------------------------------------------------
 # Monthly climatology and anomalies
@@ -244,13 +229,8 @@ sst_anom = sst_anom.sel(year=slice(start_year,end_year))
 tp_lat1, tp_lat2 = 10, -10
 tp_lon1, tp_lon2 = 140, 280
 
-tp_sst = regional_weighted_mean(
-    sst_anom,
-    tp_lat1,
-    tp_lat2,
-    tp_lon1,
-    tp_lon2
-)
+tp_sst = regional_weighted_mean(sst_anom,
+    tp_lat1,tp_lat2,tp_lon1,tp_lon2)
 
 
 # -------------------------------------------------------
@@ -271,9 +251,7 @@ else:
 # -------------------------------------------------------
 
 common_years = np.intersect1d(
-    sst_for_corr.year,
-    tp_sst_for_corr.year
-)
+    sst_for_corr.year, tp_sst_for_corr.year)
 
 sst_for_corr = sst_for_corr.sel(year=common_years)
 tp_sst_for_corr = tp_sst_for_corr.sel(year=common_years)
@@ -284,94 +262,87 @@ tp_sst_for_corr = tp_sst_for_corr.sel(year=common_years)
 # Calculate a Pearson correlation coefficient at 
 # every latitude–longitude grid point.
 
-corr_map = xr.corr(
-    sst_for_corr,
-    tp_sst_for_corr,
-    dim="year"
-)
+corr_map = xr.corr(sst_for_corr, tp_sst_for_corr,
+    dim="year")
 #print(corr_map.sel(lon=180.,method="nearest").values)
-#sys.exit()
+
 # Add a cyclic longitude point to remove the seam at 180°
 corr_cyclic, lon_cyclic = add_cyclic_point(
-    corr_map.values,
-    coord=corr_map.lon.values
-)
+    corr_map.values, coord=corr_map.lon.values)
+
+# Reconstruct xarray DataArray
+corr_cyclic_xr = xr.DataArray(corr_cyclic,
+    coords={"lat": corr_map.lat,"lon": lon_cyclic},
+    dims=("lat", "lon"), name="SST_anomaly",
+    attrs=sst_for_corr.attrs)
+print(corr_cyclic_xr)
 
 # -------------------------------------------------------
 # Create figure
 # -------------------------------------------------------
 # Create a figure with different-sized panels:
-# a smaller time series (ax0) and a larger correlation map (ax1).
 
-fig = plt.figure(figsize=(12, 8), constrained_layout=True)
-grid = fig.add_gridspec(2, 1, height_ratios=[1, 2])
+# -------------------------------------------------------
+# Create figure
+# -------------------------------------------------------
 
-# Tropical Pacific SST 3.4 time series
-ax0 = fig.add_subplot(grid[0, 0])
 
-ax0.plot(
-    tp_sst_for_corr.year,
-    tp_sst_for_corr,
-    linewidth=1.8,
-    label=f"Tropical Pacific SST {analysis_label}"
+fig, axes = plt.subplots(
+    2, 1,
+    figsize=(12, 8),
+    gridspec_kw={"height_ratios": [1, 2]},
+    constrained_layout=True,
+    squeeze=False
 )
 
-ax0.axhline(0, color="black", linewidth=0.8)
-ax0.set_xlabel("Year")
-ax0.set_ylabel("SST Anomaly (°C)")
-ax0.set_title(f"Tropical Pacific {analysis_label} SST Anomaly")
-ax0.grid(True)
-ax0.legend()
+# Replace the lower Matplotlib axes with Cartopy GeoAxes
+axes[1, 0].remove()
 
-# Correlation map
-projection = ccrs.Robinson(central_longitude=180)
-ax1 = fig.add_subplot(grid[1, 0], projection=projection)
+proj = ccrs.Robinson(central_longitude=180)
+axes[1, 0] = fig.add_subplot(2, 1, 2,
+    projection=proj)
+
+
+# Tropical Pacific SST 3.4 time series
+axes[0, 0].plot(tp_sst_for_corr.year, tp_sst_for_corr,
+    linewidth=1.8, label=f"Tropical Pacific SST {analysis_label}")
+
+axes[0, 0].axhline(0, color="black", linewidth=0.8)
+axes[0, 0].set_xlabel("Year")
+axes[0, 0].set_ylabel("SST Anomaly (°C)")
+axes[0, 0].set_title(f"Tropical Pacific {analysis_label} SST Anomaly")
+axes[0, 0].grid(True)
+axes[0, 0].legend()
+
 
 levels = np.arange(-1.0, 1.01, 0.1)
-#levels = np.arange(-2.0, 2.01, 0.2)
 
-cf = ax1.contourf(
-    lon_cyclic,
-#    corr_map.lon,
-    corr_map.lat,
-    corr_cyclic,
-#    corr_map,
+corr_cyclic_xr.plot(
+#corr_cyclic_xr.plot.contourf(
+    ax=axes[1, 0],
+    transform=ccrs.PlateCarree(),
     levels=levels,
     cmap="RdBu_r",
     extend="both",
-    transform=ccrs.PlateCarree()
-)
+    cbar_kwargs={"label": "Correlation Coefficient","orientation": "horizontal",
+        "pad": 0.06, "shrink": 0.85})
 
-ax1.add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
-ax1.coastlines(linewidth=0.8, zorder=3)
-ax1.add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
-ax1.set_global()
+axes[1, 0].add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
+axes[1, 0].coastlines(linewidth=0.8, zorder=3)
+axes[1, 0].add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
+axes[1, 0].set_global()
 
 # Draw Tropical Pacific box
 box_lon = [tp_lon1, tp_lon2, tp_lon2, tp_lon1, tp_lon1]
 box_lat = [tp_lat1, tp_lat1, tp_lat2, tp_lat2, tp_lat1]
 
-ax1.plot(
-    box_lon,
-    box_lat,
-    color="black",
-    linewidth=1.5,
-    transform=ccrs.PlateCarree()
-)
+axes[1, 0].plot(box_lon, box_lat,
+    color="black", linewidth=1.5, transform=ccrs.PlateCarree())
 
-ax1.set_title(
-    f"Correlation of Global SST with Tropical Pacific {analysis_label}"
-)
+axes[1, 0].set_title(
+    f"Correlation of Global SST with Tropical Pacific {analysis_label}")
 
-cbar = fig.colorbar(
-    cf,
-    ax=ax1,
-    orientation="horizontal",
-    pad=0.06,
-    shrink=0.85
-)
-cbar.set_label("Pearson Correlation Coefficient (r)")
 
 output_path = Path(__file__).with_suffix(".jpg")
-plt.savefig(output_path, dpi=300, bbox_inches="tight")
+plt.savefig(output_path, dpi=300)
 plt.show()

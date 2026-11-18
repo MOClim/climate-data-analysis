@@ -292,22 +292,10 @@ normalize_eof = False
 ds_sst = xr.open_dataset(sst_file)
 sst = ds_sst["sst"]
 
-sst = sst.where(
-    (sst != -1000) &
-    (sst != -1.0e30)
-)
+sst = sst.where((sst != -1000) & (sst != -1.0e30))
 
-if "latitude" in sst.coords:
-    sst = sst.rename({"latitude": "lat"})
-
-if "longitude" in sst.coords:
-    sst = sst.rename({"longitude": "lon"})
-
-if bool((sst.lon < 0).any()):
-    sst = sst.assign_coords(
-        lon=(sst.lon % 360)
-    ).sortby("lon")
-
+# Rename coordinates to match the course examples
+sst = sst.rename({"latitude": "lat","longitude": "lon"})
 
 # -------------------------------------------------------------
 # Annual SST anomalies
@@ -321,10 +309,7 @@ sst_djf_anom = sst_djf_anom.sel(year=slice(start_year, end_year))
 # -------------------------------------------------------------
 
 if use_detrended_data:
-    sst_analysis = linear_detrend(
-        sst_djf_anom,
-        min_coverage=0.9,
-    )
+    sst_analysis = linear_detrend(sst_djf_anom, min_coverage=0.9)
     analysis_label = "Detrended"
 else:
     sst_analysis = sst_djf_anom
@@ -340,8 +325,7 @@ pcs, eofs, variance_percent = compute_eof_analysis(
     latlonEOF=latlonEOF,
     neval=3,
     normalize=normalize_eof,
-    min_coverage=0.9,
-)
+    min_coverage=0.9)
 
 # Optional sign reversal for EOFs and PCs
 pcs = -pcs
@@ -365,23 +349,28 @@ var3 = variance_percent.isel(mode=2)
 # Calculate the correlation of the global SST anomalies onto standardized PC1
 # -------------------------------------------------------------
 
-cor_map = correlation_with_pcs(sst_analysis, pcs)
+eof_map = correlation_with_pcs(sst_analysis, pcs)
 
+# Convert longitude from -180–180 to 0–360
+eof_map = eof_map.assign_coords(lon=eof_map.lon % 360).sortby("lon")
+print(eof_map)
 
 # -------------------------------------------------------------
 # Create figure
 # -------------------------------------------------------------
 
-fig = plt.figure(
-    figsize=(11, 8),
-    constrained_layout=True,
-)
+fig, axes = plt.subplots(
+    2, 1, figsize=(12, 8),
+#    gridspec_kw={"height_ratios": [1, 2]},
+    gridspec_kw={"height_ratios": [0.7, 2]},
+    constrained_layout=True, squeeze=False)
+print(axes.shape)
 
-grid = fig.add_gridspec(
-    2,
-    1,
-    height_ratios=[1, 2],
-)
+# Replace the upper Matplotlib Axes with Cartopy GeoAxes
+axes[1, 0].remove()
+
+proj = ccrs.Robinson(central_longitude=180)
+axes[1, 0] = fig.add_subplot(2, 1, 2, projection=proj)
 
 
 # -------------------------------------------------------------
@@ -391,116 +380,64 @@ grid = fig.add_gridspec(
 years = pc1.year.values
 values = pc1.values
 
-colors = np.where(
-    values >= 0,
-    "red",
-    "blue",
-)
+colors = np.where(values >= 0,"red","blue")
 
-ax0 = fig.add_subplot(grid[0, 0])
+axes[0, 0].bar(
+    years, values,
+    color=colors, width=0.6)
 
-ax0.bar(
-    years,
-    values,
-    color=colors,
-    width=0.6,
-)
+axes[0, 0].axhline(
+    0, color="black", linewidth=1.0)
 
-ax0.axhline(
-    0,
-    color="black",
-    linewidth=1.0,
-)
+axes[0, 0].set_xlim(start_year-1.,end_year+1.)
+axes[0, 0].set_ylim(-2., 3.)
 
-ax0.set_xlim(start_year-1.,end_year+1.)
-ax0.set_ylim(-2., 3.)
-
-ax0.set_xlabel("Year")
-ax0.set_ylabel("Standardized PC1")
-ax0.set_title(
-    f"Tropical Pacific DJF SST PC1 "
-    f"({float(var1):.1f}% Variance Explained)"
-)
-ax0.grid(
-    axis="y",
-    alpha=0.3,
-)
+axes[0, 0].set_xlabel("Year", labelpad=4)
+axes[0, 0].set_ylabel("Standardized PC1")
+axes[0, 0].set_title(f"Tropical Pacific DJF SST PC1 "
+    f"({float(var1):.1f}% Variance Explained)")
+axes[0, 0].grid(axis="y", alpha=0.3)
 
 
 # -------------------------------------------------------------
 # Global regression map
 # -------------------------------------------------------------
 
-projection = ccrs.Robinson(
-    central_longitude=180
-)
-
-ax1 = fig.add_subplot(
-    grid[1, 0],
-    projection=projection,
-)
-
 levels = np.arange(-0.9, 0.91, 0.1)
 
-cf = ax1.contourf(
-    cor_map.lon,
-    cor_map.lat,
-    cor_map.isel(mode=0),
+dat = eof_map.isel(mode=0)
+print(dat)
+
+dat.plot.contourf(
+    ax=axes[1, 0],
+    transform=ccrs.PlateCarree(),
     levels=levels,
     cmap="RdBu_r",
     extend="both",
-    transform=ccrs.PlateCarree(),
-)
+    cbar_kwargs={"label": "Correlation Coefficient","orientation": "horizontal",
+        "pad": 0.06, "shrink": 0.85})
 
+axes[1, 0].add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
+axes[1, 0].add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
+axes[1, 0].coastlines(linewidth=0.8, zorder=3)
 
-ax1.add_feature(
-    cfeature.LAND,
-    facecolor="lightgray",
-    zorder=2,
-)
-ax1.coastlines(
-    linewidth=0.8,
-    zorder=3,
-)
-ax1.add_feature(
-    cfeature.BORDERS,
-    linewidth=0.4,
-    zorder=3,
-)
-# Draw latitude and longitude lines
-ax1.gridlines(draw_labels=True, linewidth=1, color='gray', alpha=0.5, linestyle='--')
-ax1.set_global()
+# Draw latitude and longitude gridlines (no top labels)
+axes[1, 0].gridlines(draw_labels={"bottom": "x", "left": "y", "right": "y"},
+    linewidth=1,color="gray", alpha=0.5, linestyle="--")
+axes[1, 0].set_global()
 
 # Draw the Tropical Pacific EOF domain.
 box_lon = [lon1, lon2, lon2, lon1, lon1]
 box_lat = [lat1, lat1, lat2, lat2, lat1]
 
-ax1.plot(
-    box_lon,
-    box_lat,
-    color="black",
-    linewidth=1.5,
-    transform=ccrs.PlateCarree(),
-)
+axes[1, 0].plot(
+    box_lon, box_lat,
+    color="black", linewidth=1.5, transform=ccrs.PlateCarree())
 
-ax1.set_title(
+axes[1, 0].set_title(
     f"Global DJF SST Correlation onto Tropical Pacific PC1 "
-    f"({analysis_label})"
-)
-
-cbar = fig.colorbar(
-    cf,
-    ax=ax1,
-    orientation="horizontal",
-    pad=0.06,
-    shrink=0.85,
-)
-cbar.set_label("Correlation")
+    f"({analysis_label})")
 
 output_path = Path(__file__).with_suffix(".jpg")
-plt.savefig(
-    output_path,
-    dpi=300,
-    bbox_inches="tight",
-)
+plt.savefig(output_path, dpi=300)
 plt.show()

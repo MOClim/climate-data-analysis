@@ -343,21 +343,10 @@ sst_file = indir / "HadISST_sst.nc"
 ds_sst = xr.open_dataset(sst_file)
 sst = ds_sst["sst"]
 
-sst = sst.where(
-    (sst != -1000) &
-    (sst != -1.0e30)
-)
+sst = sst.where((sst != -1000) & (sst != -1.0e30))
 
-if "latitude" in sst.coords:
-    sst = sst.rename({"latitude": "lat"})
-
-if "longitude" in sst.coords:
-    sst = sst.rename({"longitude": "lon"})
-
-if bool((sst.lon < 0).any()):
-    sst = sst.assign_coords(
-        lon=(sst.lon % 360)
-    ).sortby("lon")
+# Rename coordinates to match the course examples
+sst = sst.rename({"latitude": "lat","longitude": "lon"})
 
 # ---------------------------------------------------------
 # DJF mean anomalies
@@ -365,7 +354,6 @@ if bool((sst.lon < 0).any()):
 
 sst_anom = calc_seasonal_anom(sst,window=3,end_month=2)
 sst_anom = sst_anom.sel(year=slice(start_year, end_year))
-
 
 # ---------------------------------------------------------
 # Select the Tropical Pacific
@@ -380,25 +368,18 @@ else:
 sst_global = sst_anom
 
 # Tropical Pacific data used for EOF calculation
-sst_tp = sst_anom.sel(
-    lat=lat_slice,
-    lon=slice(lon1, lon2),
-)
+sst_tp = sst_anom.sel(lat=lat_slice, lon=slice(lon1, lon2))
+print(sst_tp)
 
 # ---------------------------------------------------------
 # Optional detrending
 # ---------------------------------------------------------
 
 if use_detrended_data:
-    sst_analysis = linear_detrend(
-        sst_tp,
-        min_coverage=0.9,
-    )
+    sst_analysis = linear_detrend(sst_tp, min_coverage=0.9)
 
     sst_global_analysis = linear_detrend(
-        sst_global,
-        min_coverage=0.9,
-    )
+        sst_global, min_coverage=0.9)
 
     analysis_label = "Detrended"
 else:
@@ -439,64 +420,96 @@ var3 = variance_percent.isel(mode=2)
 # Calculate the correlation of the global SST anomalies onto standardized PC1
 # -------------------------------------------------------------
 
-cor_map = correlation_with_pcs(
-    sst_global_analysis,
-    pcs,
-    min_coverage=0.9,
-)
+eof_map = correlation_with_pcs(sst_global_analysis, pcs, min_coverage=0.9)
+print(eof_map)
+
+# Convert longitude from -180–180 to 0–360
+eof_map = eof_map.assign_coords(lon=eof_map.lon % 360).sortby("lon")
 
 
 # ---------------------------------------------------------
 # Display variance explained by each EOF mode
 # ---------------------------------------------------------
 
-print(
-    f"Analysis period: "
+print(f"Analysis period: "
     f"{int(sst_analysis.year.values[0])}-"
-    f"{int(sst_analysis.year.values[-1])}"
-)
+    f"{int(sst_analysis.year.values[-1])}")
 
-for mode, value in enumerate(
-    variance_percent,
-    start=1,
-):
-    print(
-        f"EOF{mode} variance explained: "
-        f"{value:.2f}%"
-    )
-
+for mode, value in enumerate(variance_percent,start=1):
+    print(f"EOF{mode} variance explained: "
+        f"{value:.2f}%")
 
 # ---------------------------------------------------------
 # Create figure
 # ---------------------------------------------------------
 
-# Panel position and size controls
-
-
-# PC time-series panels
-pc_width_scale = 1.10
-pc_height_scale = 0.90
-pc_x_shift = 0.00
-pc_y_shift = 0.0
-
-
-fig = plt.figure(figsize=(11, 5))
-
+# Create a figure with different-sized panels:
 # Top row: PC time series
 # Bottom row: Correlation maps
-grid = fig.add_gridspec(
-    2,
-    n_modes,
-    height_ratios=[0.65, 1.35],
-    hspace=0.02,      # was 0.15
-    wspace=0.25,
-)
+#
+# Panel position and size controls
 
-projection = ccrs.Robinson(
-    central_longitude=180
-)
+fig, axes = plt.subplots(
+    2, 3, figsize=(11, 5),
+    gridspec_kw={"height_ratios": [0.8, 2]},
+    constrained_layout=False, squeeze=False)
+fig.subplots_adjust(top=0.88)
 
-levels = np.linspace(-0.8, 0.8, 9)
+print(axes.shape)
+
+# Replace the upper Matplotlib Axes with Cartopy GeoAxes
+axes[1, 0].remove()
+axes[1, 1].remove()
+axes[1, 2].remove()
+
+proj = ccrs.Robinson(central_longitude=180)
+axes[1, 0] = fig.add_subplot(2, 3, 4, projection=proj)
+axes[1, 1] = fig.add_subplot(2, 3, 5, projection=proj)
+axes[1, 2] = fig.add_subplot(2, 3, 6, projection=proj)
+
+# ---------------------------------------------------------
+# Plot PC time series (upper row)
+# ---------------------------------------------------------
+
+years = pc1.year.values
+
+# Set bar colors based on positive and negative PC values
+colors1 = np.where(pc1.values >= 0, "red", "blue")
+colors2 = np.where(pc2.values >= 0, "red", "blue")
+colors3 = np.where(pc3.values >= 0, "red", "blue")
+
+# PC1 time series
+axes[0, 0].bar(years, pc1.values, color=colors1, width=0.8)
+
+# PC2 time series
+axes[0, 1].bar(years, pc2.values, color=colors2, width=0.8)
+
+# PC3 time series
+axes[0, 2].bar(years, pc3.values, color=colors3, width=0.8)
+
+
+for mode in range(3):
+
+  # Add zero reference lines
+  axes[0, mode].axhline(0, color="black", linewidth=0.8)
+
+  # Set axis limits
+  axes[0, mode].set_xlim(start_year - 1, end_year + 1)
+
+  axes[0, mode].set_ylim(-3, 3)
+
+  # Axis labels
+  axes[0, mode].set_xlabel("Year")
+
+  # Gridlines
+  axes[0, mode].grid(axis="y", alpha=0.3)
+
+axes[0, 0].set_ylabel("Standardized PC")
+
+# Titles
+axes[0, 0].set_title("PC1")
+axes[0, 1].set_title("PC2")
+axes[0, 2].set_title("PC3")
 
 
 # ---------------------------------------------------------
@@ -513,186 +526,80 @@ levels = np.linspace(-0.8, 0.8, 9)
 # total variance explained by that EOF mode.
 #
 
-map_axes = []
-cf = None
+levels = np.linspace(-0.8, 0.8, 9)
 
-map_width_scale = 1.10
-map_height_scale = 1.15
-map_y_shift = 0.0
+# Select the first three EOF modes
+dat1 = eof_map.isel(mode=0)
+dat2 = eof_map.isel(mode=1)
+dat3 = eof_map.isel(mode=2)
 
-for mode in range(n_modes):
-
-    ax_map = fig.add_subplot(
-        grid[1, mode],
-        projection=projection,
-    )
-
-    # Store the map axis for the shared colorbar
-    map_axes.append(ax_map)
-
-    pos_map = ax_map.get_position()
-
-    new_width = pos_map.width * map_width_scale
-    new_height = pos_map.height * map_height_scale
-
-    new_x = pos_map.x0 + (pos_map.width - new_width) / 2
-    new_y = pos_map.y0 + (pos_map.height - new_height) / 2 + map_y_shift
-
-    ax_map.set_position([
-      new_x,
-      new_y,
-      new_width,
-      new_height,
-     ])
-
-    cdat = cor_map.isel(mode=mode)
-
-    cf = ax_map.contourf(
-        cdat.lon,
-        cdat.lat,
-        cdat,
-        levels=levels,
-        cmap="RdBu_r",
-        extend="both",
-        transform=ccrs.PlateCarree(),
-    )
-
-    ax_map.set_global()
-
-    ax_map.add_feature(
-        cfeature.LAND,
-        facecolor="lightgray",
-        zorder=2,
-    )
-
-    ax_map.coastlines(
-        linewidth=0.8,
-        zorder=3,
-    )
-
-    ax_map.add_feature(
-        cfeature.BORDERS,
-        linewidth=0.4,
-        zorder=3,
-    )
-
-    ax_map.gridlines(
-        linewidth=0.4,
-        linestyle="--",
-        alpha=0.6,
-    )
-
-    ax_map.set_title(
-        f"Correlation of SST with PC{mode + 1}"
-        f"({variance_percent.isel(mode=mode).item():.1f}% Variance)",
-        fontsize=9,
-    )
-
-
-# ---------------------------------------------------------
-# Plot PC time series on the lower row
-# ---------------------------------------------------------
-#
-# Each principal component describes how strongly the
-# corresponding EOF spatial pattern varies from year to year.
-#
-# Red bars indicate positive amplitudes.
-# Blue bars indicate negative amplitudes.
-#
-# Together, the EOF map and its PC time series describe
-# one mode of climate variability.
-#
-
-for mode in range(n_modes):
-
-    ax_pc = fig.add_subplot(
-        grid[0, mode]
-    )
-
-    pos_pc = ax_pc.get_position()
-
-    new_pc_width = pos_pc.width * pc_width_scale
-    new_pc_height = pos_pc.height * pc_height_scale
-
-    new_pc_x = (
-      pos_pc.x0
-      + (pos_pc.width - new_pc_width) / 2
-      + pc_x_shift)
-
-    new_pc_y = (
-      pos_pc.y0
-      + (pos_pc.height - new_pc_height) / 2
-      + pc_y_shift)
-
-    ax_pc.set_position([
-      new_pc_x,
-      new_pc_y,
-      new_pc_width,
-      new_pc_height])
-
-    pc = pcs.isel(
-        mode=mode
-    )
-
-    pc_values = pc.values
-    years = pc.year.values
-
-    bar_colors = np.where(
-      pc_values >= 0,
-      "red",
-      "blue")
-
-    ax_pc.bar(
-      years,
-      pc_values,
-      color=bar_colors,
-      width=0.8)
-
-    ax_pc.axhline(
-        0,
-        color="black",
-        linewidth=0.8,
-    )
-
-    ax_pc.set_xlim(start_year - 1.,end_year + 1.)
-    ax_pc.set_ylim(-4., 4.)
-
-    ax_pc.set_xlabel("Year")
-
-    if mode == 0:
-        ax_pc.set_ylabel(
-            "Standardized PC"
-        )
-
-    ax_pc.set_title(
-        f"PC{mode + 1}",
-        fontsize=12,
-    )
-
-    ax_pc.grid(True)
-
-
-# ---------------------------------------------------------
-# Shared colorbar and figure title
-# ---------------------------------------------------------
-
-cbar = fig.colorbar(
-    cf,
-    ax=map_axes,
-    orientation="horizontal",
-    pad=0.08,
-    shrink=0.6,
+dat1.plot.contourf(
+   ax=axes[1, 0],
+   transform=ccrs.PlateCarree(),
+   levels=levels,
+   cmap="RdBu_r",
+   extend="both",
+   add_colorbar=False
 )
 
-cbar.ax.tick_params(labelsize=8)
-cbar.set_label("Correlation")
+dat2.plot.contourf(
+   ax=axes[1, 1],
+   transform=ccrs.PlateCarree(),
+   levels=levels,
+   cmap="RdBu_r",
+   extend="both",
+   add_colorbar=False
+)
+
+
+dat3.plot.contourf(
+   ax=axes[1, 2],
+   transform=ccrs.PlateCarree(),
+   levels=levels,
+   cmap="RdBu_r",
+   extend="both",
+   add_colorbar=False
+)
+
+# Add map features
+for mode in range(3):
+    # Move the three maps upward
+    pos = axes[1, mode].get_position()
+    axes[1, mode].set_position([
+        pos.x0 - pos.width * 0.2, pos.y0 - 0.08,
+        pos.width * 1.5, pos.height * 1.5])
+
+    axes[1, mode].set_global()
+    axes[1, mode].add_feature(
+        cfeature.LAND, facecolor="lightgray", zorder=2
+    )
+    axes[1, mode].coastlines(linewidth=0.8)
+    axes[1, mode].gridlines(
+        linewidth=0.5, color="gray",
+        alpha=0.5, linestyle="--"
+    )
+
+# Map titles
+axes[1, 0].set_title(f"PC1 Correlation ({float(var1):.1f}%)")
+axes[1, 1].set_title(f"PC2 Correlation ({float(var2):.1f}%)")
+axes[1, 2].set_title(f"PC3 Correlation ({float(var3):.1f}%)")
+
+
+# Shared horizontal colorbar
+cbar = fig.colorbar(
+    axes[1, 0].collections[0],
+    ax=axes[1, :],
+    orientation="horizontal", pad=0.12, shrink=0.5)
+
+cbar.set_label("Correlation Coefficient")
+
+# ---------------------------------------------------------
+# ---------------------------------------------------------
 
 fig.suptitle(
     f"Leading Tropical Pacific DJF SST EOF Modes "
     f"({analysis_label})",
-    fontsize=16,
-    y=0.98,
-)
+    fontsize=16, y=0.98)
 
 # ---------------------------------------------------------
 # Save figure
@@ -700,10 +607,5 @@ fig.suptitle(
 
 output_path = Path(__file__).with_suffix(".jpg")
 
-plt.savefig(
-    output_path,
-    dpi=300,
-    bbox_inches="tight",
-)
-
+plt.savefig(output_path, dpi=300)
 plt.show()

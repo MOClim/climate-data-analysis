@@ -217,16 +217,8 @@ sst = ds_sst["sst"]
 
 sst = sst.where((sst != -1000) & (sst != -1.0e30))
 
-if "latitude" in sst.coords:
-    sst = sst.rename({"latitude": "lat"})
-if "longitude" in sst.coords:
-    sst = sst.rename({"longitude": "lon"})
-
-if bool((sst.lon > 180).any()):
-    sst = sst.assign_coords(
-        lon=((sst.lon + 180) % 360 - 180)
-    ).sortby("lon")
-
+# Rename coordinates to match the course examples
+sst = sst.rename({"latitude": "lat","longitude": "lon"})
 
 # -------------------------------------------------------
 # Annual mean anomalies
@@ -246,13 +238,8 @@ print(sst_djf_anom.coords)
 nino_lat1, nino_lat2 = 5, -5
 nino_lon1, nino_lon2 = -170, -120
 
-nino34 = regional_weighted_mean(
-    sst_djf_anom,
-    nino_lat1,
-    nino_lat2,
-    nino_lon1,
-    nino_lon2
-)
+nino34 = regional_weighted_mean(sst_djf_anom,
+    nino_lat1, nino_lat2, nino_lon1, nino_lon2)
 
 
 # -------------------------------------------------------
@@ -274,9 +261,7 @@ else:
 # -------------------------------------------------------
 
 common_years = np.intersect1d(
-    sst_for_corr.year,
-    nino34_for_corr.year
-)
+    sst_for_corr.year, nino34_for_corr.year)
 
 sst_for_corr = sst_for_corr.sel(year=common_years)
 nino34_for_corr = nino34_for_corr.sel(year=common_years)
@@ -286,24 +271,36 @@ nino34_for_corr = nino34_for_corr.sel(year=common_years)
 # Grid-point correlation
 # -------------------------------------------------------
 
-corr_map = xr.corr(
-    sst_for_corr,
-    nino34_for_corr,
-    dim="year"
-)
+corr_map = xr.corr(sst_for_corr, nino34_for_corr,dim="year")
 
 # Add a cyclic longitude point to remove the seam at 180°
 corr_cyclic, lon_cyclic = add_cyclic_point(
-    corr_map.values,
-    coord=corr_map.lon.values
-)
+    corr_map.values, coord=corr_map.lon.values)
+
+# Reconstruct xarray DataArray
+corr_cyclic_xr = xr.DataArray(corr_cyclic,
+    coords={"lat": corr_map.lat,"lon": lon_cyclic},
+    dims=("lat", "lon"), name="Correlation coefficient",
+    attrs=sst_for_corr.attrs)
+print(corr_cyclic_xr)
 
 # -------------------------------------------------------
 # Create figure
 # -------------------------------------------------------
 
-fig = plt.figure(figsize=(11, 8), constrained_layout=True)
-grid = fig.add_gridspec(2, 1, height_ratios=[1, 2])
+fig, axes = plt.subplots(
+    2, 1, figsize=(12, 8),
+    gridspec_kw={"height_ratios": [1, 2]},
+    constrained_layout=True, squeeze=False)
+print(axes.shape)
+
+# Replace the upper Matplotlib Axes with Cartopy GeoAxes
+axes[1, 0].remove()
+
+proj = ccrs.Robinson(central_longitude=180)
+axes[1, 0] = fig.add_subplot(2, 1, 2, projection=proj)
+
+
 
 # -------------------------------------------------------
 # Niño 3.4 time series (positive = red, negative = blue)
@@ -315,78 +312,48 @@ values = nino34_for_corr.values
 colors = np.where(values >= 0, "red", "blue")
 
 # Niño 3.4 time series
-ax0 = fig.add_subplot(grid[0, 0])
+axes[0, 0].bar(
+    years, values, color=colors, width=0.6)
 
-ax0.bar(
-    years,
-    values,
-    color=colors,
-    width=0.6,
-)
+axes[0, 0].axhline(
+    0, color="black", linewidth=1.0)
 
-ax0.axhline(
-    0,
-    color="black",
-    linewidth=1.0,
-)
-
-ax0.set_xlabel("Year")
-ax0.set_ylabel("SST Anomaly (°C)")
-ax0.set_title(f"Niño 3.4 {analysis_label} index")
-ax0.grid(
-    axis="y",
-    alpha=0.3,
-)
+axes[0, 0].set_xlabel("Year")
+axes[0, 0].set_ylabel("SST Anomaly (°C)")
+axes[0, 0].set_title(f"Niño 3.4 {analysis_label} index")
+axes[0, 0].grid(axis="y", alpha=0.3)
 
 
 # Correlation map
-projection = ccrs.Robinson(central_longitude=180)
-ax1 = fig.add_subplot(grid[1, 0], projection=projection)
-
 levels = np.arange(-0.9, 0.91, 0.1)
 
-cf = ax1.contourf(
-    lon_cyclic,
-    corr_map.lat,
-    corr_cyclic,
+corr_cyclic_xr.plot.contourf(
+    ax=axes[1, 0],
+    transform=ccrs.PlateCarree(),
     levels=levels,
     cmap="RdBu_r",
     extend="both",
-    transform=ccrs.PlateCarree()
-)
+    cbar_kwargs={"label": "Correlation Coefficient","orientation": "horizontal",
+        "pad": 0.06, "shrink": 0.85})
 
-ax1.add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
-ax1.coastlines(linewidth=0.8, zorder=3)
-ax1.add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
+axes[1, 0].add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
+axes[1, 0].coastlines(linewidth=0.8, zorder=3)
+axes[1, 0].add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
 # Draw latitude and longitude lines
-ax1.gridlines(draw_labels=True, linewidth=1, color='gray', alpha=0.5, linestyle='--')
-ax1.set_global()
+axes[1, 0].gridlines(draw_labels=True, linewidth=1, color='gray', alpha=0.5, linestyle='--')
+axes[1, 0].set_global()
 
 # Draw Niño 3.4 box
 box_lon = [nino_lon1, nino_lon2, nino_lon2, nino_lon1, nino_lon1]
 box_lat = [nino_lat1, nino_lat1, nino_lat2, nino_lat2, nino_lat1]
 
-ax1.plot(
-    box_lon,
-    box_lat,
-    color="black",
-    linewidth=1.5,
-    transform=ccrs.PlateCarree()
-)
+axes[1,0].plot(
+    box_lon, box_lat, color="black",
+    linewidth=1.5, transform=ccrs.PlateCarree())
 
-ax1.set_title(
-    f"Correlation of Global SST with Niño 3.4 {analysis_label}"
-)
-
-cbar = fig.colorbar(
-    cf,
-    ax=ax1,
-    orientation="horizontal",
-    pad=0.06,
-    shrink=0.85
-)
-cbar.set_label("Pearson Correlation Coefficient (r)")
+axes[1, 0].set_title(
+    f"Correlation of Global SST with Niño 3.4 {analysis_label}")
 
 output_path = Path(__file__).with_suffix(".jpg")
-plt.savefig(output_path, dpi=300, bbox_inches="tight")
+plt.savefig(output_path, dpi=300)
 plt.show()
