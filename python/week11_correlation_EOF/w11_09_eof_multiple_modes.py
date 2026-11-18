@@ -278,36 +278,12 @@ sst = sst.rename({"latitude": "lat","longitude": "lon"})
 sst_anom = calc_seasonal_anom(sst,window=3,end_month=2)
 sst_anom = sst_anom.sel(year=slice(start_year, end_year))
 
-# ---------------------------------------------------------
-# Select the Tropical Pacific
-# ---------------------------------------------------------
-
-if sst_anom.lat[0] < sst_anom.lat[-1]:
-    lat_slice = slice(lat1, lat2)
-else:
-    lat_slice = slice(lat2, lat1)
-
-# Global SST anomalies
-sst_global = sst_anom
-
-# Tropical Pacific data used for EOF calculation
-sst_tp = sst_anom.sel(lat=lat_slice, lon=slice(lon1, lon2))
-print(sst_tp)
-
-# ---------------------------------------------------------
 # Optional detrending
-# ---------------------------------------------------------
-
 if use_detrended_data:
-    sst_analysis = linear_detrend(sst_tp, min_coverage=0.9)
-
-    sst_global_analysis = linear_detrend(
-        sst_global, min_coverage=0.9)
-
+    sst_analysis = linear_detrend(sst_anom, min_coverage=0.9)
     analysis_label = "Detrended"
 else:
-    sst_analysis = sst_tp
-    sst_global_analysis = sst_global
+    sst_analysis = sst_anom
     analysis_label = "Annual Anomaly"
 
 # -------------------------------------------------------------
@@ -341,7 +317,7 @@ var3 = variance_percent.isel(mode=2)
 # Calculate the correlation of the global SST anomalies onto standardized PC1
 # -------------------------------------------------------------
 
-eof_map = correlation_with_pcs(sst_global_analysis, pcs)
+eof_map = correlation_with_pcs(sst_analysis, pcs)
 print(eof_map)
 
 # Convert longitude from -180–180 to 0–360

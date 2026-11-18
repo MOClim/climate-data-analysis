@@ -258,17 +258,13 @@ sst = sst.rename({"latitude": "lat","longitude": "lon"})
 sst_djf_anom = calc_seasonal_anom(sst,window=3,end_month=2)
 sst_djf_anom = sst_djf_anom.sel(year=slice(start_year, end_year))
 
-# -------------------------------------------------------------
 # Optional detrending
-# -------------------------------------------------------------
-
 if use_detrended_data:
     sst_analysis = linear_detrend(sst_djf_anom, min_coverage=0.9)
     analysis_label = "Detrended"
 else:
     sst_analysis = sst_djf_anom
     analysis_label = "Annual Anomaly"
-
 
 # -------------------------------------------------------------
 # EOF analysis over the Tropical Pacific: first three modes
