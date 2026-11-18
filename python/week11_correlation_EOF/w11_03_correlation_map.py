@@ -86,11 +86,8 @@ def calc_seasonal_anom(dat, window=12, end_month=12, clim_period=None):
         clm = dat.groupby("time.month").mean("time")
     else:
         start, end = clim_period
-        clm = (
-            dat.sel(time=slice(start, end))
-            .groupby("time.month")
-            .mean("time")
-        )
+        clm = (dat.sel(time=slice(start, end))
+            .groupby("time.month").mean("time"))
 
     # Monthly anomalies
     anm = dat.groupby("time.month") - clm
@@ -114,8 +111,7 @@ def calc_seasonal_anom(dat, window=12, end_month=12, clim_period=None):
             "lon": dat_tmp["lon"].values,
         },
         name=dat.name if hasattr(dat, "name") else "SeasonalMean",
-        attrs=dat.attrs.copy(),
-    )
+        attrs=dat.attrs.copy())
 
     return datS
 
@@ -247,23 +243,13 @@ else:
    analysis_label = "Annual Anomaly"
 
 # -------------------------------------------------------
-# Match common years
-# -------------------------------------------------------
-
-common_years = np.intersect1d(
-    sst_for_corr.year, tp_sst_for_corr.year)
-
-sst_for_corr = sst_for_corr.sel(year=common_years)
-tp_sst_for_corr = tp_sst_for_corr.sel(year=common_years)
-
-# -------------------------------------------------------
 # Grid-point correlation
 # -------------------------------------------------------
-# Calculate a Pearson correlation coefficient at 
+
+# Calculate a correlation coefficient at 
 # every latitude–longitude grid point.
 
-corr_map = xr.corr(sst_for_corr, tp_sst_for_corr,
-    dim="year")
+corr_map = xr.corr(sst_for_corr, tp_sst_for_corr,dim="year")
 #print(corr_map.sel(lon=180.,method="nearest").values)
 
 # Add a cyclic longitude point to remove the seam at 180°
@@ -328,8 +314,11 @@ corr_cyclic_xr.plot(
         "pad": 0.06, "shrink": 0.85})
 
 axes[1, 0].add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
-axes[1, 0].coastlines(linewidth=0.8, zorder=3)
 axes[1, 0].add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
+axes[1, 0].coastlines(linewidth=0.8, zorder=3)
+
+axes[1, 0].gridlines(draw_labels={"bottom": "x", "left": "y", "right": "y"},
+    linewidth=1,color="gray", alpha=0.5, linestyle="--")
 axes[1, 0].set_global()
 
 # Draw Tropical Pacific box

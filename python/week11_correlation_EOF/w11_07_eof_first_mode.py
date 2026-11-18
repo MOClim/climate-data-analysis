@@ -151,70 +151,37 @@ def linear_detrend(
     else:
         return dat_out
 
-def compute_eof_analysis(
-    datA,
-    latlonEOF=(30.0, 50.0, -125.0, -100.0),
-    neval=3,
-    normalize=False,
-    min_coverage=0.9,
-):
+
+def calc_eof_analysis(datA, latlonEOF, neval=3, normalize=False):
     """Calculate latitude-weighted EOFs and standardized PCs."""
 
-    # Ensure longitude is 0-360 and sorted.
-    if float(datA.lon.min()) < 0:
-        datA = datA.assign_coords(
-            lon=(datA.lon % 360)
-        ).sortby("lon")
+    # Convert longitude to 0–360 and sort coordinates
+    # Ensure latitude is ascending
+    datA = datA.assign_coords(lon=datA.lon % 360).sortby("lon")
+    datA = datA.sortby("lat")
 
-    lat_min, lat_max, lon_min, lon_max = latlonEOF
+    # Select the EOF analysis region
+    lat1, lat2, lon1, lon2 = latlonEOF
+    dat = datA.sel(lat=slice(lat1, lat2),lon=slice(lon1, lon2))
 
-    lon_min = lon_min if lon_min >= 0 else lon_min + 360
-    lon_max = lon_max if lon_max >= 0 else lon_max + 360
-
-    # Flip latitude if needed.
-    if datA["lat"][0] > datA["lat"][-1]:
-        datA = datA.isel(lat=slice(None, None, -1))
-
-    # Subset the EOF domain.
-    datA_eof = datA.sel(
-        lat=slice(lat_min, lat_max),
-        lon=slice(lon_min, lon_max),
-    )
-
-    # Latitude weighting.
-    clat = np.sqrt(np.cos(np.deg2rad(datA_eof["lat"])))
-    clat = clat.broadcast_like(datA_eof)
-    datY = datA_eof * clat
-
-    # Standardization gives correlation-based EOFs.
+    # Standardize the data for correlation-based EOF analysis
     if normalize:
-        dat_std = datY.std(dim="year")
-        datY = datY / dat_std
+        dat = dat / dat.std(dim="year")
 
-    datY = datY.transpose("year", "lat", "lon")
+    # Latitude weighting: sqrt(cos(latitude))
+    # Convert 1D latitude weights into a 2D column array (lat, 1).
+    weights = np.sqrt(np.cos(np.deg2rad(dat.lat.values)))[:, np.newaxis]
 
-    # Mask grid points with insufficient temporal coverage.
-    valid_count = datY.notnull().sum(dim="year")
-    required_count = int(np.ceil(datY.sizes["year"] * min_coverage))
-    datY = datY.where(valid_count >= required_count)
+    # Calculate EOFs
+    dat = dat.rename({"year": "time"})
+    solver = Eof(dat, weights=weights)
 
-    datY = datY.rename({"year": "time"})
-
-    weights = np.sqrt(np.cos(np.deg2rad(datY.lat.values)))[:,np.newaxis]
-
-    solver = Eof(datY,weights=weights)
-
-    eofs = solver.eofsAsCovariance(neofs=neval,pcscaling=1)
-    pcs = solver.pcs(npcs=neval,pcscaling=1)
+    # Extract EOF patterns, standardized PCs, and explained variance
+    eofs = solver.eofsAsCovariance(neofs=neval, pcscaling=1)
+    pcs = solver.pcs(npcs=neval, pcscaling=1)
     variance_percent = solver.varianceFraction(neigs=neval) * 100
 
     pcs = pcs.rename({"time": "year"})
-
-    for mode, value in enumerate(variance_percent.values,start=1):
-      print(
-        f"EOF{mode} variance explained: "
-        f"{value:.1f}%"
-      )
 
     return pcs, eofs, variance_percent
 
@@ -237,26 +204,13 @@ def correlation_with_pcs(dat, pcs):
     """
 
     # Match the years shared by the field and PCs
-    dat, pcs = xr.align(
-        dat,
-        pcs,
-        join="inner",
-    )
-
+    dat, pcs = xr.align(dat,pcs,join="inner")
 
     # xarray broadcasts the mode dimension automatically
-    corr = xr.corr(
-        dat,
-        pcs,
-        dim="year",
-    )
+    corr = xr.corr(dat,pcs,dim="year")
 
     # Arrange dimensions consistently
-    corr = corr.transpose(
-        "mode",
-        "lat",
-        "lon",
-    )
+    corr = corr.transpose("mode","lat","lon")
 
     corr.name = "correlation"
 
@@ -320,12 +274,11 @@ else:
 # EOF analysis over the Tropical Pacific: first three modes
 # -------------------------------------------------------------
 
-pcs, eofs, variance_percent = compute_eof_analysis(
+pcs, eofs, variance_percent = calc_eof_analysis(
     sst_analysis,
     latlonEOF=latlonEOF,
     neval=3,
-    normalize=normalize_eof,
-    min_coverage=0.9)
+    normalize=normalize_eof)
 
 # Optional sign reversal for EOFs and PCs
 pcs = -pcs
@@ -361,7 +314,6 @@ print(eof_map)
 
 fig, axes = plt.subplots(
     2, 1, figsize=(12, 8),
-#    gridspec_kw={"height_ratios": [1, 2]},
     gridspec_kw={"height_ratios": [0.7, 2]},
     constrained_layout=True, squeeze=False)
 print(axes.shape)

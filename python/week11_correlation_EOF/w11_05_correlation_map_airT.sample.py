@@ -400,8 +400,12 @@ ___.plot.contourf(
 # Do not cover the correlation field over land
 #axes[1, 0].add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
 
-axes[1, 0].coastlines(linewidth=0.8, zorder=3)
 axes[1, 0].add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
+axes[1, 0].coastlines(linewidth=0.8, zorder=3)
+
+# Draw latitude and longitude gridlines (no top labels)
+axes[1, 0].gridlines(draw_labels={"bottom": "x", "left": "y", "right": "y"},
+    linewidth=1,color="gray", alpha=0.5, linestyle="--")
 axes[1, 0].set_global()
 
 # Draw Tropical Pacific box

@@ -13,7 +13,7 @@
 #    calc_seasonal_anom().
 #
 # 2. Compute the first three EOF modes using
-#    compute_eof_analysis().
+#    calc_eof_analysis().
 #
 # 3. Calculate the correlation maps between the
 #    principal components and the global DJF SLP
@@ -221,74 +221,40 @@ def linear_detrend(
     else:
         return dat_out
 
-def compute_eof_analysis(
-    datA,
-    latlonEOF=(30.0, 50.0, -125.0, -100.0),
-    neval=3,
-    normalize=False,
-    min_coverage=0.9,
-):
+def calc_eof_analysis(datA, latlonEOF, neval=3, normalize=False):
+    """Calculate latitude-weighted EOFs and standardized PCs."""
 
-    lat_min, lat_max, lon_min, lon_max = latlonEOF
+    # Convert longitude to 0–360 and sort coordinates
+    # Ensure latitude is ascending
+    datA = datA.assign_coords(lon=datA.lon % 360).sortby("lon")
+    datA = datA.sortby("lat")
 
-    # Ensure latitude increases from south to north
-    if datA["lat"][0] > datA["lat"][-1]:
-        datA = datA.isel(lat=slice(None, None, -1))
+    # Select the EOF analysis region
+    lat1, lat2, lon1, lon2 = latlonEOF
+    dat = datA.sel(lat=slice(lat1, lat2),lon=slice(lon1, lon2))
 
-    # Subset the EOF domain
-    datA_eof = datA.sel(
-        lat=slice(lat_min, lat_max),
-        lon=slice(lon_min, lon_max),
-    )
-
-    # Mask grid points with insufficient temporal coverage
-    valid_count = datA_eof.notnull().sum(dim="year")
-    required_count = int(
-        np.ceil(datA_eof.sizes["year"] * min_coverage)
-    )
-
-    datY = datA_eof.where(
-        valid_count >= required_count
-    )
-
-    # Optional gridpoint standardization
+    # Standardize the data for correlation-based EOF analysis
     if normalize:
-        dat_std = datY.std(dim="year")
-        datY = datY / dat_std
+        dat = dat / dat.std(dim="year")
 
-    datY = datY.transpose("year","lat","lon").rename({"year": "time"})
+    # Latitude weighting: sqrt(cos(latitude))
+    # Convert 1D latitude weights into a 2D column array (lat, 1).
+    weights = np.sqrt(np.cos(np.deg2rad(dat.lat.values)))[:, np.newaxis]
 
-    # Latitude weights
-    weights = np.sqrt(np.cos(np.deg2rad(datY.lat.values)))[:, np.newaxis]
+    # Calculate EOFs
+    dat = dat.rename({"year": "time"})
+    solver = Eof(dat, weights=weights)
 
-    solver = Eof(datY,weights=weights)
+    # Extract EOF patterns, standardized PCs, and explained variance
+    eofs = solver.eofsAsCovariance(neofs=neval, pcscaling=1)
+    pcs = solver.pcs(npcs=neval, pcscaling=1)
+    variance_percent = solver.varianceFraction(neigs=neval) * 100
 
-    # Calculate multiple EOF modes
-    eofs = solver.eofsAsCovariance(neofs=neval,pcscaling=1)
-    pcs = solver.pcs(npcs=neval,pcscaling=1)
-
-    variance_percent = (
-        solver.varianceFraction(
-            neigs=neval
-        ) * 100
-    )
-
-    pcs = pcs.rename(
-        {"time": "year"}
-    )
-
-    for mode, value in enumerate(
-        variance_percent.values,
-        start=1,
-    ):
-        print(
-            f"EOF{mode} variance explained: "
-            f"{value:.1f}%"
-        )
+    pcs = pcs.rename({"time": "year"})
 
     return pcs, eofs, variance_percent
 
-def correlation_with_pcs(dat, pcs, min_coverage=0.9):
+def correlation_with_pcs(dat, pcs):
     """
     Calculate Pearson correlation maps between a climate field
     and all principal-component modes.
@@ -299,49 +265,25 @@ def correlation_with_pcs(dat, pcs, min_coverage=0.9):
         Climate field with dimensions (year, lat, lon).
     pcs : xr.DataArray
         Principal components with dimensions (year, mode).
-    min_coverage : float
-        Minimum fraction of valid years required at each grid point.
 
     Returns
     -------
     corr : xr.DataArray
         Correlation maps with dimensions (mode, lat, lon).
     """
-
     # Match the years shared by the field and PCs
-    dat, pcs = xr.align(
-        dat,
-        pcs,
-        join="inner",
-    )
-
-    # Require sufficient temporal coverage at each grid point
-    valid_counts = dat.notnull().sum(dim="year")
-    required_count = int(
-        np.ceil(dat.sizes["year"] * min_coverage)
-    )
-
-    dat_masked = dat.where(
-        valid_counts >= required_count
-    )
+    dat, pcs = xr.align(dat,pcs,join="inner")
 
     # xarray broadcasts the mode dimension automatically
-    corr = xr.corr(
-        dat_masked,
-        pcs,
-        dim="year",
-    )
+    corr = xr.corr(dat,pcs,dim="year")
 
     # Arrange dimensions consistently
-    corr = corr.transpose(
-        "mode",
-        "lat",
-        "lon",
-    )
+    corr = corr.transpose("mode","lat","lon")
 
     corr.name = "correlation"
 
     return corr
+
 
 # ---------------------------------------------------------
 # User settings
@@ -445,12 +387,11 @@ else:
 #   4. normalize controls whether the input data are
 #      standardized at each grid point.
 #
-pcs, eofs, variance_percent = compute_eof_analysis(
+pcs, eofs, variance_percent = calc_eof_analysis(
     ,                     # Input SLP anomaly data
     latlonEOF=latlonEOF,  # North Atlantic EOF domain
     neval=,               # Number of EOF modes
-    normalize=normalize_eof,
-    min_coverage=0.9)
+    normalize=normalize_eof)
 
 # Optional sign reversal for EOF1 and PC1
 pcs = -pcs
@@ -488,7 +429,7 @@ var3 = variance_percent.isel(mode=2)
 cor_map = correlation_with_pcs(
     ,         # Global DJF SLP anomalies
     ,         # Principal components
-    min_coverage=0.9)
+    )
 
 
 # ---------------------------------------------------------

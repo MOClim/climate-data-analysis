@@ -257,19 +257,19 @@ else:
 
 
 # -------------------------------------------------------
-# Match common years
-# -------------------------------------------------------
-
-common_years = np.intersect1d(
-    sst_for_corr.year, nino34_for_corr.year)
-
-sst_for_corr = sst_for_corr.sel(year=common_years)
-nino34_for_corr = nino34_for_corr.sel(year=common_years)
-
-
-# -------------------------------------------------------
 # Grid-point correlation
 # -------------------------------------------------------
+
+# Match the years shared by SST and Niño 3.4 index
+sst_for_corr, nino34_for_corr = xr.align(
+    sst_for_corr, nino34_for_corr, join="inner")
+
+#common_years = np.intersect1d(
+#    sst_for_corr.year, nino34_for_corr.year)
+#
+#sst_for_corr = sst_for_corr.sel(year=common_years)
+#nino34_for_corr = nino34_for_corr.sel(year=common_years)
+
 
 corr_map = xr.corr(sst_for_corr, nino34_for_corr,dim="year")
 
@@ -337,10 +337,12 @@ corr_cyclic_xr.plot.contourf(
         "pad": 0.06, "shrink": 0.85})
 
 axes[1, 0].add_feature(cfeature.LAND, facecolor="lightgray", zorder=2)
-axes[1, 0].coastlines(linewidth=0.8, zorder=3)
 axes[1, 0].add_feature(cfeature.BORDERS, linewidth=0.4, zorder=3)
+axes[1, 0].coastlines(linewidth=0.8, zorder=3)
+
 # Draw latitude and longitude lines
-axes[1, 0].gridlines(draw_labels=True, linewidth=1, color='gray', alpha=0.5, linestyle='--')
+axes[1, 0].gridlines(draw_labels={"bottom": "x", "left": "y", "right": "y"},
+    linewidth=1,color="gray", alpha=0.5, linestyle="--")
 axes[1, 0].set_global()
 
 # Draw Niño 3.4 box
