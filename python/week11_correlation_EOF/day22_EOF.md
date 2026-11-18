@@ -52,17 +52,12 @@ The regional mean is calculated using cosine-latitude weighting.
 The main correlation calculation is:
 
 ```python
-corr_map = xr.corr(
-    sst_for_corr,
-    nino34_for_corr,
-    dim="year"
-)
+corr_map = xr.corr(sst_for_corr, nino34_for_corr, dim="year")
 ```
 
 The resulting map shows the global SST pattern associated with interannual variability in the Niño 3.4 region.
 
 ### Questions to consider
-
 - Where are the strongest positive SST correlations with Niño 3.4?
 - Where are negative correlations found?
 - Why is the equatorial Pacific pattern physically consistent with ENSO?
@@ -87,7 +82,7 @@ X(t,x,y) \approx \sum_{k=1}^{K} PC_k(t)\,EOF_k(x,y)
 $$
 
 where:
-- \(EOF_k(x,y)\) is the spatial pattern of mode \(k\);
+- $$EOF_k(x,y)$$ is the spatial pattern of mode \(k\);
 - \(PC_k(t)\) is the temporal amplitude of that mode;
 - each EOF mode explains a fraction of the total variance.
 
