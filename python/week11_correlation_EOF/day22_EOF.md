@@ -240,26 +240,12 @@ does **not** change the physical mode. It only reverses the sign convention of b
 # Exercise 5. Covariance-Based and Correlation-Based EOFs
 
 The scripts include:
-
 ```python
 normalize_eof = False
 ```
+This performs covariance-based EOF analysis.
 
-With:
-
-```python
-normalize_eof = False
-```
-
-the analysis is covariance based.
-
-If:
-
-```python
-normalize_eof = True
-```
-
-each grid point is standardized before EOF analysis:
+If `normalize_eof = True`, each grid point is standardized by its temporal standard deviation before EOF analysis, producing correlation-based EOFs.
 
 ```python
 dat_std = datY.std(dim="year")
