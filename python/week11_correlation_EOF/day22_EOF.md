@@ -65,7 +65,7 @@ The resulting map shows the global SST pattern associated with interannual varia
 
 ---
 
-# Exercise 2. From a Climate Index to EOF Analysis
+# From a Climate Index to EOF Analysis
 
 The Niño 3.4 index represents sea surface temperature (SST) variability averaged over a predefined geographic region in the tropical Pacific.
 
@@ -90,7 +90,7 @@ EOF1 explains the largest possible fraction of variance, EOF2 explains the large
 
 ---
 
-# Exercise 3. First EOF Mode of Tropical Pacific SST
+# Exercise 2. First EOF Mode of Tropical Pacific SST
 
 Run:
 ```bash
@@ -148,7 +148,7 @@ Compare the PC1 time series with the Niño 3.4 time series from the previous exa
 
 ---
 
-# Exercise 4. Multiple EOF Modes
+# Exercise 3. Multiple EOF Modes
 
 Next, run:
 ```bash
@@ -190,7 +190,7 @@ does **not** change the physical mode. It only reverses the sign convention of b
 
 ---
 
-# Exercise 5. Covariance-Based and Correlation-Based EOFs
+# Exercise 4. Covariance-Based and Correlation-Based EOFs
 
 The scripts include:
 ```python
@@ -213,7 +213,7 @@ unless instructed otherwise.
 
 ---
 
-# Exercise 6. In-Class Exercise: North Atlantic SLP EOFs
+# Exercise 5. North Atlantic SLP EOFs
 
 ```bash
 cp w11_10_eof_multiple_modes_NAO.sample.py w11_10_eof_multiple_modes_NAO.py
