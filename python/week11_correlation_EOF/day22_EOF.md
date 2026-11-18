@@ -72,24 +72,21 @@ The resulting map shows the global SST pattern associated with interannual varia
 
 # Exercise 2. From a Climate Index to EOF Analysis
 
-The Niño 3.4 index is defined using a **pre-selected geographic region**.
+The Niño 3.4 index represents sea surface temperature (SST) variability averaged over a predefined geographic region in the tropical Pacific.
 
-EOF analysis instead determines **dominant** spatial patterns directly from the variability of the climate field.
+In contrast, Empirical Orthogonal Function (EOF) analysis identifies the dominant spatial patterns of climate variability directly from the data, without prescribing their spatial structures in advance.
 
-For EOF analysis, the climate field can be represented conceptually as:
+A climate anomaly field can be expressed as:
 
-\[
-X(t,x,y)
-\]
+$$X(t,x,y)$$
 
 EOF analysis decomposes this field into spatial patterns and time series:
 
-\[
+$$
 X(t,x,y) \approx \sum_{k=1}^{K} PC_k(t)\,EOF_k(x,y)
-\]
+$$
 
 where:
-
 - \(EOF_k(x,y)\) is the spatial pattern of mode \(k\);
 - \(PC_k(t)\) is the temporal amplitude of that mode;
 - each EOF mode explains a fraction of the total variance.
